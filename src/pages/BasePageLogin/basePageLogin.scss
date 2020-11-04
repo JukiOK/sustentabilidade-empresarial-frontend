@@ -1,0 +1,18 @@
+@import '../../constants/colors';
+
+.base-page-login-container {
+  background-color: $white;
+  height: 100vh;
+  padding-left: 7%;
+  padding-right: 7%;
+  
+  .base-page-login-logos {
+    height: 90px;
+    padding: 20px;
+    display: flex;
+  }
+
+  .base-page-login-title {
+    width: 60%;
+  }
+}

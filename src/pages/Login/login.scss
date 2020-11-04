@@ -1,0 +1,33 @@
+@import '../../constants/colors';
+
+.login-container {
+  width: 40%;
+  padding: 20px;
+
+  input {
+    width: 100%;
+  }
+
+  .login-btn {
+    background-color: $green;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+
+  .login-text {
+    color: $white;
+    font-weight: bold;
+  }
+
+  .text-container {
+    margin-top: 10px;
+
+    span {
+      font-size: 17px;
+      margin-right: 5px;
+    }
+  }
+}
