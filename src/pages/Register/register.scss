@@ -1,6 +1,6 @@
 @import '../../constants/colors';
 
-.login-container {
+.register-container {
   width: 30%;
   padding: 20px;
 
@@ -8,11 +8,12 @@
     width: 100%;
   }
 
-  .login-btn {
-
+  .input-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 
-  .login-text {
+  .register-text {
     color: $white;
     font-weight: bold;
   }
@@ -20,7 +21,7 @@
   .text-container {
     margin-top: 10px;
     text-align: center;
-    
+
     span {
       font-size: 17px;
       margin-right: 5px;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
 
 require('./login.scss');
@@ -22,7 +22,7 @@ function Login(props) {
           <span>Senha</span>
         </div>
         <input type="password" onChange={e => setPass(e.target.value)}></input>
-        <div className="login-btn">
+        <div className="login-btn btn-confirm" onClick={() => props.history.push('/')}>
           <span className="login-text">Entrar</span>
         </div>
         <div className="text-container">
@@ -31,7 +31,7 @@ function Login(props) {
         </div>
         <div className="text-container">
           <span>Ainda não possui uma conta?</span>
-          <a>Registre-se</a>
+          <a href={'/register'}>Registre-se</a>
         </div>
       </div>
     </BasePageLogin>
