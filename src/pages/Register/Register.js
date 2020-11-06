@@ -5,6 +5,19 @@ import InputMask from 'react-input-mask';
 require('./register.scss');
 
 function Register(props) {
+
+  const [pass, setPass] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState(false);
+
+  function registerUser() {
+    if(pass !== confirm) {
+      setError(true);
+    } else {
+      props.history.push('/');
+    }
+  }
+
   return (
     <BasePageLogin>
       <div className="register-container">
@@ -24,12 +37,18 @@ function Register(props) {
         <div className="input-title">
           <span>Senha</span>
         </div>
-        <input type="password"></input>
+        <input type="password" onChange={e => setPass(e.target.value)} onFocus={() => setError(false)}></input>
         <div className="input-title">
           <span>Confirmar senha</span>
         </div>
-        <input type="password"></input>
-        <div className="btn-confirm" onClick={() => props.history.push('/')}>
+        <input type="password" onChange={e => setConfirm(e.target.value)} onFocus={() => setError(false)}></input>
+        {
+          error &&
+          <div className="error-text">
+            As senhas não são as mesmas.
+          </div>
+        }
+        <div className="btn-confirm" onClick={registerUser}>
           <span className="register-text">Finalizar cadastro</span>
         </div>
         <div className="text-container">

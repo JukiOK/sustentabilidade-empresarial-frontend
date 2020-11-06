@@ -8,6 +8,10 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
 
+  function login() {
+    props.history.push('/')
+  }
+
   return (
     <BasePageLogin>
       <div className="login-container">
@@ -22,7 +26,7 @@ function Login(props) {
           <span>Senha</span>
         </div>
         <input type="password" onChange={e => setPass(e.target.value)}></input>
-        <div className="login-btn btn-confirm" onClick={() => props.history.push('/')}>
+        <div className="login-btn btn-confirm" onClick={login}>
           <span className="login-text">Entrar</span>
         </div>
         <div className="text-container">
