@@ -1,0 +1,14 @@
+@import '../../constants/colors';
+
+.menu-container {
+  background-color: $lightgray;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0px;
+
+  .menu-logo-container {
+    margin-top: auto;
+    display: flex;
+  }
+}

@@ -1,0 +1,16 @@
+@import '../../constants/colors';
+
+.base-page-container {
+  display: flex;
+  height: 100vh;
+
+  .base-page-container-content {
+    width: 100%;
+
+    .base-page-content {
+      overflow: auto;
+      height: calc( 100% - 80px);
+    }
+  }
+
+}
