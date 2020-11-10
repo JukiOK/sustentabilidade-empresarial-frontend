@@ -14,7 +14,7 @@ function Register(props) {
     if(pass !== confirm) {
       setError(true);
     } else {
-      props.history.push('/');
+      props.history.push('/organizationprofile');
     }
   }
 

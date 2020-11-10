@@ -9,7 +9,7 @@ function Login(props) {
   const [pass, setPass] = useState('');
 
   function login() {
-    props.history.push('/')
+    props.history.push('/organizationprofile')
   }
 
   return (

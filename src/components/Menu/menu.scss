@@ -7,8 +7,36 @@
   flex-direction: column;
   padding: 10px 0px;
 
+  .line {
+    height: 2px;
+    margin: 20px 20px 0px 20px;
+    background-color: $darkgray;
+  }
+
   .menu-logo-container {
     margin-top: auto;
     display: flex;
+  }
+
+  .menu-content {
+    padding: 20px;
+
+    .menu-item {
+      margin: 20px 0px;
+      font-size: 23px;
+      color: $gray;
+
+      .icon-menu {
+        margin-right: auto;
+        width: 30%;
+      }
+
+    }
+
+    .menu-item:hover {
+      color: $green;
+      cursor: pointer;
+    }
+
   }
 }
