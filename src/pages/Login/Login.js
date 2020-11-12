@@ -31,7 +31,7 @@ function Login(props) {
         </div>
         <div className="text-container">
           <span>Esqueceu sua senha?</span>
-          <a href={'/login'}>Recupere-a</a>
+          <a href={'/recoverpassword'}>Recupere-a</a>
         </div>
         <div className="text-container">
           <span>Ainda não possui uma conta?</span>
