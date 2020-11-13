@@ -18,7 +18,7 @@ function OrganizationProfile(props) {
         </div>
         <input placeholder="Endereço principal" />
         <div className="profile-row">
-          <select>
+          <select className="profile-select">
             <option value="" disabled selected hidden>País</option>
             <option>bla</option>
           </select>
@@ -30,13 +30,13 @@ function OrganizationProfile(props) {
             <option value="" disabled selected hidden>Cidade</option>
             <option>bla</option>
           </select>
-          <input placeholder="CEP" />
+          <InputMask mask="999.999.999-99" maskChar="_"  placeholder="CEP" style={{marginLeft: '5px'}}/>
         </div>
-        <div>
+        <div className="profile-title">
           <span>Atividade</span>
-          <p>Se sua empresa atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
+          <p style={{margin: '10px 0px'}}>Se sua empresa atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
         </div>
-        <select>
+        <select className="profile-select">
           <option value="" disabled selected hidden>Categoria</option>
           <option>bla</option>
         </select>
@@ -44,13 +44,16 @@ function OrganizationProfile(props) {
           <option value="" disabled selected hidden>Setor</option>
           <option>bla</option>
         </select>
-        <div>
+        <div className="profile-title size-title">
           <span>Porte da instituição</span>
         </div>
-        <select>
-          <option value="" disabled selected hidden>´Número de funcionários</option>
+        <select className="profile-select">
+          <option value="" disabled selected hidden>Número de funcionários</option>
           <option>bla</option>
         </select>
+        <div className="btn-confirm">
+          <span className="text">Salvar</span>
+        </div>
       </div>
     </BasePage>
   )
