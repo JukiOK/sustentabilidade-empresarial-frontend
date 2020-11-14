@@ -53,7 +53,7 @@ function Register(props) {
         </div>
         <div className="text-container">
           <span>Já possui uma conta?</span>
-          <a href={'/login'}>Faça o login</a>
+          <a href={'/'}>Faça o login</a>
         </div>
       </div>
     </BasePageLogin>

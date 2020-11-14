@@ -8,7 +8,7 @@ import RecoverPassword from './pages/RecoverPassword/RecoverPassword';
 export default (
   <BrowserRouter>
     <Switch>
-      <Route path="/login" component={Login} />
+      <Route exact path="/" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/recoverpassword" component={RecoverPassword} />
       <Route path="/organizationprofile" component={OrganizationProfile} />

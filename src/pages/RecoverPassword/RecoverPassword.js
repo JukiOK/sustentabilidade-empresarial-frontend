@@ -27,7 +27,7 @@ function RecoverPassword(props) {
         </div>
         <div className="text-container">
           <span>Já possui uma conta?</span>
-          <a href={'/login'}>Faça login</a>
+          <a href={'/'}>Faça login</a>
         </div>
 
       </div>

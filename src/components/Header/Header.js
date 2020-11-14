@@ -8,7 +8,7 @@ require('./header.scss');
 function Header(props) {
 
   function logout() {
-    props.history.push('/login');
+    props.history.push('/');
   }
 
   return (
