@@ -31,7 +31,7 @@ function Menu(props) {
 
   return (
     <div className="menu-container">
-      <span style={{textAlign: 'center', fontWeight: 'bold'}}>Avaliação de Sustentabilidade Corporativa</span>
+      <span style={{textAlign: 'center', fontWeight: 'bold', color: '#ffffff'}}>Avaliação de Sustentabilidade Corporativa</span>
       <div className="line"></div>
       <div className="menu-content">
         {
@@ -41,7 +41,7 @@ function Menu(props) {
                 key={index}
                 className="menu-item"
                 onClick={() => props.history.push(tab.path)}
-                style={{color: url.includes(tab.path) && colorsobject.darkgray}}
+                style={{color: url.includes(tab.path) && colorsobject.darkestgreen}}
               >
                 {tab.icon}
                 {tab.name}

@@ -8,4 +8,5 @@ export default {
   darkgreen: '#077f4f',
   blue: '#03AFCF',
   red: '#F23D52',
+  darkestgreen: '#054028',
 }
