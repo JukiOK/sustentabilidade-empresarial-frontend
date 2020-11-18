@@ -2,13 +2,18 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from 'react-router-dom';
+import firebase from 'firebase';
 
 require('./header.scss');
 
 function Header(props) {
 
   function logout() {
-    props.history.push('/');
+    firebase.auth().signOut().then(function() {
+      props.history.push('/');
+    }).catch(function(error) {
+      // An error happened.
+    });
   }
 
   return (

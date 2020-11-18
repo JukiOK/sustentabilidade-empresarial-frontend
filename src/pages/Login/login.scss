@@ -20,10 +20,16 @@
   .text-container {
     margin-top: 10px;
     text-align: center;
-    
+
     span {
       font-size: 17px;
       margin-right: 5px;
     }
+  }
+
+  .error-text {
+    text-align: center;
+    color: $red;
+    margin-top: 20px;
   }
 }

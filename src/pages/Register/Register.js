@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
 import InputMask from 'react-input-mask';
+import firebase from 'firebase';
+import { createUser } from '../../services/requests';
 
 require('./register.scss');
 
 function Register(props) {
 
   const [pass, setPass] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(false);
 
@@ -14,7 +19,17 @@ function Register(props) {
     if(pass !== confirm) {
       setError(true);
     } else {
-      props.history.push('/organizationprofile');
+      firebase.auth().createUserWithEmailAndPassword(email, pass)
+      .then(async () => {
+        await createUser({name, email, phone, pass});
+        props.history.push('/organizationprofile');
+      })
+      .catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(error);
+        alert(error.message);
+      });
     }
   }
 
@@ -25,15 +40,15 @@ function Register(props) {
         <div style={{marginTop: '40px', marginBottom: '10px'}}>
           <span>Nome</span>
         </div>
-        <input></input>
+        <input onChange={e => setName(e.target.value)}></input>
         <div className="input-title">
           <span>Email</span>
         </div>
-        <input></input>
+        <input onChange={e => setEmail(e.target.value)}></input>
         <div className="input-title">
           <span>Telefone</span>
         </div>
-        <InputMask mask="(99) 9999-9999" maskChar="_" />
+        <InputMask mask="(99)9999-9999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
         <div className="input-title">
           <span>Senha</span>
         </div>
