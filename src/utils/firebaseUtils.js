@@ -17,7 +17,7 @@ export function firebaseImpl() {
       var currentToken = null
       if (user != null){
         currentToken = await user.getIdToken()
-      }else if (window.location.pathname != '/' && window.location.pathname != '/register' && window.location.pathname != '/recoverpassword') { //Redirect to login screen
+      }else if (window.location.pathname !== '/' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.")
         window.location.href = "/"
       }

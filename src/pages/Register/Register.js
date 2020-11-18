@@ -10,7 +10,8 @@ function Register(props) {
 
   const [pass, setPass] = useState('');
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(false);
@@ -21,7 +22,7 @@ function Register(props) {
     } else {
       firebase.auth().createUserWithEmailAndPassword(email, pass)
       .then(async () => {
-        await createUser({name, email, phone, pass});
+        await createUser({firstName, lastName, email, phone});
         props.history.push('/organizationprofile');
       })
       .catch(function(error) {
@@ -40,7 +41,11 @@ function Register(props) {
         <div style={{marginTop: '40px', marginBottom: '10px'}}>
           <span>Nome</span>
         </div>
-        <input onChange={e => setName(e.target.value)}></input>
+        <input onChange={e => setFirstName(e.target.value)}></input>
+        <div className="input-title">
+          <span>Sobrenome</span>
+        </div>
+        <input onChange={e => setLastName(e.target.value)}></input>
         <div className="input-title">
           <span>Email</span>
         </div>
@@ -48,7 +53,7 @@ function Register(props) {
         <div className="input-title">
           <span>Telefone</span>
         </div>
-        <InputMask mask="(99)9999-9999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
+        <InputMask mask="(99) 9999-9999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
         <div className="input-title">
           <span>Senha</span>
         </div>

@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
+import firebase from 'firebase';
+import colors from '../../constants/colorsobject';
 
 require('./recoverPassword.scss');
 
 function RecoverPassword(props) {
 
   const [email, setEmail] = useState('');
+  const [sent, setSent] = useState(false);
 
   function sendRecover() {
-    props.history.goBack();
+    var auth = firebase.auth();
+    auth.sendPasswordResetEmail(email).then(function() {
+      setSent(true);
+    }).catch(function(error) {
+      // An error happened.
+    });
   }
 
   return (
@@ -22,9 +30,13 @@ function RecoverPassword(props) {
           <span>Email</span>
         </div>
         <input onChange={e => setEmail(e.target.value)}></input>
-        <div className="btn-confirm" onClick={sendRecover}>
+        {
+          sent &&
+          <div style={{marginTop: '10px', color: colors.red}}>O email foi enviado</div>
+        }
+        <button className="btn-confirm recover-btn" onClick={sendRecover} disabled={sent}>
           <span className="recover-password-text">Recuperar senha</span>
-        </div>
+        </button>
         <div className="text-container">
           <span>Já possui uma conta?</span>
           <a href={'/'}>Faça login</a>
