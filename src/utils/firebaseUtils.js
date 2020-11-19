@@ -13,13 +13,11 @@ const config = {
 
 export function firebaseImpl() {
   firebase.initializeApp(config);
-  firebase.auth().onAuthStateChanged(async function(user) {
-      var currentToken = null
-      if (user != null){
-        currentToken = await user.getIdToken()
-      }else if (window.location.pathname !== '/' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
-        alert("Desculpe, sua sessão expirou. Por favor entre novamente.")
-        window.location.href = "/"
-      }
-    })
+  return new Promise((resolve, reject) => {
+     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+        unsubscribe();
+        resolve(user);
+     }, reject);
+  });
+
 }

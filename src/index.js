@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import router from './router';
+import Router from './router';
 import * as serviceWorker from './serviceWorker';
-import {firebaseImpl} from './utils/firebaseUtils';
-
-firebaseImpl();
 
 ReactDOM.render(
   <React.StrictMode>
-    {router}
+    {<Router/>}
   </React.StrictMode>,
   document.getElementById('root')
 );

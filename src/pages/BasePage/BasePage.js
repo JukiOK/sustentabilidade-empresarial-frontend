@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 require('./basePage.scss');
 
 function BasePage(props) {
+
   return (
     <div className="base-page-container">
       <Menu />
