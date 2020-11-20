@@ -23,8 +23,8 @@ export const createOrganization = async (body) => {
   .catch(err => {console.log(err);});
 }
 
-export const updateOrganization = async (id, body) => {
-  return axiosApi.put('/organization/' + id, body)
+export const updateOrganization = async (body) => {
+  return axiosApi.put('/organization/mine', body)
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
@@ -36,13 +36,31 @@ export const createUser = async (body) => {
 }
 
 export const getOrganization = async (orgId) => {
-  return axiosApi.get('/organization/' + orgId)
+  return axiosApi.get('/organization/mine')
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
 
 export const getMe = async () => {
   return axiosApi.get('/user/me')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getCategories = async () => {
+  return axiosApi.get('/common/categories')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getSectors = async () => {
+  return axiosApi.get('/common/sectors')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getNumbEmp = async () => {
+  return axiosApi.get('/common/sizes')
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }

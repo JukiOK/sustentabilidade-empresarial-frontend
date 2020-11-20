@@ -4,7 +4,7 @@ import InputMask from 'react-input-mask';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { createOrganization, getOrganization, getMe, updateOrganization } from '../../services/requests';
+import { createOrganization, getOrganization, getMe, updateOrganization, getCategories, getSectors, getNumbEmp } from '../../services/requests';
 
 require('./organizationProfile.scss');
 
@@ -23,11 +23,21 @@ function OrganizationProfile(props) {
   const [numberEmp, setNumberEmp] = useState('');
   const [isNew, setIsNew] = useState();
   const [orgId, setOrgId] = useState();
+  const [listCategories, setListCategories] = useState();
+  const [listSectors, setListSectors] = useState();
+  const [listNumbEmp, setListNumbEmp] = useState();
+
   useEffect(() => {
     getOrg();
   }, []);
 
   async function getOrg() {
+    let categoryList = await getCategories();
+    let sectorsList = await getSectors();
+    let numbEmpList = await getNumbEmp();
+    setListCategories(categoryList);
+    setListSectors(sectorsList);
+    setListNumbEmp(numbEmpList);
     let me = await getMe();
     if(me && me.orgId) {
       setIsNew(false);
@@ -62,10 +72,10 @@ function OrganizationProfile(props) {
   async function saveOrg() {
     const addressFull = {address, cep, state, city, number};
     if(isNew) {
-      await createOrganization({name, address: {...addressFull}, phone, site, category, sector});
+      await createOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp});
       setIsNew(false);
     } else {
-      await updateOrganization(orgId, {name, address: {...addressFull}, phone, site, category, sector})
+      await updateOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
     }
   }
 
@@ -96,18 +106,36 @@ function OrganizationProfile(props) {
         </div>
         <select className="profile-select" onChange={e => setCategory(e.target.value)} value={category}>
           <option value="" disabled selected hidden>Categoria</option>
-          <option value="bla">bla</option>
+          {
+            listCategories && listCategories.map((category, index) => {
+              return (
+                <option key={index} value={category.value}>{category.label}</option>
+              )
+            })
+          }
         </select>
-        <select onChange={e => setSector(e.target.value)} value={sector}>
+        <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
           <option value="" disabled selected hidden>Setor</option>
-          <option value="bla">bla</option>
+          {
+            listSectors && listSectors.map((sector, index) => {
+              return (
+                <option key={index} value={sector.value}>{sector.label}</option>
+              )
+            })
+          }
         </select>
         <div className="profile-title size-title">
           <span>Porte da instituição</span>
         </div>
-        <select className="profile-select" value={numberEmp}>
+        <select className="profile-select" value={numberEmp} onChange={e => setNumberEmp(e.target.value)}>
           <option value="" disabled selected hidden>Número de funcionários</option>
-          <option>bla</option>
+          {
+            listNumbEmp && listNumbEmp.map((numbEmp, index) => {
+              return (
+                <option key={index} value={numbEmp.value}>{numbEmp.label}</option>
+              )
+            })
+          }
         </select>
         <div className="btn-confirm" onClick={saveOrg}>
           <span className="text">Salvar</span>
