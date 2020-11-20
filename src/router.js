@@ -5,7 +5,8 @@ import Register from './pages/Register/Register';
 import OrganizationProfile from './pages/OrganizationProfile/OrganizationProfile';
 import RecoverPassword from './pages/RecoverPassword/RecoverPassword';
 import {firebaseImpl} from './utils/firebaseUtils';
-import firebase from 'firebase'
+import firebase from 'firebase';
+import Dimensions from './pages/Dimensions/Dimensions';
 
 export default function Router(props) {
 
@@ -33,7 +34,10 @@ export default function Router(props) {
         <Route path="/recoverpassword" component={RecoverPassword} />
         {
           token &&
-          <Route path="/organizationprofile" component={OrganizationProfile} />
+          <>
+            <Route path="/organizationprofile" component={OrganizationProfile} />
+            <Route path="/dimensions" component={Dimensions} />            
+          </>
         }
       </Switch>
     </BrowserRouter>

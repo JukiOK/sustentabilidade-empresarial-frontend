@@ -10,7 +10,7 @@ function BasePage(props) {
     <div className="base-page-container">
       <Menu />
       <div className="base-page-container-content">
-        <Header title={'Perfil da instituição'}/>
+        <Header title={props.title}/>
         <div className="base-page-content">
           {props.children}
         </div>

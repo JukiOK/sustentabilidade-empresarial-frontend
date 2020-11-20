@@ -80,7 +80,7 @@ function OrganizationProfile(props) {
   }
 
   return (
-    <BasePage>
+    <BasePage title={'Perfil da Instituição'}>
       <div className="profile-container">
         <div>
           <span>Identificação da instituição</span>
