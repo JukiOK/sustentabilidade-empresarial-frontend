@@ -1,0 +1,55 @@
+@import '../../constants/colors.scss';
+
+.dimensions-container {
+  padding: 20px;
+
+  .dimensions-filter-container {
+    display: flex;
+
+    .filter-btn {
+      background-color: $blue;
+      color: $white;
+      margin-top: 0px;
+      margin-left: 10px;
+    }
+
+    .filter-btn:hover {
+      background-color: $darkblue;
+    }
+
+    .new-btn {
+      color: $white;
+      margin-top: 0px;
+      margin-left: auto;
+      width: 200px;
+    }
+  }
+
+  .card-container {
+    border: 1px solid $black;
+    border-radius: 20px;
+    margin: 10px 0px;
+    padding: 10px;
+
+    .table-dimension {
+      width: 100%;
+      border-collapse: collapse;
+
+      .table-row {
+        background-color: $white;
+      }
+
+      .table-cell {
+        padding: 10px;
+      }
+
+      .table-row:nth-child(2n) {
+        background-color: $darkwhite;
+      }
+    }
+
+    .table-dimension, .table-cell {
+      border: 1px solid $black;
+    }
+  }
+}
