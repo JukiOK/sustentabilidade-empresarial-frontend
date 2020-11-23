@@ -31,6 +31,17 @@
     margin: 10px 0px;
     padding: 10px;
 
+    .card-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+
+      .card-title {
+        font-weight: bold;
+        margin-right: auto;
+      }
+    }
+
     .table-dimension {
       width: 100%;
       border-collapse: collapse;
@@ -40,11 +51,19 @@
       }
 
       .table-cell {
-        padding: 10px;
+
+        .indicator-cell {
+          padding: 10px;
+          border-top: 1px solid $black;
+        }
+
+        .indicator-cell:first-child {
+          border-top: none;
+        }
       }
 
-      .table-row:nth-child(2n) {
-        background-color: $darkwhite;
+      .table-row:nth-child(2n), thead {
+        background-color: $ligthgrayblue;
       }
     }
 

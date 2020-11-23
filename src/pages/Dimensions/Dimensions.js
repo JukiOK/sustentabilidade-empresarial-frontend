@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
 import InputMask from 'react-input-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 require('./dimensions.scss');
 
 function Card(props) {
   return (
     <div className="card-container">
-      <div>
-        <span>{props.dimension}</span>
+      <div className="card-row">
+        <span className="card-title">{props.dimension}</span>
+        <FontAwesomeIcon icon={faEllipsisV} style={{fontSize: '24px'}}/>
       </div>
       <table className="table-dimension">
         <thead>
@@ -22,14 +23,16 @@ function Card(props) {
         <tbody>
           <tr className="table-row">
             <td className="table-cell">
-              <span>missão engajamento</span>
-              <span>peso</span>
+              <div>
+                <span>missão engajamento</span>
+                <span>peso</span>
+              </div>
             </td>
             <td className="table-cell">
-              <div>
+              <div className="indicator-cell">
                 <span>compromisso social</span>
               </div>
-              <div>
+              <div className="indicator-cell">
                 <span>envolvimento parte</span>
               </div>
             </td>
@@ -67,7 +70,7 @@ function Dimensions(props) {
         <div className="dimensions-filter-container">
           <input />
           <div className="btn-confirm filter-btn"><FontAwesomeIcon icon={faSearch} /></div>
-          <div className="btn-confirm new-btn">Nova dimensão</div>
+          <div className="btn-confirm new-btn" onClick={() => props.history.push('/dimensionform/')}>Nova dimensão</div>
         </div>
         <Card dimension={'Governança'}/>
       </div>

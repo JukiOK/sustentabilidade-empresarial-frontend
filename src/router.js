@@ -7,6 +7,7 @@ import RecoverPassword from './pages/RecoverPassword/RecoverPassword';
 import {firebaseImpl} from './utils/firebaseUtils';
 import firebase from 'firebase';
 import Dimensions from './pages/Dimensions/Dimensions';
+import DimensionForm from './pages/DimensionForm/DimensionForm';
 
 export default function Router(props) {
 
@@ -18,7 +19,6 @@ export default function Router(props) {
       if (user != null){
         currentToken = await user.getIdToken();
         setToken(currentToken);
-        console.log(firebase.auth().currentUser);
       }else if (window.location.pathname !== '/' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
         window.location.href = "/"
@@ -36,7 +36,8 @@ export default function Router(props) {
           token &&
           <>
             <Route path="/organizationprofile" component={OrganizationProfile} />
-            <Route path="/dimensions" component={Dimensions} />            
+            <Route exact path="/dimensions" component={Dimensions} />
+            <Route path="/dimensionform/*" component={DimensionForm} />
           </>
         }
       </Switch>

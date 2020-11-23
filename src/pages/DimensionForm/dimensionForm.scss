@@ -1,0 +1,20 @@
+@import '../../constants/colors.scss';
+
+.dimension-form-container {
+  padding: 20px;
+
+  .dimension-form-title {
+    font-weight: bold;
+  }
+
+  .dimension-form-card {
+    padding: 10px;
+    border: 1px solid $black;
+    border-radius: 10px;
+    margin: 10px 0px;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
