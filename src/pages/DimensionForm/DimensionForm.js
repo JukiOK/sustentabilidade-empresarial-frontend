@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {saveDimension, updateDimension, saveCriterionDimension, saveIndicatorCriterion, updateCriterionDimension, updateIndicatorCriterion} from '../../services/requests';
 
 require('./dimensionForm.scss');
 
@@ -9,17 +10,17 @@ function Criteria(props) {
 
   const [evidence, setEvidence] = useState(false);
   const [typeAnswer, setTypeAnswer] = useState('');
-  const { criteria, index, addIndicator, removeCriteria, editCriteria, } = props;
+  const { criterion, addIndicator, removeCriterion, editCriterion, } = props;
 
-  function editingCriteria(value, field) {
-    editCriteria(index, field, value);
+  function editingCriterion(value, field) {
+    editCriterion(criterion._id, field, value);
   }
 
   return (
     <div style={{display: 'flex'}}>
       <div className="dimension-form-card inside-row">
         <div className="dimension-form-row">
-          <input placeholder="Nome" className="input-form" value={criteria.name} onChange={e => editingCriteria(e.target.value, "name")}/>
+          <input placeholder="Nome" className="input-form" value={criterion.name} onChange={e => editingCriterion(e.target.value, "name")}/>
           <input placeholder="Peso"/>
         </div>
         <textarea placeholder="Descrição" className="text-container"/>
@@ -28,7 +29,7 @@ function Criteria(props) {
           <div className="btn-confirm new-btn" onClick={addIndicator}>Novo indicador</div>
         </div>
         {
-          props.criteria.indicatorList.map((indicator, index) => (
+          criterion.indicatorList.map((indicator, index) => (
             <div style={{display: 'flex'}} key={index}>
               <div className="dimension-form-card inside-row">
                 <div className="dimension-form-row inside-card">
@@ -73,7 +74,7 @@ function Criteria(props) {
         }
 
       </div>
-      <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={removeCriteria}/>
+      <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={removeCriterion}/>
     </div>
   )
 }
@@ -81,8 +82,12 @@ function Criteria(props) {
 function DimensionForm(props) {
 
   const [criteriaList, setCriteriaList] = useState([]);
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
+  const [description, setDescription] = useState('');
+  const [year, setYear] = useState();
 
-  function addCriteria() {
+  function addCriterion() {
     let aux = criteriaList.slice();
     aux.push({name: '', weight: 0, indicatorList: []});
     setCriteriaList(aux);
@@ -95,13 +100,13 @@ function DimensionForm(props) {
     setCriteriaList(aux);
   }
 
-  function removeCriteria(id) {
+  function removeCriterion(id) {
     let aux = criteriaList.slice();
     aux.splice(id, 1);
     setCriteriaList(aux);
   }
 
-  function editCriteria(id, field, value) {
+  function editCriterion(id, field, value) {
     let newobj = {[field]: value};
     let aux = criteriaList.slice();
     aux[id] = {...aux[id], ...newobj};
@@ -117,27 +122,27 @@ function DimensionForm(props) {
         <div className="dimension-form-card">
           <div className="dimension-form-row">
             <input placeholder="Nome" className="input-form"/>
-            <input placeholder="Código"/>
+            <input placeholder="Código" style={{marginRight: '10px'}}/>
+            <input placeholder="Ano"/>
           </div>
           <textarea placeholder="Descrição" className="text-container"/>
         </div>
         <div className="dimension-form-row">
           <span className="dimension-form-title">Critérios</span>
-          <div className="btn-confirm new-btn" onClick={addCriteria}>Novo critério</div>
+          <div className="btn-confirm new-btn" onClick={addCriterion}>Novo critério</div>
         </div>
         {
-          criteriaList.map((criteria, index) => (
+          criteriaList.map((criterion, index) => (
             <Criteria
-              index={index}
               key={index}
-              criteria={criteria}
+              criterion={criterion}
               addIndicator={() => addIndicator(index)}
-              removeCriteria={() => removeCriteria(index)}
-              editCriteria={(index, field, value) => editCriteria(index, field, value)}
+              removeCriterion={() => removeCriterion(index)}
+              editCriterion={(index, field, value) => editCriterion(index, field, value)}
             />
           ))
         }
-        <div className="btn-confirm save-btn" onClick={addCriteria}>Salvar</div>
+        <div className="btn-confirm save-btn" onClick={addCriterion}>Salvar</div>
       </div>
     </BasePage>
   )

@@ -137,9 +137,7 @@ function OrganizationProfile(props) {
             })
           }
         </select>
-        <div className="btn-confirm" onClick={saveOrg}>
-          <span className="text">Salvar</span>
-        </div>
+        <div className="btn-confirm" onClick={saveOrg}>Salvar</div>
       </div>
     </BasePage>
   )
