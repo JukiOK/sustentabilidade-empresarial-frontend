@@ -7,14 +7,75 @@
     font-weight: bold;
   }
 
+  .inside-row {
+    width: 100%;
+  }
+
   .dimension-form-card {
     padding: 10px;
     border: 1px solid $black;
     border-radius: 10px;
     margin: 10px 0px;
+
+    .text-container {
+      resize: vertical;
+      font-family: auto;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 10px;
+      min-height: 90px;
+      padding: 10px;
+    }
+
+    .input-form {
+      width: 100%;
+      margin-right: 10px;
+    }
+
+    .inside-card {
+      margin-top: 10px;
+    }
+
+    .input-outside {
+      width: 33%;
+    }
+
+    .input-middle {
+      width: 33%;
+      margin: 0px 10px;
+    }
   }
 
-  textarea {
-    resize: vertical;
+  .icon-trash {
+    margin-left: 10px;
+    color: $red;
+    font-size: 30px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  .icon-trash:hover {
+    color: $darkred;
+  }
+
+  .new-btn {
+    color: $white;
+    margin-left: auto;
+    width: 150px;
+  }
+
+  .dimension-form-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .save-btn {
+    color: $white;
+    width: 200px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Helmet} from 'react-helmet';
 
 require('./basePageLogin.scss');
 
@@ -9,6 +10,7 @@ function BasePageLogin(props) {
 
   return (
     <div className="base-page-login-container">
+      <Helmet defaultTitle={'HIDS-Sustentabilidade Corporativa'} />
       <div className="base-page-login-logos">
         <img src={hids} style={{height:'100%'}}/>
         <img src={unicamp} style={{height:'100%', marginLeft: 'auto'}}/>

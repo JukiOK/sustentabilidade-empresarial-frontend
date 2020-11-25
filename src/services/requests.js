@@ -13,7 +13,6 @@ export const axiosApi = axios.create({
 
 axiosApi.interceptors.request.use(async (options) => {
   options.headers["Authorization"] = await firebase.auth().currentUser.getIdToken();
-  console.log(options);
   return options;
 });
 

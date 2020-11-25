@@ -5,7 +5,7 @@
   height: 100vh;
 
   .base-page-container-content {
-    width: 100%;
+    width: calc(100% - 230px);
 
     .base-page-content {
       overflow: auto;

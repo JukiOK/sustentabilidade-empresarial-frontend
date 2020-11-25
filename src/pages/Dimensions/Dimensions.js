@@ -70,7 +70,7 @@ function Dimensions(props) {
         <div className="dimensions-filter-container">
           <input />
           <div className="btn-confirm filter-btn"><FontAwesomeIcon icon={faSearch} /></div>
-          <div className="btn-confirm new-btn" onClick={() => props.history.push('/dimensionform/')}>Nova dimensão</div>
+          <div className="btn-confirm new-btn" onClick={() => props.history.push('/dimensions/form/')}>Nova dimensão</div>
         </div>
         <Card dimension={'Governança'}/>
       </div>
