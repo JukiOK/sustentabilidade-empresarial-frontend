@@ -37,7 +37,7 @@ export default function Router(props) {
           <>
             <Route path="/organizationprofile" component={OrganizationProfile} />
             <Route exact path="/dimensions" component={Dimensions} />
-            <Route path="/dimensions/form/*" component={DimensionForm} />
+            <Route path="/dimensions/form/:id" component={DimensionForm} />
           </>
         }
       </Switch>

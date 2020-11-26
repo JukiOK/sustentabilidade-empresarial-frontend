@@ -3,7 +3,7 @@ import BasePage from '../BasePage/BasePage';
 import InputMask from 'react-input-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
+import { saveDimension, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
 
 require('./dimensions.scss');
 
@@ -30,7 +30,7 @@ function Card(props) {
   }
 
   return (
-    <div className="card-container">
+    <div className="card-container" onClick={() => props.history.push('/dimensions/form/' + dimension._id)}>
       <div className="card-row">
         <span className="card-title">{dimension.name}</span>
         <FontAwesomeIcon icon={faEllipsisV} style={{fontSize: '24px'}}/>
@@ -88,7 +88,8 @@ function Dimensions(props) {
   }
 
   async function newDimension() {
-    props.history.push('/dimensions/form/' );
+    let data = await saveDimension();
+    props.history.push('/dimensions/form/' + data._id);
   }
 
   return (
@@ -101,7 +102,7 @@ function Dimensions(props) {
         </div>
         {
           dimensionsList && dimensionsList.map((dimension, index) => (
-            <Card dimension={dimension} key={index}/>
+            <Card dimension={dimension} key={index} history={props.history}/>
           ))
         }
       </div>
