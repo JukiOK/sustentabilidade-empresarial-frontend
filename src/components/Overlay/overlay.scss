@@ -1,0 +1,21 @@
+@import '../../constants/colors.scss';
+
+.overlay-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: $overlayblack;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .overlay-content {
+    background-color: $white;
+    padding: 20px;
+    border: 1px solid $black;
+    border-radius: 10px;
+  }
+}

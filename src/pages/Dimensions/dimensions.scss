@@ -31,10 +31,55 @@
     margin: 10px 0px;
     padding: 10px;
 
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .yes-btn {
+      color: $white;
+      border-radius: 50px;
+      width: 100px;
+    }
+
+    .cancel-btn {
+      color: $white;
+      border-radius: 50px;
+      width: 100px;
+      background-color: $red;
+      margin-left: 10px;
+    }
+
+    .cancel-btn:hover {
+      background-color: $darkred;
+    }
+
     .card-row {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
+
+      .icon-trash {
+        color: $red;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .icon-trash:hover {
+        color: $darkred;
+      }
+
+      .icon-edit {
+        color: $blue;
+        font-size: 24px;
+        cursor: pointer;
+        margin-right: 20px;
+      }
+
+      .icon-edit:hover {
+        color: $darkblue;
+      }
 
       .card-title {
         font-weight: bold;
@@ -71,4 +116,5 @@
       border: 1px solid $black;
     }
   }
+
 }

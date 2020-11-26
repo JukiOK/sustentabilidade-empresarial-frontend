@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
 import InputMask from 'react-input-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-import { saveDimension, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
+import { faSearch, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { saveDimension, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion, deleteDimension } from '../../services/requests';
+import Overlay from '../../components/Overlay/Overlay';
 
 require('./dimensions.scss');
 
@@ -11,7 +12,9 @@ function Card(props) {
 
   const [criteriaList, setCriteriaList] = useState();
   const [indicatorsList, setIndicatorsList] = useState();
-  const { dimension } = props;
+  const [openOverlay, setOpenOverlay] = useState(false);
+
+  const { dimension, history, deleteDimensionId } = props;
 
   useEffect(() => {
     getAll();
@@ -29,11 +32,24 @@ function Card(props) {
     setIndicatorsList(aux);
   }
 
+  function handleClickDelete() {
+    setOpenOverlay(false);
+    deleteDimensionId(dimension._id);
+  }
+
   return (
-    <div className="card-container" onClick={() => props.history.push('/dimensions/form/' + dimension._id)}>
+    <div className="card-container">
+      <Overlay openOverlay={openOverlay} setOpenOverlay={(value) => setOpenOverlay(value)}>
+        <span>Tem certeza que deseja apagar a dimensão? Essa ação não pode ser desfeita.</span>
+        <div className="btn-row">
+          <div className="btn-confirm yes-btn" onClick={handleClickDelete}>Sim</div>
+          <div className="btn-confirm cancel-btn" onClick={() => setOpenOverlay(false)}>Não</div>
+        </div>
+      </Overlay>
       <div className="card-row">
         <span className="card-title">{dimension.name}</span>
-        <FontAwesomeIcon icon={faEllipsisV} style={{fontSize: '24px'}}/>
+        <FontAwesomeIcon icon={faEdit} className="icon-edit" onClick={() => history.push('/dimensions/form/' + dimension._id)}/>
+        <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => setOpenOverlay(true)}/>
       </div>
       <table className="table-dimension">
         <thead>
@@ -92,6 +108,15 @@ function Dimensions(props) {
     props.history.push('/dimensions/form/' + data._id);
   }
 
+  async function deleteDimensionId(id, idArray) {
+    await deleteDimension(id);
+    let aux = dimensionsList.slice();
+    aux.splice(idArray, 1);
+    setDimensionsList(aux);
+  }
+
+  console.log(dimensionsList);
+
   return (
     <BasePage title={'Lista de dimensões'}>
       <div className="dimensions-container">
@@ -102,7 +127,7 @@ function Dimensions(props) {
         </div>
         {
           dimensionsList && dimensionsList.map((dimension, index) => (
-            <Card dimension={dimension} key={index} history={props.history}/>
+            <Card dimension={dimension} key={index} history={props.history} deleteDimensionId={(id) => deleteDimensionId(id, index)}/>
           ))
         }
       </div>

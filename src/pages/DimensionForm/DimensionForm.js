@@ -1,8 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BasePage from '../BasePage/BasePage';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import {getDimension , deleteDimension, updateDimension, getAllCriteriaDimension, saveCriterionDimension, deleteCriterionDimension, saveIndicatorCriterion, updateCriterionDimension, updateIndicatorCriterion} from '../../services/requests';
+import {
+  getDimension ,
+  deleteDimension,
+  updateDimension,
+  getAllCriteriaDimension,
+  saveCriterionDimension,
+  deleteCriterionDimension,
+  saveIndicatorCriterion,
+  updateCriterionDimension,
+  updateIndicatorCriterion,
+  getAllIndicatorsCriterion,
+  deleteIndicatorCriterion,
+} from '../../services/requests';
 import { useParams } from "react-router-dom";
 
 require('./dimensionForm.scss');
@@ -11,7 +23,7 @@ function Criteria(props) {
 
   const [evidence, setEvidence] = useState(false);
   const [typeAnswer, setTypeAnswer] = useState('');
-  const { criterion, addIndicator, removeCriterion, editCriterion, indicatorsList, indexArray } = props;
+  const { criterion, addIndicator, removeCriterion, editCriterion, indicatorsList, indexArray, removeIndicator } = props;
 
   function editingCriterion(value, field) {
     editCriterion(indexArray, field, value, criterion._id);
@@ -27,43 +39,64 @@ function Criteria(props) {
           </div>
           <div style={{width: '20%', marginLeft: '10px'}}>
             <span>Peso</span>
-            <input className="input-form"/>
+            <input className="input-form" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")}/>
           </div>
         </div>
         <div style={{marginTop: '10px'}}>
           <span>Descrição</span>
-          <textarea className="text-container"/>
+          <textarea className="text-container" value={criterion.description} onChange={e => editingCriterion(e.target.value, "description")}/>
         </div>
         <div className="dimension-form-row inside-card">
           <span className="dimension-form-title">Indicadores</span>
           <div className="btn-confirm new-btn" onClick={addIndicator}>Novo indicador</div>
         </div>
         {
-          indicatorsList && indicatorsList.map((indicator, index) => (
+          criterion.indicatorsList && criterion.indicatorsList.map((indicator, index) => (
             <div style={{display: 'flex'}} key={index}>
               <div className="dimension-form-card inside-row">
                 <div className="dimension-form-row inside-card">
-                  <div >
+                  <div style={{width: '80%'}}>
                     <span>Nome</span>
-                    <input placeholder="Nome" className="input-form"/>
+                    <input className="input-form"/>
                   </div>
-                  <input placeholder="Peso" className="input-form"/>
+                  <div style={{width: '20%', marginLeft: '10px'}}>
+                    <span>Peso</span>
+                    <input className="input-form"/>
+                  </div>
                 </div>
                 <div className="dimension-form-row inside-card">
-                  <input placeholder="Refência" className="input-outside"/>
-                  <input placeholder="Área" className="input-middle"/>
-                  <input placeholder="Responsavel" className="input-outside"/>
+                  <div className="input-outside">
+                    <span>Refência</span>
+                    <input className="input-form"/>
+                  </div>
+                  <div className="input-middle">
+                    <span>Área</span>
+                    <input className="input-form"/>
+                  </div>
+                  <div className="input-outside">
+                    <span>Responsável</span>
+                    <input className="input-form"/>
+                  </div>
                 </div>
-                <textarea placeholder="Descrição" className="text-container"/>
-                <textarea placeholder="Questão" className="text-container"/>
+                <div className="textarea-container">
+                  <span>Descrição</span>
+                  <textarea className="text-container"/>
+                </div>
+                <div className="textarea-container">
+                  <span>Questão</span>
+                  <textarea className="text-container"/>
+                </div>
                 <div className="dimension-form-row">
-                  <textarea placeholder="Instruções" className="text-container"/>
+                  <div style={{width: '90%'}}>
+                    <span>Instruções</span>
+                    <textarea className="text-container"/>
+                  </div>
                   <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)}/>
                   <span>Evidência?</span>
                 </div>
                 <div style={{marginTop: '10px'}}>
                   <div>
-                    <span>Tipo de resposta:</span>
+                    <span>Tipo de resposta</span>
                   </div>
                   <div style={{display: 'flex'}}>
                     <div>
@@ -81,7 +114,7 @@ function Criteria(props) {
                   </div>
                 </div>
               </div>
-              <FontAwesomeIcon icon={faTrashAlt} className="icon-trash"/>
+              <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator(index, indicator._id)}/>
             </div>
           ))
         }
@@ -95,7 +128,6 @@ function Criteria(props) {
 function DimensionForm(props) {
 
   const [criteriaList, setCriteriaList] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [description, setDescription] = useState('');
@@ -121,6 +153,10 @@ function DimensionForm(props) {
       setYear(data.year);
       setDescription(data.description);
       let data1 = await getAllCriteriaDimension(id);
+      for(let i = 0; i < data1.length; i++) {
+        let data2 = await getAllIndicatorsCriterion(id, data1[i]._id);
+        data1[i].indicatorsList = data2;
+      }
       setCriteriaList(data1);
     } else {
       isEdited.current = 'no';
@@ -132,15 +168,39 @@ function DimensionForm(props) {
     data.name = '';
     data.weight = '';
     data.description = '';
+    data.indicatorsList = [];
     let aux = criteriaList.slice();
     aux.push(data);
     setCriteriaList(aux);
   }
 
-  function addIndicator(id) {
-    let aux = indicatorsList.slice();
-    let newIndicator = {name: ''};
-    aux[id] = [...aux[id], newIndicator];
+  async function addIndicator(idCriterion, idArray) {
+    let data = await saveIndicatorCriterion(id, idCriterion);
+    let aux = criteriaList.slice();
+    let newIndicator = {
+      name: '',
+      "description": "",
+      "reference": "",
+      "weight": 0,
+      "evidence": false,
+      "question": {
+        "title": "",
+        "type": 0,
+        "answer": {
+          "answer": "",
+          "points": 0
+        }
+      },
+    };
+    aux[idArray].indicatorsList.push({...newIndicator, ...data});
+    setCriteriaList(aux);
+  }
+
+  async function removeIndicator(idCriterion, idIndicator, indArrayCrit, indArrayIndc) {
+    console.log(idCriterion, idIndicator, indArrayCrit, indArrayIndc);
+    await deleteIndicatorCriterion(id, idCriterion, idIndicator);
+    let aux = criteriaList.slice();
+    aux[indArrayCrit].indicatorsList.splice(indArrayIndc, 1);
     setCriteriaList(aux);
   }
 
@@ -164,7 +224,7 @@ function DimensionForm(props) {
     await updateDimension(id, {[field]: value});
   }
 
-  console.log(criteriaList, indicatorsList);
+  console.log(criteriaList);
 
   return (
     <BasePage title={'Formulário da dimensão'}>
@@ -185,7 +245,7 @@ function DimensionForm(props) {
               <input className="input-form" value={year} onChange={(e) => setYear(e.target.value)} onBlur={() => saveInfoDimension('year', year)}/>
             </div>
           </div>
-          <div style={{marginTop: '10px'}}>
+          <div className="textarea-container">
             <span>Descrição</span>
             <textarea placeholder="Descrição" className="text-container" value={description} onChange={(e) => setDescription(e.target.value)} onBlur={() => saveInfoDimension('description', description)}/>
           </div>
@@ -200,10 +260,10 @@ function DimensionForm(props) {
               key={index}
               indexArray={index}
               criterion={criterion}
-              addIndicator={() => addIndicator(index)}
+              addIndicator={() => addIndicator(criterion._id, index)}
               removeCriterion={() => removeCriterion(index)}
               editCriterion={(index, field, value, idCriterion) => editCriterion(index, field, value, idCriterion)}
-              indicatorsList={indicatorsList[criterion._id]}
+              removeIndicator={(indArrayIndc, idIndicator) => removeIndicator(criterion._id, idIndicator, index, indArrayIndc)}
             />
           ))
         }
