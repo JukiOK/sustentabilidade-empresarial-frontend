@@ -23,7 +23,8 @@ function Criteria(props) {
 
   const [evidence, setEvidence] = useState(false);
   const [typeAnswer, setTypeAnswer] = useState('');
-  const { criterion, addIndicator, removeCriterion, editCriterion, indicatorsList, indexArray, removeIndicator } = props;
+  const { criterion, addIndicator, removeCriterion, editCriterion,
+    indicatorsList, indexArray, removeIndicator, editIndicator, saveInfoCriterion } = props;
 
   function editingCriterion(value, field) {
     editCriterion(indexArray, field, value, criterion._id);
@@ -35,16 +36,16 @@ function Criteria(props) {
         <div className="dimension-form-row">
           <div style={{width: '80%'}}>
             <span>Nome</span>
-            <input className="input-form" value={criterion.name} onChange={e => editingCriterion(e.target.value, "name")}/>
+            <input className="input-form" value={criterion.name} onChange={e => editingCriterion(e.target.value, "name")} onBlur={() => saveInfoCriterion()}/>
           </div>
           <div style={{width: '20%', marginLeft: '10px'}}>
             <span>Peso</span>
-            <input className="input-form" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")}/>
+            <input className="input-form" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")} onBlur={() => saveInfoCriterion()}/>
           </div>
         </div>
         <div style={{marginTop: '10px'}}>
           <span>Descrição</span>
-          <textarea className="text-container" value={criterion.description} onChange={e => editingCriterion(e.target.value, "description")}/>
+          <textarea className="text-container" value={criterion.description} onChange={e => editingCriterion(e.target.value, "description")} onBlur={() => saveInfoCriterion()}/>
         </div>
         <div className="dimension-form-row inside-card">
           <span className="dimension-form-title">Indicadores</span>
@@ -57,64 +58,70 @@ function Criteria(props) {
                 <div className="dimension-form-row inside-card">
                   <div style={{width: '80%'}}>
                     <span>Nome</span>
-                    <input className="input-form"/>
+                    <input className="input-form" value={indicator.name} onChange={e => editIndicator(index, 'name', e.target.value)}/>
                   </div>
                   <div style={{width: '20%', marginLeft: '10px'}}>
                     <span>Peso</span>
-                    <input className="input-form"/>
+                    <input className="input-form" value={indicator.weight} onChange={e => editIndicator(index, 'weight', e.target.value)}/>
                   </div>
                 </div>
                 <div className="dimension-form-row inside-card">
                   <div className="input-outside">
                     <span>Refência</span>
-                    <input className="input-form"/>
+                    <input className="input-form" value={indicator.reference} onChange={e => editIndicator(index, 'reference', e.target.value)}/>
                   </div>
                   <div className="input-middle">
                     <span>Área</span>
-                    <input className="input-form"/>
+                    <input className="input-form" value={indicator.area} onChange={e => editIndicator(index, 'area', e.target.value)}/>
                   </div>
                   <div className="input-outside">
                     <span>Responsável</span>
-                    <input className="input-form"/>
+                    <input className="input-form" value={indicator.responsable} onChange={e => editIndicator(index, 'responsable', e.target.value)}/>
                   </div>
                 </div>
-                <div className="textarea-container">
-                  <span>Descrição</span>
-                  <textarea className="text-container"/>
-                </div>
-                <div className="textarea-container">
-                  <span>Questão</span>
-                  <textarea className="text-container"/>
-                </div>
                 <div className="dimension-form-row">
-                  <div style={{width: '90%'}}>
-                    <span>Instruções</span>
-                    <textarea className="text-container"/>
+                  <div className="textarea-container" style={{width: '90%'}}>
+                    <span>Descrição</span>
+                    <textarea className="text-container" value={indicator.description} onChange={e => editIndicator(index, 'description', e.target.value)}/>
                   </div>
                   <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)}/>
                   <span>Evidência?</span>
                 </div>
-                <div style={{marginTop: '10px'}}>
+                {
+                  indicator.question &&
                   <div>
-                    <span>Tipo de resposta</span>
+                    <div className="textarea-container">
+                      <span>Questão</span>
+                      <textarea className="text-container" value={indicator.question.title} onChange={e => editIndicator(index, 'question.title', e.target.value)}/>
+                    </div>
+                    <div style={{width: '100%'}}>
+                      <span>Instruções</span>
+                      <textarea className="text-container"/>
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                      <div>
+                        <span>Tipo de resposta</span>
+                      </div>
+                      <div style={{display: 'flex'}}>
+                        <div>
+                          <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => setTypeAnswer(e.target.value)}/>
+                          <span>Dissertativa</span>
+                        </div>
+                        <div style={{margin: '0px 10px'}}>
+                          <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => setTypeAnswer(e.target.value)}/>
+                          <span>Binária</span>
+                        </div>
+                        <div>
+                          <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => setTypeAnswer(e.target.value)}/>
+                          <span>Multipla escolha</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div style={{display: 'flex'}}>
-                    <div>
-                      <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                      <span>Dissertativa</span>
-                    </div>
-                    <div style={{margin: '0px 10px'}}>
-                      <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                      <span>Binária</span>
-                    </div>
-                    <div>
-                      <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                      <span>Multipla escolha</span>
-                    </div>
-                  </div>
-                </div>
+                }
+
               </div>
-              <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator(index, indicator._id)}/>
+              <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator(index)}/>
             </div>
           ))
         }
@@ -179,27 +186,24 @@ function DimensionForm(props) {
     let aux = criteriaList.slice();
     let newIndicator = {
       name: '',
-      "description": "",
-      "reference": "",
-      "weight": 0,
-      "evidence": false,
-      "question": {
-        "title": "",
-        "type": 0,
-        "answer": {
-          "answer": "",
-          "points": 0
-        }
+      description: "",
+      reference: "",
+      weight: 0,
+      evidence: false,
+      question: {
+        title: "",
+        type: "",
+        answer: []
       },
     };
     aux[idArray].indicatorsList.push({...newIndicator, ...data});
     setCriteriaList(aux);
   }
 
-  async function removeIndicator(idCriterion, idIndicator, indArrayCrit, indArrayIndc) {
-    console.log(idCriterion, idIndicator, indArrayCrit, indArrayIndc);
-    await deleteIndicatorCriterion(id, idCriterion, idIndicator);
+  async function removeIndicator(indArrayCrit, indArrayIndc) {
     let aux = criteriaList.slice();
+    let indicator = aux[indArrayCrit].indicatorsList[indArrayIndc];
+    await deleteIndicatorCriterion(id, indicator.criteriaId, indicator._id);
     aux[indArrayCrit].indicatorsList.splice(indArrayIndc, 1);
     setCriteriaList(aux);
   }
@@ -211,17 +215,37 @@ function DimensionForm(props) {
     setCriteriaList(aux);
   }
 
-  async function editCriterion(idArray, field, value, idCriterion) {
+  function editCriterion(idArray, field, value, idCriterion) {
     let newobj = {[field]: value};
     let aux = criteriaList.slice();
     aux[idArray] = {...aux[idArray], ...newobj};
     setCriteriaList(aux);
-    await updateCriterionDimension(id, idCriterion, newobj);
+  }
+
+  function editIndicator(indArrayCrit, indArrayIndc, field, value) {
+    console.log(indArrayCrit, indArrayIndc, field, value);
+    let newobj = {[field]: value};
+    let aux = [...criteriaList[indArrayCrit].indicatorsList];
+    aux[indArrayIndc] = {...aux[indArrayIndc], ...newobj};
+    let aux1 = {...criteriaList[indArrayCrit], ...{indicatorsList: aux}};
+    console.log(aux);
+    setCriteriaList(aux);
   }
 
   async function saveInfoDimension(field, value) {
     isEdited.current = 'yes';
     await updateDimension(id, {[field]: value});
+  }
+
+  async function saveInfoCriterion(idArray) {
+    let criterion = criteriaList[idArray];
+    console.log(idArray);
+    await updateCriterionDimension(id, criterion._id, criterion);
+  }
+
+  async function saveInfoIndicator(indArrayCrit, indArrayIndc) {
+    let indicator = criteriaList[indArrayCrit].indicatorsList[indArrayIndc];
+    await updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, indicator);
   }
 
   console.log(criteriaList);
@@ -263,7 +287,10 @@ function DimensionForm(props) {
               addIndicator={() => addIndicator(criterion._id, index)}
               removeCriterion={() => removeCriterion(index)}
               editCriterion={(index, field, value, idCriterion) => editCriterion(index, field, value, idCriterion)}
-              removeIndicator={(indArrayIndc, idIndicator) => removeIndicator(criterion._id, idIndicator, index, indArrayIndc)}
+              saveInfoCriterion={() => saveInfoCriterion(index)}
+              removeIndicator={(indArrayIndc) => removeIndicator(index, indArrayIndc)}
+              editIndicator={(indArrayIndc, field, value) => editIndicator(index, indArrayIndc, field, value)}
+              saveInfoIndicator={(indArray) => saveInfoIndicator(index, indArray)}
             />
           ))
         }
