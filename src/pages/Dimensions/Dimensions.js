@@ -75,6 +75,7 @@ function Card(props) {
                     indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
                       <div className="indicator-cell">
                         <span>{indicator.name}</span>
+                        <span style={{marginLeft: 'auto'}}>{indicator.weight}</span>
                       </div>
                     ))
                   }

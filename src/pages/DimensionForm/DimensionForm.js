@@ -3,7 +3,6 @@ import BasePage from '../BasePage/BasePage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
-
 import {
   getDimension ,
   deleteDimension,
@@ -18,6 +17,9 @@ import {
   deleteIndicatorCriterion,
 } from '../../services/requests';
 import { useParams } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
+import { css } from "@emotion/core";
+import colors from '../../constants/colorsobject';
 
 require('./dimensionForm.scss');
 
@@ -109,7 +111,7 @@ function Indicator(props) {
               </div>
               <div style={{width: '20%', marginLeft: '10px'}}>
                 <span>Peso</span>
-                <input className="input-form" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
+                <input className="input-form" placeholder="Valor entre 0 e 1" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
               </div>
             </div>
             <div className="dimension-form-row inside-card">
@@ -218,7 +220,7 @@ function Criteria(props) {
 
   return (
     <div style={{display: 'flex'}}>
-      <div className="dimension-form-card inside-row">
+      <div className="dimension-form-card inside-row ">
         <div className="dimension-form-row">
           <div style={{width: '80%'}}>
             <span>Nome</span>
@@ -226,7 +228,7 @@ function Criteria(props) {
           </div>
           <div style={{width: '20%', marginLeft: '10px'}}>
             <span>Peso</span>
-            <input className="input-form" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")} onBlur={() => saveInfoCriterion()}/>
+            <input className="input-form" placeholder="Valor entre 0 e 1" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")} onBlur={() => saveInfoCriterion()}/>
           </div>
         </div>
         <div style={{marginTop: '10px'}}>
@@ -261,6 +263,9 @@ function DimensionForm(props) {
   const [code, setCode] = useState('');
   const [description, setDescription] = useState('');
   const [year, setYear] = useState('');
+  const [warning, setWarning] = useState(true);
+  const [saving, setSaving] = useState(false);
+
   let isEdited = useRef();
   const { id } = useParams();
 
@@ -269,6 +274,7 @@ function DimensionForm(props) {
     return (async () => {
       if(isEdited.current === 'no') {
         await deleteDimension(id);
+        setTimeout(() => {}, 200);
       }
     })
   }, []);
@@ -361,7 +367,11 @@ function DimensionForm(props) {
 
   async function saveInfoCriterion(idArray) {
     let criterion = criteriaList[idArray];
-    await updateCriterionDimension(id, criterion._id, criterion);
+    setSaving(true);
+    updateCriterionDimension(id, criterion._id, criterion)
+    .then(() => {
+      setTimeout(() => {setSaving(false)}, 500);
+    });
   }
 
   async function saveInfoIndicator(indArrayCrit, indArrayIndc, body) {
@@ -371,14 +381,38 @@ function DimensionForm(props) {
     let listCriteria = criteriaList.slice();
     listCriteria[indArrayCrit].indicatorsList = list;
     setCriteriaList(listCriteria);
-    await updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, {...indicator, ...body});
+    setSaving(true);
+    updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, {...indicator, ...body})
+    .then(() =>{
+      setSaving(false)
+    });
   }
 
   console.log(criteriaList);
+  const override = css`margin-left: auto;`;
 
   return (
     <BasePage title={'Formulário da dimensão'}>
       <div className="dimension-form-container">
+        {
+          warning &&
+          <div className="warning-container">
+            <span>O formulário é salvo automaticamente quando é criado critérios e indicadores, e ao preencher um campo.</span>
+            <FontAwesomeIcon icon={faTimesCircle} className="icon-trash" style={{marginTop: '0px', marginLeft: 'auto'}} onClick={() => setWarning(false)}/>
+          </div>
+        }
+        {
+          saving &&
+          <div className="warning-container saving-container">
+            <span>Salvando...</span>
+            <ClipLoader
+              size={20}
+              color={colors.black}
+              loading={saving}
+              css={override}
+            />
+          </div>
+        }
         <span className="dimension-form-title">Informações gerais</span>
         <div className="dimension-form-card">
           <div className="dimension-form-row">

@@ -1,6 +1,6 @@
 export default {
   white: '#FFFFFF',
-  lightgray: '#FAFAFB',
+  ligthgrayblue: '#c9e7ec',
   gray: '#969FAA',
   darkgray: '#5A6978',
   black: '#47525E',
@@ -8,5 +8,8 @@ export default {
   darkgreen: '#077f4f',
   blue: '#03AFCF',
   red: '#F23D52',
-  darkestgreen: '#054028',
+  darkergreen: '#054028',
+  brightgreen: '#6EEB83',
+  yellow: '#FFC82C',
+  orange: '#FF6700',
 }

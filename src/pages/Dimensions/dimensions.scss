@@ -30,6 +30,7 @@
     border-radius: 10px;
     margin: 20px 0px;
     padding: 10px;
+    background-color: $white;
 
     .btn-row {
       display: flex;
@@ -98,6 +99,7 @@
       .table-cell {
 
         .indicator-cell {
+          display: flex;
           padding: 10px;
           border-top: 1px solid $black;
         }
@@ -108,7 +110,7 @@
       }
 
       .table-row:nth-child(2n), thead {
-        background-color: $ligthgrayblue;
+        background-color: $lightgray;
       }
     }
 

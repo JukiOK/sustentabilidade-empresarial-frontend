@@ -1,7 +1,7 @@
 @import '../../constants/colors';
 
 .menu-container {
-  background-color: $green;
+  background: linear-gradient(180deg, $black 28%, $darkergreen 100%);
   width: 230px;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,6 @@
     .menu-item {
       margin: 30px 0px;
       font-size: 20px;
-      color: $gray;
       display: flex;
       align-items: center;
       color: $white;

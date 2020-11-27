@@ -60,7 +60,7 @@ function Menu(props) {
                   key={index}
                   className="menu-item"
                   onClick={() => props.history.push(tab.path)}
-                  style={{color: url.includes(tab.path) && colorsobject.darkestgreen}}
+                  style={{color: url.includes(tab.path) && colorsobject.brightgreen}}
                   >
                     {tab.icon}
                     {tab.name}

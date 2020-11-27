@@ -1,13 +1,15 @@
 @import '../../constants/colors';
 
 .header-container {
-  background-color: $darkgreen;
+  background-color: $white;
   padding: 20px;
   display: flex;
   align-items: center;
+  box-shadow: 8px 3px 13px $gray;
+  position: relative;
 
   .header-title {
-    color: $white;
+    color: $green;
     font-size: 30px;
     font-weight: bold;
   }
@@ -16,11 +18,11 @@
     margin-left: auto;
     cursor: pointer;
     font-size: 40px;
-    color: $white;
+    color: $red;
   }
 
   .icon-header:hover {
-    color: $red;
+    color: $darkred;
   }
 
 }

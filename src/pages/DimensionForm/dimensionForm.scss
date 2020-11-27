@@ -3,6 +3,22 @@
 .dimension-form-container {
   padding: 20px;
 
+  .warning-container {
+    background-color: $lightyellow;
+    padding: 10px;
+    border: 1px solid $yellow;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .saving-container {
+    position: absolute;
+    width: 200px;
+    top: 0;
+    left: 50%;
+  }
+
   .dimension-form-title {
     font-weight: bold;
   }
@@ -16,6 +32,7 @@
     border: 1px solid $black;
     border-radius: 10px;
     margin: 10px 0px;
+    background-color: $white;
 
     .textarea-container {
       margin-top: 10px;
@@ -85,7 +102,7 @@
 
   hr {
     margin: 20px 0px;
-    border-color: $green;
+    border-color: $gray;
   }
 
   .icon-arrow {

@@ -6,6 +6,7 @@
 
   .base-page-container-content {
     width: calc(100% - 230px);
+    background-color: $lightergray;
 
     .base-page-content {
       overflow: auto;
