@@ -63,10 +63,10 @@ function Card(props) {
             criteriaList && criteriaList.map((criterion, index) => (
               <tr className="table-row" key={index}>
                 <td className="table-cell">
-                  <div>
+                  <div style={{margin: '10px'}}>
                     <span>{criterion.name}</span>
                   </div>
-                  <div>
+                  <div style={{margin: '10px'}}>
                     <span>Peso na dimensão: {criterion.weight}</span>
                   </div>
                 </td>
@@ -121,8 +121,6 @@ function Dimensions(props) {
     <BasePage title={'Lista de dimensões'}>
       <div className="dimensions-container">
         <div className="dimensions-filter-container">
-          <input />
-          <div className="btn-confirm filter-btn"><FontAwesomeIcon icon={faSearch} /></div>
           <div className="btn-confirm new-btn" onClick={newDimension}>Nova dimensão</div>
         </div>
         {

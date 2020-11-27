@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BasePage from '../BasePage/BasePage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 import {
@@ -35,6 +35,7 @@ function Indicator(props) {
   const [instruction, setInstruction] = useState('');
   const [typeAnswer, setTypeAnswer] = useState('');
   const [answerList, setAnswerList] = useState([]);
+  const [expand, setExpand] = useState(false);
 
   useEffect(() => {
     if(indicator.question) {
@@ -79,95 +80,127 @@ function Indicator(props) {
     setAnswerList(aux);
   }
 
+  function addAnswer() {
+    let aux = answerList.slice();
+    aux.push({answer:'', points: ''});
+    setAnswerList(aux);
+
+  }
+
+  function removeAnswer(index) {
+    let aux = answerList.slice();
+    aux.splice(index, 1);
+    setAnswerList(aux);
+  }
+
   return (
     <div style={{display: 'flex'}}>
       <div className="dimension-form-card inside-row">
-        <div className="dimension-form-row inside-card">
-          <div style={{width: '80%'}}>
-            <span>Nome</span>
-            <input className="input-form" value={name} onChange={e => setName(e.target.value)} onBlur={handleSave}/>
-          </div>
-          <div style={{width: '20%', marginLeft: '10px'}}>
-            <span>Peso</span>
-            <input className="input-form" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
-          </div>
-        </div>
-        <div className="dimension-form-row inside-card">
-          <div className="input-outside">
-            <span>Refência</span>
-            <input className="input-form" value={reference} onChange={e => setReference(e.target.value)} onBlur={handleSave}/>
-          </div>
-          <div className="input-middle">
-            <span>Área</span>
-            <input className="input-form" value={area} onChange={e => setArea(e.target.value)} onBlur={handleSave}/>
-          </div>
-          <div className="input-outside">
-            <span>Responsável</span>
-            <input className="input-form" value={responsable} onChange={e => setResponsable(e.target.value)} onBlur={handleSave}/>
-          </div>
-        </div>
-        <div className="dimension-form-row">
-          <div className="textarea-container" style={{width: '90%'}}>
-            <span>Descrição</span>
-            <textarea className="text-container" value={description} onChange={e => setDescription(e.target.value)} onBlur={handleSave}/>
-          </div>
-          <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)} onBlur={handleSave}/>
-          <span>Evidência?</span>
-        </div>
-        <div className="textarea-container">
-          <span>Questão</span>
-          <textarea className="text-container" value={questionTitle} onChange={e => setQuestionTitle(e.target.value)} onBlur={handleSave}/>
-        </div>
-        <div style={{width: '100%'}}>
-          <span>Instruções</span>
-          <textarea className="text-container" value={instruction} onChange={e => setInstruction(e.target.value)} onBlur={handleSave}/>
-        </div>
-        <div style={{marginTop: '10px'}}>
+        {
+          expand ?
           <div>
-            <span>Tipo de resposta</span>
-          </div>
-          <div style={{display: 'flex'}}>
-            <div>
-              <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
-              <span>Dissertativa</span>
+            <div style={{display: 'flex'}}>
+              <FontAwesomeIcon icon={faAngleDown} className="icon-arrow" onClick={() => setExpand(false)}/>
             </div>
-            <div style={{margin: '0px 10px'}}>
-              <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
-              <span>Binária</span>
+            <div className="dimension-form-row inside-card">
+              <div style={{width: '80%'}}>
+                <span>Nome</span>
+                <input className="input-form" value={name} onChange={e => setName(e.target.value)} onBlur={handleSave}/>
+              </div>
+              <div style={{width: '20%', marginLeft: '10px'}}>
+                <span>Peso</span>
+                <input className="input-form" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
+              </div>
             </div>
-            <div>
-              <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
-              <span>Multipla escolha</span>
+            <div className="dimension-form-row inside-card">
+              <div className="input-outside">
+                <span>Refência</span>
+                <input className="input-form" value={reference} onChange={e => setReference(e.target.value)} onBlur={handleSave}/>
+              </div>
+              <div className="input-middle">
+                <span>Área</span>
+                <input className="input-form" value={area} onChange={e => setArea(e.target.value)} onBlur={handleSave}/>
+              </div>
+              <div className="input-outside">
+                <span>Responsável</span>
+                <input className="input-form" value={responsable} onChange={e => setResponsable(e.target.value)} onBlur={handleSave}/>
+              </div>
             </div>
-          </div>
-          {
-            answerList.length > 0 &&
-            <div style={{margin: '10px 0px', display: 'flex'}}>
-              <span>Alternativas</span>
+            <div className="dimension-form-row">
+              <div className="textarea-container" style={{width: '90%'}}>
+                <span>Descrição</span>
+                <textarea className="text-container" value={description} onChange={e => setDescription(e.target.value)} onBlur={handleSave}/>
+              </div>
+              <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)} onBlur={handleSave}/>
+              <span>Evidência?</span>
+            </div>
+            <div className="textarea-container">
+              <span>Questão</span>
+              <textarea className="text-container" value={questionTitle} onChange={e => setQuestionTitle(e.target.value)} onBlur={handleSave}/>
+            </div>
+            <div style={{width: '100%'}}>
+              <span>Instruções</span>
+              <textarea className="text-container" value={instruction} onChange={e => setInstruction(e.target.value)} onBlur={handleSave}/>
+            </div>
+            <div style={{marginTop: '10px'}}>
+              <div>
+                <span>Tipo de resposta</span>
+              </div>
+              <div style={{display: 'flex'}}>
+                <div>
+                  <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+                  <span>Dissertativa</span>
+                </div>
+                <div style={{margin: '0px 10px'}}>
+                  <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+                  <span>Binária</span>
+                </div>
+                <div>
+                  <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+                  <span>Multipla escolha</span>
+                </div>
+              </div>
               {
-                typeAnswer==='multiple' &&
-                <div className="btn-confirm new-btn" >Nova alternativa</div>
+                answerList.length > 0 &&
+                <div style={{margin: '10px 0px', display: 'flex'}}>
+                  <span>Alternativas</span>
+                  {
+                    typeAnswer==='multiple' &&
+                    <div className="btn-confirm new-btn" onClick={addAnswer}>Nova alternativa</div>
+                  }
+                </div>
+              }
+              {
+                answerList.map((answer, index) => {
+                  return (
+                    <div style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}} key={index}>
+                      <input value={answer.answer} placeholder="Insira texto da resposta" style={{width: '75%', marginRight: '10px'}}
+                        onChange={e => editAnswer(index, 'answer', e.target.value)}
+                        onBlur={handleSave}
+                      />
+                      <input value={answer.points} placeholder="Insira pontuação da resposta" style={{width: '20%'}}
+                        onChange={e => editAnswer(index, 'points', e.target.value)}
+                        onBlur={handleSave}
+                      />
+                      <div style={{width: '5%'}}>
+                        {
+                          index > 1 &&
+                          <FontAwesomeIcon icon={faTimesCircle} className="icon-trash" style={{marginTop: '0px'}} onClick={() => removeAnswer(index)}/>
+                        }
+                      </div>
+                    </div>
+                  )
+                })
               }
             </div>
-          }
-          {
-            answerList.map((answer, index) => {
-              return (
-                <div style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}} key={index}>
-                  <input value={answer.answer} placeholder="Insira texto da resposta" style={{width: '75%', marginRight: '10px'}}
-                    onChange={e => editAnswer(index, 'answer', e.target.value)}
-                  />
-                  <input value={answer.points} placeholder="Insira pontuação da resposta" style={{width: '20%'}}
-                    onChange={e => editAnswer(index, 'points', e.target.value)}
-                  />
-                  <div style={{width: '5%'}}>
-                    <FontAwesomeIcon icon={faTimesCircle} className="icon-trash" style={{marginTop: '0px'}}/>
-                  </div>
-                </div>
-              )
-            })
-          }
-        </div>
+          </div>
+          :
+          <div style={{display: 'flex'}}>
+            <span>{name}</span>
+            <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(true)}/>
+          </div>
+        }
+
       </div>
       <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator()}/>
     </div>
@@ -373,20 +406,23 @@ function DimensionForm(props) {
         </div>
         {
           criteriaList.map((criterion, index) => (
-            <Criteria
-              key={index}
-              indexArray={index}
-              criterion={criterion}
-              addIndicator={() => addIndicator(criterion._id, index)}
-              removeCriterion={() => removeCriterion(index)}
-              editCriterion={(index, field, value, idCriterion) => editCriterion(index, field, value, idCriterion)}
-              saveInfoCriterion={() => saveInfoCriterion(index)}
-              removeIndicator={(indArrayIndc) => removeIndicator(index, indArrayIndc)}
-              saveInfoIndicator={(indArray, body) => saveInfoIndicator(index, indArray, body)}
-            />
+            <div>
+              <Criteria
+                key={index}
+                indexArray={index}
+                criterion={criterion}
+                addIndicator={() => addIndicator(criterion._id, index)}
+                removeCriterion={() => removeCriterion(index)}
+                editCriterion={(index, field, value, idCriterion) => editCriterion(index, field, value, idCriterion)}
+                saveInfoCriterion={() => saveInfoCriterion(index)}
+                removeIndicator={(indArrayIndc) => removeIndicator(index, indArrayIndc)}
+                saveInfoIndicator={(indArray, body) => saveInfoIndicator(index, indArray, body)}
+              />
+              <hr/>
+            </div>
           ))
         }
-        <div className="btn-confirm save-btn" onClick={addCriterion}>Salvar</div>
+        <div className="btn-confirm save-btn" >Salvar</div>
       </div>
     </BasePage>
   )
