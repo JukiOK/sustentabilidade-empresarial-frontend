@@ -42,6 +42,7 @@ function Menu(props) {
     {
       name: 'Dimensões',
       path: '/dimensions',
+      icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdm: true,
     }
   ];

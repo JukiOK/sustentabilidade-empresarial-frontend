@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import BasePage from '../BasePage/BasePage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+
 import {
   getDimension ,
   deleteDimension,
@@ -19,12 +21,163 @@ import { useParams } from "react-router-dom";
 
 require('./dimensionForm.scss');
 
+function Indicator(props) {
+
+  const { indicator, removeIndicator, saveInfoIndicator } = props;
+  const [evidence, setEvidence] = useState(indicator.evidence);
+  const [name, setName] = useState(indicator.name);
+  const [weight, setWeight] = useState(indicator.weight);
+  const [reference, setReference] = useState(indicator.reference);
+  const [area, setArea] = useState(indicator.area);
+  const [responsable, setResponsable] = useState(indicator.responsable);
+  const [description, setDescription] = useState(indicator.description);
+  const [questionTitle, setQuestionTitle] =  useState('');
+  const [instruction, setInstruction] = useState('');
+  const [typeAnswer, setTypeAnswer] = useState('');
+  const [answerList, setAnswerList] = useState([]);
+
+  useEffect(() => {
+    if(indicator.question) {
+      setQuestionTitle(indicator.question.title);
+      setInstruction(indicator.question.instruction);
+      setTypeAnswer(indicator.question.type);
+
+      if(indicator.question.answer) {
+        setAnswerList(indicator.question.answer);
+      }
+    }
+  }, [indicator]);
+
+  function handleSave() {
+    let body = {name, weight, evidence, reference, area, responsable, description,
+      question: {
+        title: questionTitle,
+        instruction,
+        type: typeAnswer,
+        answer: answerList,
+      }
+    }
+    saveInfoIndicator(body);
+  }
+
+  function handleChangeAnwserType(value) {
+    setTypeAnswer(value);
+    switch (value) {
+      case 'dissertative':
+        setAnswerList([]);
+        break;
+      case 'binary': case 'multiple':
+        setAnswerList([{answer:'', points: ''}, {answer:'', points: ''}])
+      default:
+        break;
+    }
+  }
+
+  function editAnswer(ind, field, value) {
+    let aux = answerList.slice();
+    aux[ind][field] = value;
+    setAnswerList(aux);
+  }
+
+  return (
+    <div style={{display: 'flex'}}>
+      <div className="dimension-form-card inside-row">
+        <div className="dimension-form-row inside-card">
+          <div style={{width: '80%'}}>
+            <span>Nome</span>
+            <input className="input-form" value={name} onChange={e => setName(e.target.value)} onBlur={handleSave}/>
+          </div>
+          <div style={{width: '20%', marginLeft: '10px'}}>
+            <span>Peso</span>
+            <input className="input-form" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
+          </div>
+        </div>
+        <div className="dimension-form-row inside-card">
+          <div className="input-outside">
+            <span>Refência</span>
+            <input className="input-form" value={reference} onChange={e => setReference(e.target.value)} onBlur={handleSave}/>
+          </div>
+          <div className="input-middle">
+            <span>Área</span>
+            <input className="input-form" value={area} onChange={e => setArea(e.target.value)} onBlur={handleSave}/>
+          </div>
+          <div className="input-outside">
+            <span>Responsável</span>
+            <input className="input-form" value={responsable} onChange={e => setResponsable(e.target.value)} onBlur={handleSave}/>
+          </div>
+        </div>
+        <div className="dimension-form-row">
+          <div className="textarea-container" style={{width: '90%'}}>
+            <span>Descrição</span>
+            <textarea className="text-container" value={description} onChange={e => setDescription(e.target.value)} onBlur={handleSave}/>
+          </div>
+          <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)} onBlur={handleSave}/>
+          <span>Evidência?</span>
+        </div>
+        <div className="textarea-container">
+          <span>Questão</span>
+          <textarea className="text-container" value={questionTitle} onChange={e => setQuestionTitle(e.target.value)} onBlur={handleSave}/>
+        </div>
+        <div style={{width: '100%'}}>
+          <span>Instruções</span>
+          <textarea className="text-container" value={instruction} onChange={e => setInstruction(e.target.value)} onBlur={handleSave}/>
+        </div>
+        <div style={{marginTop: '10px'}}>
+          <div>
+            <span>Tipo de resposta</span>
+          </div>
+          <div style={{display: 'flex'}}>
+            <div>
+              <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+              <span>Dissertativa</span>
+            </div>
+            <div style={{margin: '0px 10px'}}>
+              <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+              <span>Binária</span>
+            </div>
+            <div>
+              <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => handleChangeAnwserType(e.target.value)} onBlur={handleSave}/>
+              <span>Multipla escolha</span>
+            </div>
+          </div>
+          {
+            answerList.length > 0 &&
+            <div style={{margin: '10px 0px', display: 'flex'}}>
+              <span>Alternativas</span>
+              {
+                typeAnswer==='multiple' &&
+                <div className="btn-confirm new-btn" >Nova alternativa</div>
+              }
+            </div>
+          }
+          {
+            answerList.map((answer, index) => {
+              return (
+                <div style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}} key={index}>
+                  <input value={answer.answer} placeholder="Insira texto da resposta" style={{width: '75%', marginRight: '10px'}}
+                    onChange={e => editAnswer(index, 'answer', e.target.value)}
+                  />
+                  <input value={answer.points} placeholder="Insira pontuação da resposta" style={{width: '20%'}}
+                    onChange={e => editAnswer(index, 'points', e.target.value)}
+                  />
+                  <div style={{width: '5%'}}>
+                    <FontAwesomeIcon icon={faTimesCircle} className="icon-trash" style={{marginTop: '0px'}}/>
+                  </div>
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+      <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator()}/>
+    </div>
+  )
+}
+
 function Criteria(props) {
 
-  const [evidence, setEvidence] = useState(false);
-  const [typeAnswer, setTypeAnswer] = useState('');
   const { criterion, addIndicator, removeCriterion, editCriterion,
-    indicatorsList, indexArray, removeIndicator, editIndicator, saveInfoCriterion } = props;
+    indicatorsList, indexArray, removeIndicator, saveInfoCriterion, saveInfoIndicator } = props;
 
   function editingCriterion(value, field) {
     editCriterion(indexArray, field, value, criterion._id);
@@ -53,76 +206,12 @@ function Criteria(props) {
         </div>
         {
           criterion.indicatorsList && criterion.indicatorsList.map((indicator, index) => (
-            <div style={{display: 'flex'}} key={index}>
-              <div className="dimension-form-card inside-row">
-                <div className="dimension-form-row inside-card">
-                  <div style={{width: '80%'}}>
-                    <span>Nome</span>
-                    <input className="input-form" value={indicator.name} onChange={e => editIndicator(index, 'name', e.target.value)}/>
-                  </div>
-                  <div style={{width: '20%', marginLeft: '10px'}}>
-                    <span>Peso</span>
-                    <input className="input-form" value={indicator.weight} onChange={e => editIndicator(index, 'weight', e.target.value)}/>
-                  </div>
-                </div>
-                <div className="dimension-form-row inside-card">
-                  <div className="input-outside">
-                    <span>Refência</span>
-                    <input className="input-form" value={indicator.reference} onChange={e => editIndicator(index, 'reference', e.target.value)}/>
-                  </div>
-                  <div className="input-middle">
-                    <span>Área</span>
-                    <input className="input-form" value={indicator.area} onChange={e => editIndicator(index, 'area', e.target.value)}/>
-                  </div>
-                  <div className="input-outside">
-                    <span>Responsável</span>
-                    <input className="input-form" value={indicator.responsable} onChange={e => editIndicator(index, 'responsable', e.target.value)}/>
-                  </div>
-                </div>
-                <div className="dimension-form-row">
-                  <div className="textarea-container" style={{width: '90%'}}>
-                    <span>Descrição</span>
-                    <textarea className="text-container" value={indicator.description} onChange={e => editIndicator(index, 'description', e.target.value)}/>
-                  </div>
-                  <input type="checkbox" name="evidence" checked={evidence} onChange={(e) => setEvidence(!evidence)}/>
-                  <span>Evidência?</span>
-                </div>
-                {
-                  indicator.question &&
-                  <div>
-                    <div className="textarea-container">
-                      <span>Questão</span>
-                      <textarea className="text-container" value={indicator.question.title} onChange={e => editIndicator(index, 'question.title', e.target.value)}/>
-                    </div>
-                    <div style={{width: '100%'}}>
-                      <span>Instruções</span>
-                      <textarea className="text-container"/>
-                    </div>
-                    <div style={{marginTop: '10px'}}>
-                      <div>
-                        <span>Tipo de resposta</span>
-                      </div>
-                      <div style={{display: 'flex'}}>
-                        <div>
-                          <input type="radio" value={'dissertative'} checked={typeAnswer==='dissertative'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                          <span>Dissertativa</span>
-                        </div>
-                        <div style={{margin: '0px 10px'}}>
-                          <input type="radio" value={'binary'} checked={typeAnswer==='binary'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                          <span>Binária</span>
-                        </div>
-                        <div>
-                          <input type="radio" value={'multiple'} checked={typeAnswer==='multiple'} onChange={(e) => setTypeAnswer(e.target.value)}/>
-                          <span>Multipla escolha</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                }
-
-              </div>
-              <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => removeIndicator(index)}/>
-            </div>
+            <Indicator
+              indicator={indicator}
+              key={index}
+              removeIndicator={() => removeIndicator(index)}
+              saveInfoIndicator={(body) => saveInfoIndicator(index, body)}
+            />
           ))
         }
 
@@ -222,15 +311,15 @@ function DimensionForm(props) {
     setCriteriaList(aux);
   }
 
-  function editIndicator(indArrayCrit, indArrayIndc, field, value) {
-    console.log(indArrayCrit, indArrayIndc, field, value);
-    let newobj = {[field]: value};
-    let aux = [...criteriaList[indArrayCrit].indicatorsList];
-    aux[indArrayIndc] = {...aux[indArrayIndc], ...newobj};
-    let aux1 = {...criteriaList[indArrayCrit], ...{indicatorsList: aux}};
-    console.log(aux);
-    setCriteriaList(aux);
-  }
+  // function editIndicator(indArrayCrit, indArrayIndc, field, value) {
+  //   console.log(indArrayCrit, indArrayIndc, field, value);
+  //   let newobj = {[field]: value};
+  //   let aux = [...criteriaList[indArrayCrit].indicatorsList];
+  //   aux[indArrayIndc] = {...aux[indArrayIndc], ...newobj};
+  //   let aux1 = {...criteriaList[indArrayCrit], ...{indicatorsList: aux}};
+  //   console.log(aux);
+  //   setCriteriaList(aux);
+  // }
 
   async function saveInfoDimension(field, value) {
     isEdited.current = 'yes';
@@ -239,13 +328,17 @@ function DimensionForm(props) {
 
   async function saveInfoCriterion(idArray) {
     let criterion = criteriaList[idArray];
-    console.log(idArray);
     await updateCriterionDimension(id, criterion._id, criterion);
   }
 
-  async function saveInfoIndicator(indArrayCrit, indArrayIndc) {
+  async function saveInfoIndicator(indArrayCrit, indArrayIndc, body) {
     let indicator = criteriaList[indArrayCrit].indicatorsList[indArrayIndc];
-    await updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, indicator);
+    let list = criteriaList[indArrayCrit].indicatorsList.slice();
+    list[indArrayIndc] = {...indicator, ...body};
+    let listCriteria = criteriaList.slice();
+    listCriteria[indArrayCrit].indicatorsList = list;
+    setCriteriaList(listCriteria);
+    await updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, {...indicator, ...body});
   }
 
   console.log(criteriaList);
@@ -289,8 +382,7 @@ function DimensionForm(props) {
               editCriterion={(index, field, value, idCriterion) => editCriterion(index, field, value, idCriterion)}
               saveInfoCriterion={() => saveInfoCriterion(index)}
               removeIndicator={(indArrayIndc) => removeIndicator(index, indArrayIndc)}
-              editIndicator={(indArrayIndc, field, value) => editIndicator(index, indArrayIndc, field, value)}
-              saveInfoIndicator={(indArray) => saveInfoIndicator(index, indArray)}
+              saveInfoIndicator={(indArray, body) => saveInfoIndicator(index, indArray, body)}
             />
           ))
         }
