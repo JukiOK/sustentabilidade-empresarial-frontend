@@ -1,7 +1,8 @@
 @import '../../constants/colors';
 
 .header-container {
-  background-color: $white;
+  background: linear-gradient(270deg, $black 28%, $green 100%);
+  // background-image: url('../../assets/images/leaves.png'), linear-gradient(270deg, $black 28%, $green 100%);
   padding: 20px;
   display: flex;
   align-items: center;
@@ -9,7 +10,7 @@
   position: relative;
 
   .header-title {
-    color: $green;
+    color: $white;
     font-size: 30px;
     font-weight: bold;
   }

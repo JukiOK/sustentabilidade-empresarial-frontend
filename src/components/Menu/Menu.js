@@ -62,8 +62,8 @@ function Menu(props) {
                   onClick={() => props.history.push(tab.path)}
                   style={{color: url.includes(tab.path) && colorsobject.brightgreen}}
                   >
-                    {tab.icon}
                     {tab.name}
+                    {tab.icon}
                   </div>
                 )
             }

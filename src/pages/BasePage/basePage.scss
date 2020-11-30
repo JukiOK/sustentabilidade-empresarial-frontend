@@ -4,13 +4,19 @@
   display: flex;
   height: 100vh;
 
+  .background {
+    position: absolute;
+  }
+
   .base-page-container-content {
     width: calc(100% - 230px);
     background-color: $lightergray;
+    background-image: url('../../assets/images/leaves.png');
 
     .base-page-content {
       overflow: auto;
       height: calc( 100% - 80px);
+      z-index: 1;
     }
   }
 

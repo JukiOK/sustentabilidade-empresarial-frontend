@@ -115,18 +115,18 @@ function Indicator(props) {
               </div>
             </div>
             <div className="dimension-form-row inside-card">
-              <div className="input-outside">
+              <div className="input-outside" style={{width: '100%'}}>
                 <span>Refência</span>
                 <input className="input-form" value={reference} onChange={e => setReference(e.target.value)} onBlur={handleSave}/>
               </div>
-              <div className="input-middle">
+              {/* <div className="input-middle">
                 <span>Área</span>
                 <input className="input-form" value={area} onChange={e => setArea(e.target.value)} onBlur={handleSave}/>
               </div>
               <div className="input-outside">
                 <span>Responsável</span>
                 <input className="input-form" value={responsable} onChange={e => setResponsable(e.target.value)} onBlur={handleSave}/>
-              </div>
+              </div> */}
             </div>
             <div className="dimension-form-row">
               <div className="textarea-container" style={{width: '90%'}}>

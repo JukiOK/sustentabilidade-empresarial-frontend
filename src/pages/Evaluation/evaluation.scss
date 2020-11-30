@@ -1,0 +1,28 @@
+@import '../../constants/colors.scss';
+
+.evaluation-container {
+  padding: 20px;
+
+  .evaluation-title {
+    font-weight: bold;
+  }
+
+  .evaluation-container-general {
+    display: flex;
+    margin: 20px 0px;
+
+    .img {
+      height: 300px;
+    }
+
+    .evaluation-container-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin: 0px 30px;
+      align-items: center;
+    }
+
+  }
+
+}

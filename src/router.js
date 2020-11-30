@@ -8,6 +8,7 @@ import {firebaseImpl} from './utils/firebaseUtils';
 import firebase from 'firebase';
 import Dimensions from './pages/Dimensions/Dimensions';
 import DimensionForm from './pages/DimensionForm/DimensionForm';
+import Evaluation from './pages/Evaluation/Evaluation';
 
 export default function Router(props) {
 
@@ -18,6 +19,7 @@ export default function Router(props) {
       var currentToken = null;
       if (user != null){
         currentToken = await user.getIdToken();
+        console.log(currentToken);
         setToken(currentToken);
       }else if (window.location.pathname !== '/' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
@@ -35,6 +37,7 @@ export default function Router(props) {
         {
           token &&
           <>
+            <Route path="/evaluation" component={Evaluation} />
             <Route path="/organizationprofile" component={OrganizationProfile} />
             <Route exact path="/dimensions" component={Dimensions} />
             <Route path="/dimensions/form/:id" component={DimensionForm} />

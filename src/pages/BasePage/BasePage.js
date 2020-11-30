@@ -7,6 +7,7 @@ require('./basePage.scss');
 
 function BasePage(props) {
 
+  const img = require('../../assets/images/leaves.png');
   return (
     <div className="base-page-container">
       <Helmet defaultTitle={'HIDS-Sustentabilidade Corporativa'} />
