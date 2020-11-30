@@ -25,4 +25,30 @@
 
   }
 
+  .dimension-card {
+    padding: 15px;
+    box-shadow: 0px 0px 10px $gray;
+    border-radius: 10px;
+    margin: 10px 0px;
+    background-color: $white;
+    display: flex;
+
+    .dimension-name {
+      font-weight: bold;
+    }
+
+    .dimension-progress {
+      margin-left: auto;
+    }
+  }
+
+  .btn-confirm {
+    color: $white
+  }
+
+  p {
+    font-size: 20px;
+    color: $black;
+    margin: 0px;
+  }
 }

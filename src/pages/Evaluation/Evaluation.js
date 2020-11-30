@@ -31,8 +31,21 @@ function Evaluation(props) {
         </div>
         <span className="evaluation-title">Dimensões</span>
         <div className="dimension-card">
-          <span>dimensão</span>
-
+          <div>
+            <p className="dimension-name">dimensão</p>
+            <p>critérios</p>
+          </div>
+          <div className="dimension-progress">
+            <div>
+              <span>Pontuação</span>
+              <span>0.0</span>
+            </div>
+            <div>
+              <span>Progresso</span>
+              <span>0/10</span>              
+            </div>
+            <div className="btn-confirm">Começar</div>
+          </div>
         </div>
       </div>
     </BasePage>

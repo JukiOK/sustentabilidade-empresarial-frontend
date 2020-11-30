@@ -13,11 +13,13 @@ const config = {
 
 export function firebaseImpl() {
   firebase.initializeApp(config);
+}
+
+export function firebaseCheckToken() {
   return new Promise((resolve, reject) => {
      const unsubscribe = firebase.auth().onAuthStateChanged(user => {
         unsubscribe();
         resolve(user);
      }, reject);
   });
-
 }

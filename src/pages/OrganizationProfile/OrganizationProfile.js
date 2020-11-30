@@ -48,6 +48,7 @@ function OrganizationProfile(props) {
       setSite(data.site);
       setCategory(data.category);
       setSector(data.sector);
+      setNumberEmp(data.size);
       if(data.address) {
         setAddress(data.address.address);
         setNumber(data.address.number);
@@ -67,6 +68,7 @@ function OrganizationProfile(props) {
     })
     setState(response.data.uf);
     setCity(response.data.localidade);
+    setAddress(response.data.logradouro);
   }
 
   async function saveOrg() {
@@ -91,14 +93,14 @@ function OrganizationProfile(props) {
           <input placeholder="Site" style={{marginLeft: '10px'}} value={site} onChange={e => setSite(e.target.value)}/>
         </div>
         <div className="profile-row">
-          <input placeholder="Endereço principal"  onChange={e => setAddress(e.target.value)} value={address}/>
-          <input placeholder="Número" onChange={e => setNumber(e.target.value)} style={{marginLeft: '10px'}} value={number}/>
-        </div>
-        <div className="profile-row">
           <InputMask mask="99999-999" maskChar="_"  placeholder="CEP" onChange={e => setCep(e.target.value)} value={cep}/>
           <button onClick={cepAutocomplete} className="btn-search"><FontAwesomeIcon icon={faSearch} /></button>
           <input placeholder="Estado" onChange={e => setState(e.target.value)} style={{margin: '0px 10px'}} value={state}/>
           <input placeholder="Cidade" onChange={e => setCity(e.target.value)} value={city}/>
+        </div>
+        <div className="profile-row">
+          <input placeholder="Endereço principal"  onChange={e => setAddress(e.target.value)} value={address}/>
+          <input placeholder="Número" onChange={e => setNumber(e.target.value)} style={{marginLeft: '10px'}} value={number}/>
         </div>
         <div className="profile-title">
           <span>Atividade</span>

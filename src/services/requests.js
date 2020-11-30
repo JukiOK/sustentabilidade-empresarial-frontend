@@ -1,5 +1,6 @@
 import axios from 'axios';
 import firebase from 'firebase';
+import {firebaseCheckToken} from '../utils/firebaseUtils';
 
 const url = 'http://localhost:3000';
 
@@ -12,6 +13,7 @@ export const axiosApi = axios.create({
 })
 
 axiosApi.interceptors.request.use(async (options) => {
+  await firebaseCheckToken();
   options.headers["Authorization"] = await firebase.auth().currentUser.getIdToken();
   return options;
 });

@@ -20,7 +20,9 @@ function Menu(props) {
 
   async function getInfo() {
     let data = await getMe();
-    setIsAdmin(data.isAdmin);
+    if(data) {
+      setIsAdmin(data.isAdmin);
+    }
   }
 
   const tabs = [
@@ -60,7 +62,7 @@ function Menu(props) {
                   key={index}
                   className="menu-item"
                   onClick={() => props.history.push(tab.path)}
-                  style={{color: url.includes(tab.path) && colorsobject.brightgreen}}
+                  style={{color: url.includes(tab.path) && colorsobject.black}}
                   >
                     {tab.name}
                     {tab.icon}

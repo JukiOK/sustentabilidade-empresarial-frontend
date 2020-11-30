@@ -166,10 +166,7 @@ function Indicator(props) {
                 answerList.length > 0 &&
                 <div style={{margin: '10px 0px', display: 'flex'}}>
                   <span>Alternativas</span>
-                  {
-                    typeAnswer==='multiple' &&
-                    <div className="btn-confirm new-btn" onClick={addAnswer}>Nova alternativa</div>
-                  }
+                  <div className="btn-confirm new-btn" onClick={addAnswer}>Nova alternativa</div>
                 </div>
               }
               {
@@ -237,7 +234,7 @@ function Criteria(props) {
         </div>
         <div className="dimension-form-row inside-card">
           <span className="dimension-form-title">Indicadores</span>
-          <div className="btn-confirm new-btn" onClick={addIndicator}>Novo indicador</div>
+
         </div>
         {
           criterion.indicatorsList && criterion.indicatorsList.map((indicator, index) => (
@@ -249,7 +246,7 @@ function Criteria(props) {
             />
           ))
         }
-
+        <div className="btn-confirm new-btn" onClick={addIndicator}>Novo indicador</div>
       </div>
       <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={removeCriterion}/>
     </div>

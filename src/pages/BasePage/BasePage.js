@@ -6,7 +6,6 @@ import {Helmet} from 'react-helmet';
 require('./basePage.scss');
 
 function BasePage(props) {
-
   const img = require('../../assets/images/leaves.png');
   return (
     <div className="base-page-container">

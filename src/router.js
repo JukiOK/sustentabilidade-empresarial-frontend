@@ -4,7 +4,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import OrganizationProfile from './pages/OrganizationProfile/OrganizationProfile';
 import RecoverPassword from './pages/RecoverPassword/RecoverPassword';
-import {firebaseImpl} from './utils/firebaseUtils';
+import {firebaseImpl, firebaseCheckToken} from './utils/firebaseUtils';
 import firebase from 'firebase';
 import Dimensions from './pages/Dimensions/Dimensions';
 import DimensionForm from './pages/DimensionForm/DimensionForm';
@@ -13,9 +13,10 @@ import Evaluation from './pages/Evaluation/Evaluation';
 export default function Router(props) {
 
   const [token, setToken] = useState();
+  const [user, setUser] = useState();
 
   useEffect(() => {
-    firebaseImpl().then(async user => {
+    firebaseCheckToken().then(async user => {
       var currentToken = null;
       if (user != null){
         currentToken = await user.getIdToken();
@@ -28,21 +29,18 @@ export default function Router(props) {
     })
   }, [])
 
+  console.log(token);
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/recoverpassword" component={RecoverPassword} />
-        {
-          token &&
-          <>
-            <Route path="/evaluation" component={Evaluation} />
-            <Route path="/organizationprofile" component={OrganizationProfile} />
-            <Route exact path="/dimensions" component={Dimensions} />
-            <Route path="/dimensions/form/:id" component={DimensionForm} />
-          </>
-        }
+        <Route path="/evaluation" component={Evaluation} />
+        <Route path="/organizationprofile" component={OrganizationProfile} />
+        <Route exact path="/dimensions" component={Dimensions} />
+        <Route path="/dimensions/form/:id" component={DimensionForm} />
       </Switch>
     </BrowserRouter>
   )
