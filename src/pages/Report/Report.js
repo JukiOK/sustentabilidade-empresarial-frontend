@@ -16,16 +16,22 @@ function Report(props) {
             <span>Pontuação geral</span>
             <span>Saiba mais</span>
           </div>
+          <div className="report-circular">
+            <span style={{fontSize: '30px'}}>0/100</span>
+          </div>
         </div>
         <span className="report-title">Pontuação por dimensão</span>
         <div className="row">
           <div className="dimension-card">
-            <div>
               <p className="dimension-name">dimensão</p>
-              <span>critérios</span>
-              <span>0/5</span>
-            </div>
-
+              <div className="report-circular small-circle">
+                <span>0/100</span>
+              </div>
+              <div style={{display: 'flex', margin: '10px 0px'}}>
+                <span>critérios</span>
+                <span style={{marginLeft: 'auto'}}>0/5</span>
+              </div>
+              <span>Saiba como melhorar</span>
           </div>
         </div>
       </div>

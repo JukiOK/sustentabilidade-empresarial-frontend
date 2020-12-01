@@ -25,6 +25,16 @@
 
   }
 
+  .report-circular {
+    border: 7px solid $red;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .row {
     display: flex;
   }
@@ -36,6 +46,8 @@
     margin: 10px 0px;
     background-color: $white;
     display: flex;
+    flex-direction: column;
+    width: 30%;
 
     .dimension-name {
       font-weight: bold;
@@ -43,6 +55,12 @@
 
     .dimension-progress {
       margin-left: auto;
+    }
+
+    .small-circle {
+      width: 100px;
+      height: 100px;
+      margin: auto;
     }
   }
 
