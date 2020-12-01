@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import Dimensions from './pages/Dimensions/Dimensions';
 import DimensionForm from './pages/DimensionForm/DimensionForm';
 import Evaluation from './pages/Evaluation/Evaluation';
+import Report from './pages/Report/Report';
 
 export default function Router(props) {
 
@@ -29,8 +30,6 @@ export default function Router(props) {
     })
   }, [])
 
-  console.log(token);
-
   return (
     <BrowserRouter>
       <Switch>
@@ -41,6 +40,7 @@ export default function Router(props) {
         <Route path="/organizationprofile" component={OrganizationProfile} />
         <Route exact path="/dimensions" component={Dimensions} />
         <Route path="/dimensions/form/:id" component={DimensionForm} />
+        <Route path="/report" component={Report} />
       </Switch>
     </BrowserRouter>
   )

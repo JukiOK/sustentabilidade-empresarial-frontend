@@ -37,12 +37,12 @@ function Evaluation(props) {
           </div>
           <div className="dimension-progress">
             <div>
-              <span>Pontuação</span>
+              <span>Pontuação </span>
               <span>0.0</span>
             </div>
             <div>
-              <span>Progresso</span>
-              <span>0/10</span>              
+              <span>Progresso </span>
+              <span>0/10</span>
             </div>
             <div className="btn-confirm">Começar</div>
           </div>

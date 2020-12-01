@@ -1,13 +1,13 @@
 @import '../../constants/colors.scss';
 
-.evaluation-container {
+.report-container {
   padding: 20px;
 
-  .evaluation-title {
+  .report-title {
     font-weight: bold;
   }
 
-  .evaluation-container-general {
+  .report-container-general {
     display: flex;
     margin: 20px 0px;
 
@@ -15,7 +15,7 @@
       height: 300px;
     }
 
-    .evaluation-container-info {
+    .report-container-info {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -23,6 +23,10 @@
       align-items: center;
     }
 
+  }
+
+  .row {
+    display: flex;
   }
 
   .dimension-card {
@@ -40,11 +44,6 @@
     .dimension-progress {
       margin-left: auto;
     }
-  }
-
-  .btn-confirm {
-    color: $white;
-    margin-top: 10px;
   }
 
   p {
