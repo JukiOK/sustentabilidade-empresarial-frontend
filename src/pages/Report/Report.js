@@ -33,6 +33,39 @@ function Report(props) {
               </div>
               <span>Saiba como melhorar</span>
           </div>
+          <div className="dimension-card">
+              <p className="dimension-name">dimensão</p>
+              <div className="report-circular small-circle">
+                <span>0/100</span>
+              </div>
+              <div style={{display: 'flex', margin: '10px 0px'}}>
+                <span>critérios</span>
+                <span style={{marginLeft: 'auto'}}>0/5</span>
+              </div>
+              <span>Saiba como melhorar</span>
+          </div>
+          <div className="dimension-card">
+              <p className="dimension-name">dimensão</p>
+              <div className="report-circular small-circle">
+                <span>0/100</span>
+              </div>
+              <div style={{display: 'flex', margin: '10px 0px'}}>
+                <span>critérios</span>
+                <span style={{marginLeft: 'auto'}}>0/5</span>
+              </div>
+              <span>Saiba como melhorar</span>
+          </div>
+          <div className="dimension-card">
+              <p className="dimension-name">dimensão</p>
+              <div className="report-circular small-circle">
+                <span>0/100</span>
+              </div>
+              <div style={{display: 'flex', margin: '10px 0px'}}>
+                <span>critérios</span>
+                <span style={{marginLeft: 'auto'}}>0/5</span>
+              </div>
+              <span>Saiba como melhorar</span>
+          </div>
         </div>
       </div>
     </BasePage>

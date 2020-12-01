@@ -1,13 +1,13 @@
 @import '../../constants/colors.scss';
 
-.report-container {
+.form-evaluation-container {
   padding: 20px;
 
-  .report-title {
+  .evaluation-title {
     font-weight: bold;
   }
 
-  .report-container-general {
+  .evaluation-container-general {
     display: flex;
     margin: 20px 0px;
 
@@ -15,40 +15,22 @@
       height: 300px;
     }
 
-    .report-container-info {
+    .evaluation-container-info {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin: 0px 30px;
       align-items: center;
     }
 
-  }
-
-  .report-circular {
-    border: 7px solid $red;
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-  }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
   }
 
   .dimension-card {
     padding: 15px;
     box-shadow: 0px 0px 10px $gray;
     border-radius: 10px;
-    margin: 10px 5px;
+    margin: 10px 0px;
     background-color: $white;
-    display: flex;
-    flex-direction: column;
-    width: 28%;
 
     .dimension-name {
       font-weight: bold;
@@ -58,11 +40,24 @@
       margin-left: auto;
     }
 
-    .small-circle {
-      width: 100px;
-      height: 100px;
-      margin: auto;
+    .btn-attach {
+      margin-left: auto;
+      margin-right: 5px;
+      background-color: $gray;
     }
+
+    .icon-arrow {
+      font-size: 30px;
+      color: $black;
+      margin-left: auto;
+      cursor: pointer;
+    }
+  }
+
+  .btn-confirm {
+    color: $white;
+    margin-top: 10px;
+    width: 150px;
   }
 
   p {

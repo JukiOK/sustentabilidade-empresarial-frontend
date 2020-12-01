@@ -102,7 +102,7 @@ function Indicator(props) {
           expand ?
           <div>
             <div style={{display: 'flex'}}>
-              <FontAwesomeIcon icon={faAngleDown} className="icon-arrow" onClick={() => setExpand(false)}/>
+              <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(false)}/>
             </div>
             <div className="dimension-form-row inside-card">
               <div style={{width: '80%'}}>
@@ -196,7 +196,7 @@ function Indicator(props) {
           :
           <div style={{display: 'flex'}}>
             <span>{name}</span>
-            <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(true)}/>
+            <FontAwesomeIcon icon={faAngleDown} className="icon-arrow" onClick={() => setExpand(true)}/>
           </div>
         }
 

@@ -44,7 +44,7 @@ function Evaluation(props) {
               <span>Progresso </span>
               <span>0/10</span>
             </div>
-            <div className="btn-confirm">Começar</div>
+            <div className="btn-confirm" onClick={() => props.history.push('/evaluation/' + 'bla')}>Começar</div>
           </div>
         </div>
       </div>
