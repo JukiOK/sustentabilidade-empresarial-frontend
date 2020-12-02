@@ -47,13 +47,13 @@ function Register(props) {
         </div>
         <input onChange={e => setLastName(e.target.value)}></input>
         <div className="input-title">
-          <span>Email</span>
-        </div>
-        <input onChange={e => setEmail(e.target.value)}></input>
-        <div className="input-title">
           <span>Telefone</span>
         </div>
         <InputMask mask="(99) 9999-9999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
+        <div className="input-title">
+          <span>Email</span>
+        </div>
+        <input onChange={e => setEmail(e.target.value)}></input>
         <div className="input-title">
           <span>Senha</span>
         </div>

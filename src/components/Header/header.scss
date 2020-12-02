@@ -4,7 +4,7 @@
   background-color: $white;
   // background: linear-gradient(270deg, $black 28%, $green 100%);
   background-image: url('../../assets/images/leaves-header.png'), ;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   align-items: center;
   box-shadow: 8px 3px 13px $gray;
@@ -22,7 +22,7 @@
   .icon-header {
     margin-left: auto;
     cursor: pointer;
-    font-size: 40px;
+    font-size: 45px;
     color: $red;
   }
 

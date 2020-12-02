@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
 import firebase from 'firebase';
+import { paramFromUrl } from '../../utils/functions';
 
 require('./login.scss');
 
@@ -13,13 +14,16 @@ function Login(props) {
   function login() {
     firebase.auth().signInWithEmailAndPassword(email, pass)
     .then(() => {
-        props.history.push('/organizationprofile');
+        let path = paramFromUrl();
+        path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
+        props.history.push(path);
       }
     )
     .catch(function(error) {
       // Handle Errors here.
       var errorCode = error.code;
       var errorMessage = error.message;
+      console.log(error);
       setErr(true);
       // ...
     });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import OrganizationProfile from './pages/OrganizationProfile/OrganizationProfile';
@@ -11,6 +11,7 @@ import DimensionForm from './pages/DimensionForm/DimensionForm';
 import Evaluation from './pages/Evaluation/Evaluation';
 import Report from './pages/Report/Report';
 import FormEvaluation from './pages/FormEvaluation/FormEvaluation';
+import ProfileUser from './pages/ProfileUser/ProfileUser';
 
 export default function Router(props) {
 
@@ -24,9 +25,10 @@ export default function Router(props) {
         currentToken = await user.getIdToken();
         console.log(currentToken);
         setToken(currentToken);
-      }else if (window.location.pathname !== '/' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
+      } else if (!window.location.pathname.includes('login') && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
-        window.location.href = "/"
+        let path = encodeURIComponent(window.location.pathname);
+        window.location.href = "/login?previous=" + path;
       }
     })
   }, [])
@@ -34,7 +36,8 @@ export default function Router(props) {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Login} />
+        <Redirect exact from="/" to="/evaluation" />
+        <Route exact path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/recoverpassword" component={RecoverPassword} />
         <Route exact path="/evaluation" component={Evaluation} />
@@ -43,6 +46,7 @@ export default function Router(props) {
         <Route exact path="/dimensions" component={Dimensions} />
         <Route path="/dimensions/form/:id" component={DimensionForm} />
         <Route path="/report" component={Report} />
+        <Route path="/user" component={ProfileUser} />
       </Switch>
     </BrowserRouter>
   )

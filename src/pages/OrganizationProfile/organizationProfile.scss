@@ -50,4 +50,8 @@
     color: $white;
     border: none;
   }
+
+  .error-input {
+    border: 1px solid $red;
+  }
 }

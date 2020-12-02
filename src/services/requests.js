@@ -21,13 +21,11 @@ axiosApi.interceptors.request.use(async (options) => {
 export const createOrganization = async (body) => {
   return axiosApi.post('/organization', body)
   .then( response => response.data )
-  .catch(err => {console.log(err);});
 }
 
 export const updateOrganization = async (body) => {
   return axiosApi.put('/organization/mine', body)
   .then( response => response.data )
-  .catch(err => {console.log(err);});
 }
 
 export const createUser = async (body) => {
@@ -44,6 +42,18 @@ export const getOrganization = async (orgId) => {
 
 export const getMe = async () => {
   return axiosApi.get('/user/me')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const updateMe = async (body) => {
+  return axiosApi.put('/user/me', body)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const deleteMe = async () => {
+  return axiosApi.delete('/user/me')
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }

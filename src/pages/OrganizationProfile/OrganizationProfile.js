@@ -4,7 +4,9 @@ import InputMask from 'react-input-mask';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import colorsobject from '../../constants/colorsobject';
 import { createOrganization, getOrganization, getMe, updateOrganization, getCategories, getSectors, getNumbEmp } from '../../services/requests';
+import SaveBtn from '../../components/SaveBtn/SaveBtn';
 
 require('./organizationProfile.scss');
 
@@ -26,6 +28,9 @@ function OrganizationProfile(props) {
   const [listCategories, setListCategories] = useState();
   const [listSectors, setListSectors] = useState();
   const [listNumbEmp, setListNumbEmp] = useState();
+  const [errorName, setErrorName] = useState(false);
+  const [errorCategory, setErrorCategory] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     getOrg();
@@ -71,13 +76,36 @@ function OrganizationProfile(props) {
     setAddress(response.data.logradouro);
   }
 
-  async function saveOrg() {
+  function saveOrg() {
     const addressFull = {address, cep, state, city, number};
-    if(isNew) {
-      await createOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp});
-      setIsNew(false);
+    if(name && category) {
+      setSaving(true);
+      if(isNew) {
+        createOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
+        .then(() => {
+          setIsNew(false);
+          setSaving(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(error);
+        });
+      } else {
+        updateOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
+        .then(() => {
+          setSaving(false);
+        })
+        .catch((error) => {
+          alert(error);
+        });
+      }
     } else {
-      await updateOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
+      if(!name) {
+        setErrorName(true);
+      }
+      if(!category) {
+        setErrorCategory(true);
+      }
     }
   }
 
@@ -87,7 +115,11 @@ function OrganizationProfile(props) {
         <div>
           <span>Identificação da instituição</span>
         </div>
-        <input placeholder="Nome da instituição" onChange={e => setName(e.target.value)} value={name}/>
+        <input className={errorName && "error-input"} placeholder="Nome da instituição" onChange={e => setName(e.target.value)} value={name} onFocus={() => setErrorName(false)} />
+        {
+          errorName &&
+          <div style={{color: colorsobject.red}}>Campo obrigatório</div>
+        }
         <div className="profile-row">
           <InputMask value={phone} mask="(99) 9999-9999" maskChar="_" placeholder="Telefone" onChange={e => setPhone(e.target.value)}/>
           <input placeholder="Site" style={{marginLeft: '10px'}} value={site} onChange={e => setSite(e.target.value)}/>
@@ -106,7 +138,7 @@ function OrganizationProfile(props) {
           <span>Atividade</span>
           <p style={{margin: '10px 0px'}}>Se sua empresa atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
         </div>
-        <select className="profile-select" onChange={e => setCategory(e.target.value)} value={category}>
+        <select className={"profile-select " + (errorCategory && "error-input")} onChange={e => setCategory(e.target.value)} value={category} onFocus={() => setErrorCategory(false)}>
           <option value="" disabled selected hidden>Categoria</option>
           {
             listCategories && listCategories.map((category, index) => {
@@ -116,6 +148,10 @@ function OrganizationProfile(props) {
             })
           }
         </select>
+        {
+          errorCategory &&
+          <div style={{color: colorsobject.red}}>Campo obrigatório</div>
+        }
         <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
           <option value="" disabled selected hidden>Setor</option>
           {
@@ -139,7 +175,9 @@ function OrganizationProfile(props) {
             })
           }
         </select>
-        <div className="btn-confirm" onClick={saveOrg}>Salvar</div>
+
+        <SaveBtn save={saveOrg} saving={saving}/>
+
       </div>
     </BasePage>
   )

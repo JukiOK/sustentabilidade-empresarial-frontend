@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 
@@ -19,7 +19,7 @@ function Header(props) {
   return (
     <div className="header-container">
       <span className="header-title">{props.title}</span>
-      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header" onClick={logout}/>
+      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header" onClick={() => props.history.push('/login')}/>
     </div>
   )
 }

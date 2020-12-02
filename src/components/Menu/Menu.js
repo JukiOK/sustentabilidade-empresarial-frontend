@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileSignature, faFileAlt, faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature, faFileAlt, faBuilding, faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
+import firebase from 'firebase';
 
 require ('./menu.scss');
 
@@ -23,6 +24,14 @@ function Menu(props) {
     if(data) {
       setIsAdmin(data.isAdmin);
     }
+  }
+
+  function logout() {
+    firebase.auth().signOut().then(function() {
+      props.history.push('/login');
+    }).catch(function(error) {
+      // An error happened.
+    });
   }
 
   const tabs = [
@@ -46,6 +55,11 @@ function Menu(props) {
       path: '/dimensions',
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdm: true,
+    },
+    {
+      name: 'Meu perfil',
+      path: '/user',
+      icon: (<FontAwesomeIcon icon={faUserCircle} className="icon-menu"/>),
     }
   ];
 
