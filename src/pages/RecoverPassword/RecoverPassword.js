@@ -39,7 +39,7 @@ function RecoverPassword(props) {
         </button>
         <div className="text-container">
           <span>Já possui uma conta?</span>
-          <a href={'/'}>Faça login</a>
+          <a href={'/login'}>Faça login</a>
         </div>
 
       </div>

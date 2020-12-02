@@ -15,10 +15,14 @@ function Register(props) {
   const [phone, setPhone] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [textErrorEmail, setTextErrorEmail] = useState('');
+  const [textErrorPass, setTextErrorPass] = useState('');
 
   function registerUser() {
     if(pass !== confirm) {
       setError(true);
+      setTextErrorPass('As senhas não são as mesmas');
     } else {
       firebase.auth().createUserWithEmailAndPassword(email, pass)
       .then(async () => {
@@ -28,8 +32,18 @@ function Register(props) {
       .catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-        console.log(error);
-        alert(error.message);
+        if(error.code === 'auth/email-already-in-use') {
+          setErrorEmail(true);
+          setTextErrorEmail('O email já esta sendo utilizado');
+        } else if(error.code === 'auth/invalid-email') {
+          setErrorEmail(true);
+          setTextErrorEmail('O email é inválido');
+        } else if(error.code === 'auth/weak-password') {
+          setError(true);
+          setTextErrorPass('A senha deve ter no mínimo 6 caracteres');
+        } else {
+          console.log(error);
+        }
       });
     }
   }
@@ -53,8 +67,13 @@ function Register(props) {
         <div className="input-title">
           <span>Email</span>
         </div>
-        <input onChange={e => setEmail(e.target.value)}></input>
+        <input onChange={e => setEmail(e.target.value)} onFocus={() => setTextErrorEmail(false)}></input>
+        {
+          errorEmail &&
+          <div className="error-text">{textErrorEmail}</div>
+        }
         <div className="input-title">
+          <p>A senha deve ter no mínimo 6 caracteres</p>
           <span>Senha</span>
         </div>
         <input type="password" onChange={e => setPass(e.target.value)} onFocus={() => setError(false)}></input>
@@ -65,7 +84,7 @@ function Register(props) {
         {
           error &&
           <div className="error-text">
-            As senhas não são as mesmas.
+            {textErrorPass}
           </div>
         }
         <div className="btn-confirm" onClick={registerUser}>
@@ -73,7 +92,7 @@ function Register(props) {
         </div>
         <div className="text-container">
           <span>Já possui uma conta?</span>
-          <a href={'/'}>Faça o login</a>
+          <a href={'/login'}>Faça o login</a>
         </div>
       </div>
     </BasePageLogin>

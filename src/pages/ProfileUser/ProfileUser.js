@@ -3,6 +3,7 @@ import BasePage from '../BasePage/BasePage';
 import { getMe, updateMe, deleteMe, getOrganization } from '../../services/requests';
 import firebase from 'firebase';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
+import Overlay from '../../components/Overlay/Overlay';
 
 require('./profileUser.scss');
 
@@ -14,8 +15,15 @@ function ProfileUser(props) {
   const [organization, setOrganization] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [oldEMail, setOldEmail] = useState('');
   const [saving, setSaving] = useState(false);
+  const [savingPass, setSavingPass] = useState(false);
+  const [errorPass, setErrorPass] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openSignin, setOpenSignin] = useState(false);
+  const [oldEmail, setOldEmail] = useState('');
+  const [oldPass, setOldPass] = useState('');
+  const [type, setType] = useState();
+  const [errorSign, setErrorSign] = useState(false);
 
   useEffect(() => {
     getInfos();
@@ -46,43 +54,105 @@ function ProfileUser(props) {
       // Update successful.
     }).catch(function(error) {
       // An error happened.
-      handleError();
+      handleError(error);
     });
   }
 
   async function changePassword() {
-    let user = firebase.auth().currentUser;
-    setSaving(true);
-    user.updatePassword(password).then(function() {
-      // Update successful.
-      setSaving(false);
-    }).catch(function(error) {
-      // An error happened.
-      handleError();
-    });
+    if(password === confirm) {
+      let user = firebase.auth().currentUser;
+      setSavingPass(true);
+      user.updatePassword(password).then(function() {
+        // Update successful.
+        setSavingPass(false);
+      }).catch(function(error) {
+        // An error happened.
+        setSavingPass(false);
+        handleError(error);
+      });
+    } else {
+      setErrorPass(true);
+    }
   }
 
   async function deleteUser() {
     let user = firebase.auth().currentUser;
-    user.delete().then(function() {
+    user.delete().then(async function() {
       // User deleted.
+      await deleteMe();
+      props.history.push('/login');
     }).catch(function(error) {
       // An error happened.
-      handleError();
+      handleError(error);
     });
   }
 
-  function handleError() {
-    if (window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
-      alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
-      let path = encodeURIComponent(window.location.pathname);
-      window.location.href = "/login?previous=" + path;
+  function handleError(error) {
+    if(error.code === 'auth/weak-password') {
+      alert('A senha precisa ter no minimo 6 caracteres');
     }
+  }
+
+  async function reauth() {
+    firebase.auth().signInWithEmailAndPassword(oldEmail, oldPass).then(() => {
+      setOpenSignin(false);
+      let user = firebase.auth().currentUser;
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        oldPass
+      );
+      user.reauthenticateWithCredential(credential).then(function() {
+        // User re-authenticated.
+        setOpen(false);
+        if(type === 'email') {
+          updateUser();
+        } else if(type === 'password') {
+          changePassword();
+        } else if(type === 'delete') {
+          deleteUser();
+        }
+      }).catch(function(error) {
+        // An error happened.
+      });
+    }).catch(function(error) {
+      // An error happened.
+      setErrorSign(true);
+    });
+  }
+
+  function handleSave(typeAction) {
+    setOpenSignin(true);
+    setType(typeAction);
   }
 
   return (
     <BasePage title={'Meu perfil'}>
       <div className="profile-user-container">
+        <Overlay openOverlay={open} setOpenOverlay={(value) => setOpen(value)}>
+          <div>
+            <span>Tem certeza que deseja excluir a conta? Essa ação não pode ser desfeita.</span>
+            <div style={{display: 'flex', marginTop: '10px'}}>
+              <div className="btn-confirm" onClick={() => handleSave('delete')}>
+                Sim
+              </div>
+              <div className="btn-confirm delete-btn" onClick={() => setOpen(false)}>
+                Não
+              </div>
+            </div>
+          </div>
+        </Overlay>
+        <Overlay openOverlay={openSignin} setOpenOverlay={(value) => setOpenSignin(value)}>
+          <div>
+            <span>Para realizar a ação é necessário inserir novamente seu login</span>
+            <input placeholder={'Email'} value={oldEmail} onChange={(e) => setOldEmail(e.target.value)} type="email" onFocus={() => setErrorSign(false)}/>
+            <input placeholder={'Senha'} value={oldPass} onChange={(e) => setOldPass(e.target.value)} type="password" onFocus={() => setErrorSign(false)}/>
+            {
+              errorSign &&
+              <div className="error-text">Email ou senha invalida</div>
+            }
+            <div className="btn-confirm save-pass" onClick={reauth}>Enviar</div>
+          </div>
+        </Overlay>
         <div className="card">
           <div className="row">
             <div className="text-input-half" style={{marginRight: '10px'}}>
@@ -93,22 +163,27 @@ function ProfileUser(props) {
             </div>
           </div>
           <div className="text-input-container">
-            <input value={email} onChange={e => setEmail(e.target.value)} placeholder={'Email'}/>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={'Email'}/>
           </div>
           <div className="text-input-container">
             <span className="text-title">Organização</span>
             <input value={organization} disabled />
           </div>
           <div style={{display: 'flex'}}>
-            <SaveBtn save={updateUser} saving={saving} style={{fontSize: '16px'}}/>
-            <div className="btn-confirm delete-btn">Deletar conta</div>
+            <SaveBtn save={() => handleSave('email')} saving={saving} style={{fontSize: '16px'}}/>
+            <div className="btn-confirm delete-btn" onClick={() => setOpen(true)}>Deletar conta</div>
           </div>
         </div>
         <div className="card">
           <span className="text-title">Alterar senha</span>
-          <input value={password} placeholder="Insira nova senha" onChange={e => setPassword(e.target.value)}/>
-          <input value={confirm} placeholder="Confirme a nova senha" onChange={e => setConfirm(e.target.value)} />
-          <SaveBtn save={changePassword} saving={saving} style={{fontSize: '16px'}} classBtn={'save-pass'}/>
+          <p style={{marginBottom: '0px'}}>A senha deve ter no mínimo 6 caracteres</p>
+          <input type="password" value={password} placeholder="Insira nova senha" onChange={e => setPassword(e.target.value)} onFocus={() => setErrorPass(false)}/>
+          <input type="password" value={confirm} placeholder="Confirme a nova senha" onChange={e => setConfirm(e.target.value)} onFocus={() => setErrorPass(false)}/>
+          {
+            errorPass &&
+            <div className="error-text">As senhas não são as mesmas</div>
+          }
+          <SaveBtn save={() => handleSave('password')} saving={savingPass} style={{fontSize: '16px'}} classBtn={'save-pass'}/>
         </div>
       </div>
     </BasePage>
