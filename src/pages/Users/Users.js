@@ -67,8 +67,8 @@ function Users(props) {
           previousLabel={(<FontAwesomeIcon icon={faAngleLeft} className="icon-arrow"/>)}
           nextLabel={(<FontAwesomeIcon icon={faAngleRight} className="icon-arrow"/>)}
           containerClassName={'pagination-container'}
-          activeClassName={'active-page'}
-          pageClassName={'page-container'}
+          activeLinkClassName={'active-page'}
+          pageLinkClassName={'page-container'}
         />
       </div>
     </BasePage>

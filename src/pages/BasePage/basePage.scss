@@ -31,11 +31,11 @@
         .disabled  {
           .icon-arrow {
             color: $gray;
-            cursor: auto;           
+            cursor: auto;
           }
         }
 
-        li {
+        a {
           margin: 5px;
           width: 40px;
           height: 40px;
@@ -43,19 +43,13 @@
           align-items: center;
           justify-content: center;
           cursor: pointer;
-        }
-
-        a {
           color: $black;
         }
 
         .active-page {
           background-color: $green;
           border-radius: 50%;
-
-          a {
-            color: $white;
-          }
+          color: $white;
         }
 
         .page-container:hover {

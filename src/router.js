@@ -13,6 +13,7 @@ import Report from './pages/Report/Report';
 import FormEvaluation from './pages/FormEvaluation/FormEvaluation';
 import ProfileUser from './pages/ProfileUser/ProfileUser';
 import Users from './pages/Users/Users';
+import Organizations from './pages/Organizations/Organizations';
 
 export default function Router(props) {
 
@@ -49,6 +50,7 @@ export default function Router(props) {
         <Route path="/report" component={Report} />
         <Route path="/userprofile" component={ProfileUser} />
         <Route path="/users" component={Users} />
+        <Route path="/organizations" component={Organizations} />
       </Switch>
     </BrowserRouter>
   )

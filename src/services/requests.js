@@ -201,3 +201,9 @@ export const getUsersList = async (body) => {
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
+
+export const getOrganizationsList = async (body) => {
+  return axiosApi.get('/organization', {params: body})
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
