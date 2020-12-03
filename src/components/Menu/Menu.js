@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileSignature, faFileAlt, faBuilding, faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
 import firebase from 'firebase';
@@ -51,16 +51,22 @@ function Menu(props) {
       icon: (<FontAwesomeIcon icon={faBuilding} className="icon-menu"/>)
     },
     {
+      name: 'Meu perfil',
+      path: '/userprofile',
+      icon: (<FontAwesomeIcon icon={faUserCircle} className="icon-menu"/>),
+    },
+    {
       name: 'Dimensões',
       path: '/dimensions',
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdm: true,
     },
     {
-      name: 'Meu perfil',
-      path: '/user',
-      icon: (<FontAwesomeIcon icon={faUserCircle} className="icon-menu"/>),
-    }
+      name: 'Usuários',
+      path: '/users',
+      icon: (<FontAwesomeIcon icon={faUsers} className="icon-menu"/>),
+      isAdmin: true,
+    },
   ];
 
   return (

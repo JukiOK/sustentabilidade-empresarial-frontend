@@ -12,6 +12,7 @@ import Evaluation from './pages/Evaluation/Evaluation';
 import Report from './pages/Report/Report';
 import FormEvaluation from './pages/FormEvaluation/FormEvaluation';
 import ProfileUser from './pages/ProfileUser/ProfileUser';
+import Users from './pages/Users/Users';
 
 export default function Router(props) {
 
@@ -46,7 +47,8 @@ export default function Router(props) {
         <Route exact path="/dimensions" component={Dimensions} />
         <Route path="/dimensions/form/:id" component={DimensionForm} />
         <Route path="/report" component={Report} />
-        <Route path="/user" component={ProfileUser} />
+        <Route path="/userprofile" component={ProfileUser} />
+        <Route path="/users" component={Users} />
       </Switch>
     </BrowserRouter>
   )

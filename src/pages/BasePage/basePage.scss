@@ -17,7 +17,56 @@
       overflow: auto;
       height: calc( 100% - 80px);
       z-index: 1;
+
+      .pagination-container {
+        display: flex;
+        list-style-type: none;
+        padding-inline-start: 0px;
+
+        .icon-arrow {
+          color: $black;
+          font-size: 20px;
+        }
+
+        .disabled  {
+          .icon-arrow {
+            color: $gray;
+            cursor: auto;           
+          }
+        }
+
+        li {
+          margin: 5px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        a {
+          color: $black;
+        }
+
+        .active-page {
+          background-color: $green;
+          border-radius: 50%;
+
+          a {
+            color: $white;
+          }
+        }
+
+        .page-container:hover {
+          background-color: $lightgray;
+          border-radius: 50%;
+        }
+
+      }
+
     }
+
   }
 
 }

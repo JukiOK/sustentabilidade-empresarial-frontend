@@ -195,3 +195,9 @@ export const getIndicator = async (id) => {
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
+
+export const getUsersList = async (body) => {
+  return axiosApi.get('/user', {params: body})
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
