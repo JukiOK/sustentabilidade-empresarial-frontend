@@ -77,9 +77,8 @@ function ProfileUser(props) {
 
   async function deleteUser() {
     let user = firebase.auth().currentUser;
+    await deleteMe();
     user.delete().then(async function() {
-      // User deleted.
-      await deleteMe();
       props.history.push('/login');
     }).catch(function(error) {
       // An error happened.
