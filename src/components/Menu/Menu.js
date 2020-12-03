@@ -27,15 +27,6 @@ function Menu(props) {
     }
   }
 
-  function logout() {
-    firebase.auth().signOut().then(function() {
-      setCookie('isAdmin', 'false');
-      props.history.push('/login');
-    }).catch(function(error) {
-      // An error happened.
-    });
-  }
-
   const tabs = [
     {
       name: 'Avaliação',

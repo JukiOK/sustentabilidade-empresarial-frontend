@@ -3,14 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
+import { useCookies } from 'react-cookie';
 
 require('./header.scss');
 
 function Header(props) {
 
+  const [cookies, setCookie] = useCookies(['isAdmin']);
+
   function logout() {
     firebase.auth().signOut().then(function() {
-      props.history.push('/');
+      setCookie('isAdmin', 'false');
+      props.history.push('/login');
     }).catch(function(error) {
       // An error happened.
     });
@@ -19,7 +23,7 @@ function Header(props) {
   return (
     <div className="header-container">
       <span className="header-title">{props.title}</span>
-      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header" onClick={() => props.history.push('/login')}/>
+      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header" onClick={logout}/>
     </div>
   )
 }
