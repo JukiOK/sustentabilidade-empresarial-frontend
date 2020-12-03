@@ -19,12 +19,12 @@ function Users(props) {
 
   async function getInfos() {
     let data = await getList(0);
-    setTotal(Math.ceil(data.total/ data.pageSize));
   }
 
   async function getList(page) {
     let data = await getUsersList({page, name, pageSize: 10});
     setUserList(data.results);
+    setTotal(Math.ceil(data.total/10));
     return data;
   }
 

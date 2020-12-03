@@ -5,6 +5,7 @@ import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity }
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
 import firebase from 'firebase';
+import { useCookies } from 'react-cookie';
 
 require ('./menu.scss');
 
@@ -14,20 +15,26 @@ function Menu(props) {
   const url = window.location.href;
 
   const [isAdmin, setIsAdmin] = useState();
+  const [cookies, setCookie] = useCookies(['isAdmin']);
 
   useEffect(() => {
     getInfo();
   }, []);
 
+  useEffect(() => {
+    console.log('aqui', cookies.isAdmin, cookies);
+  }, [cookies])
+
   async function getInfo() {
     let data = await getMe();
     if(data) {
-      setIsAdmin(data.isAdmin);
+      setCookie('isAdmin', data.isAdmin);
     }
   }
 
   function logout() {
     firebase.auth().signOut().then(function() {
+      setCookie('isAdmin', 'false');
       props.history.push('/login');
     }).catch(function(error) {
       // An error happened.
@@ -59,7 +66,7 @@ function Menu(props) {
       name: 'Dimensões',
       path: '/dimensions',
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
-      isAdm: true,
+      isAdmin: true,
     },
     {
       name: 'Usuários',
@@ -82,7 +89,7 @@ function Menu(props) {
       <div className="menu-content">
         {
           tabs.map((tab, index) => {
-            if(!tab.isAdm || (tab.isAdm && isAdmin)) {
+            if(!tab.isAdmin || (tab.isAdmin && (cookies.isAdmin == 'true'))) {
               return (
                 <div
                   key={index}

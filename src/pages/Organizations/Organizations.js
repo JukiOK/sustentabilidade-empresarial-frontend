@@ -53,6 +53,7 @@ function Organizations(props) {
     }
     let data = await getOrganizationsList(body);
     setOrgList(data.results);
+    setTotal(Math.ceil(data.total/body.pageSize));
     return data;
   }
 
