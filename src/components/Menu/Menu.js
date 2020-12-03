@@ -14,16 +14,11 @@ function Menu(props) {
   const unicamp = require('../../assets/images/UNICAMP_logo.png');
   const url = window.location.href;
 
-  const [isAdmin, setIsAdmin] = useState();
   const [cookies, setCookie] = useCookies(['isAdmin']);
 
   useEffect(() => {
     getInfo();
   }, []);
-
-  useEffect(() => {
-    console.log('aqui', cookies.isAdmin, cookies);
-  }, [cookies])
 
   async function getInfo() {
     let data = await getMe();
