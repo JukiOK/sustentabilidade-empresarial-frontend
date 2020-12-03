@@ -28,5 +28,29 @@
     background-color: $blue;
     color: $white;
     border: none;
+    cursor: pointer;
+  }
+
+  .btn-search:hover {
+    background-color: $darkblue;
+  }
+
+  .btn-clean {
+    font-size: 30px;
+    color: $red;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .btn-clean:hover {
+    color: $darkred;
+  }
+
+  .filter-category {
+    margin: 0px 10px;
+  }
+
+  .filter-sector {
+    width: 200px;
   }
 }

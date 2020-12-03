@@ -28,5 +28,10 @@
     background-color: $blue;
     color: $white;
     border: none;
+    cursor: pointer;
+  }
+
+  .btn-search:hover {
+    background-color: $darkblue;
   }
 }

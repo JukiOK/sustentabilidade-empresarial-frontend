@@ -4,6 +4,7 @@ import { getOrganizationsList, getCategories, getSectors } from '../../services/
 import ReactPaginate from 'react-paginate';
 import { faSearch, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 require('./organizations.scss');
 
@@ -43,27 +44,39 @@ function Organizations(props) {
   }
 
   async function getList(page) {
-    let data = await getOrganizationsList({page, name, pageSize: 10, category, sector});
+    let body = {page, name, pageSize: 10};
+    if(category) {
+      body.category = category;
+    }
+    if(sector) {
+      body.sector = sector;
+    }
+    let data = await getOrganizationsList(body);
     setOrgList(data.results);
     return data;
+  }
+
+  function cleanFilters() {
+    setName('');
+    setCategory('');
+    setSector('');
   }
 
   return (
     <BasePage title={'Instituições'}>
       <div className="organizations-container">
         <div style={{display: 'flex', marginBottom: '10px'}}>
-          <span style={{marginRight: '10px'}}>Pesquisar:</span>
-          <input placeholder={'Filtrar por nome'} value={name} onChange={e => setName(e.target.value)}/>
-          <select value={category} onChange={e => setCategory(e.target.value)}>
-            <option value="" disabled selected hidden>Categoria</option>
+          <input placeholder={'Nome'} value={name} onChange={e => setName(e.target.value)}/>
+          <select value={category} onChange={e => setCategory(e.target.value)} className="filter-category">
+            <option value="" selected>Selecionar categoria</option>
             {
               categories.map((cat, index) => (
                 <option key={index} value={cat.value}>{cat.label}</option>
               ))
             }
           </select>
-          <select value={sector} onChange={e => setSector(e.target.value)}>
-            <option value="" disabled selected hidden>Setor</option>
+          <select value={sector} onChange={e => setSector(e.target.value)} className="filter-sector">
+            <option value="" selected >Selecionar setor</option>
             {
               sectors.map((sect, index) => (
                 <option key={index} value={sect.value}>{sect.label}</option>
@@ -71,6 +84,9 @@ function Organizations(props) {
             }
           </select>
           <button className="btn-search" onClick={() => getList(0)}><FontAwesomeIcon icon={faSearch} /></button>
+          <div className="btn-clean" onClick={cleanFilters}>
+            <FontAwesomeIcon icon={faTimesCircle}/>
+          </div>
         </div>
         <table className="table-users">
           <thead>
