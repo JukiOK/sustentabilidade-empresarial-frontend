@@ -1,4 +1,4 @@
-##Front end da Avaliação de sustentabilidade
+# Front end da Avaliação de sustentabilidade
 
 Front-end do projeto sustentabilidade empresarial, para a disciplina MC855.
 Projeto utiliza o [Create React App](https://github.com/facebook/create-react-app).
