@@ -34,6 +34,52 @@ Se não esta satisfeito com as build tools e configurações escolhidas, pode-se
 Não deveria ser necessário o uso de `eject`, já que as configurações estão adequadas para produtos pequenos e médios, mas se for necerrária a customização pode-se utiliza-la.
 
 ### `npm run doc`
-Geração da documentação na raiz, no arquivo documentationComponent.md, usando a biblioteca [react-doc-generator](https://github.com/marborkowski/react-doc-generator#readme)
+Geração da documentação das componentes na raiz do projeto, no arquivo documentationComponent.md, usando a biblioteca [react-doc-generator](https://github.com/marborkowski/react-doc-generator#readme)
 
+## Estrutura do código
+Todos os códigos principais estão dentro da pasta `src`.
+
+### index.js
+Componente inicial, com a chamada da função para inicializar o firebase.
+
+### router.js
+Componente com todas as rotas e a chamada da função para checar o token do firebase.
+
+### /assets
+Pasta com os assets do projeto
+
+#### /assets/images
+Pasta com as imagens.
+
+### /components
+Pasta com componentes reutilizaveis, ou que não são componentes para renderizar uma página. <br/>
+Dentro tem pastas que dentro terá um arquivo para a componente e outro para o seu estilo.
+
+### /constants
+Pasta para armazenar arquivos com constantes. 
+
+#### /constants/_colors.scss
+Arquivo com constantes para as cores, para ser usadas em arquivos .scss
+
+#### /constants/colorsobject.js
+Arquivo com objeto com as cores, para ser usadas em arquivos .js
+
+### /pages
+Pasta com as páginas e as páginas bases. <br/>
+Dentro tem pastas com as componentes para as páginas, e componentes para renderizar partes das páginas, e seus arquivos de estilo.
+
+### /services
+Pasta com arquivos referentes as requisições e suas configurações.
+
+#### /services/requests.js
+Arquivo com a configuração da biblioteca [axios](https://www.npmjs.com/package/axios) para fazer as requisições, junto com as funções que executam as requisições.
+
+### /utils
+Pasta arquivos de utilidades variadas.
+
+#### /utils/firebaseUtils.js
+Arquivo com a configuração do firebase, a função para inicializa-lo e a função para verificar mudança no token do usuário.
+
+#### /utils/functions.js
+Arquivo com funções variadas, que são usadas no projeto.
 
