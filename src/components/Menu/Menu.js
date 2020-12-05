@@ -9,24 +9,29 @@ import { useCookies } from 'react-cookie';
 
 require ('./menu.scss');
 
+/**
+* Componente para o menu lateral.
+*/
+
 function Menu(props) {
   const hids = require('../../assets/images/logohids.png');
   const unicamp = require('../../assets/images/UNICAMP_logo.png');
   const url = window.location.href;
 
-  const [cookies, setCookie] = useCookies(['isAdmin']);
+  const [cookies, setCookie] = useCookies(['isAdmin']); //state para guardar cookie para saber se usuário é administrador
 
   useEffect(() => {
     getInfo();
   }, []);
 
   async function getInfo() {
-    let data = await getMe();
+    let data = await getMe(); //função para obter as informações do usuário
     if(data) {
       setCookie('isAdmin', data.isAdmin);
     }
   }
 
+  //itens do menu, com url, nome e icone, e se pode ser acessado somente com a permissão de administrador
   const tabs = [
     {
       name: 'Avaliação',

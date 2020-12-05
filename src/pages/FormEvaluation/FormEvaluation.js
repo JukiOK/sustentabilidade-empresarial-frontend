@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 require('./formEvaluation.scss');
 
+/**
+* Componente para a página da avaliação de 1 dimensão.
+*/
+
 function FormEvaluation(props) {
 
   const [expand, setExpand] = useState(false);

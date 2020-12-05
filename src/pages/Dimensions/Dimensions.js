@@ -8,6 +8,9 @@ import Overlay from '../../components/Overlay/Overlay';
 
 require('./dimensions.scss');
 
+/**
+* Componente para o card envolvendo a dimensão.
+*/
 function Card(props) {
 
   const [criteriaList, setCriteriaList] = useState();
@@ -24,6 +27,7 @@ function Card(props) {
     let data = await getAllCriteriaDimension(dimension._id);
     setCriteriaList(data);
     let aux = {};
+    //indexar lista de indicadores pelo id do critério deles
     for(let i = 0; i < data.length; i++) {
       let indicators = await getAllIndicatorsCriterion(dimension._id, data[i]._id);
       aux[data[i]._id] = indicators;
@@ -90,13 +94,17 @@ function Card(props) {
   )
 }
 
+/**
+* Componente para a página da Lista de dimensões.
+*/
+
 function Dimensions(props) {
 
   const [filter, setFilter] = useState();
   const [dimensionsList, setDimensionsList] = useState();
 
   useEffect(() => {
-    getInfos();
+    setTimeout(() => {getInfos();}, 300); //delay para garantir que a dimensão não editada foi excluida do banco de dados
   }, []);
 
   async function getInfos() {

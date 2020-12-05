@@ -21,13 +21,13 @@ export default function Router(props) {
   const [user, setUser] = useState();
 
   useEffect(() => {
+    //função para verificar se usuário esta logado pelo token do firebase, usando a função onAuthStateChanged do firebase
     firebaseCheckToken().then(async user => {
       var currentToken = null;
       if (user != null){
         currentToken = await user.getIdToken();
-        console.log(currentToken);
         setToken(currentToken);
-      } else if (!window.location.pathname.includes('login') && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redirect to login screen
+      } else if (!window.location.pathname.includes('login') && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redireciona para tela de login se token for invalido
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
         let path = encodeURIComponent(window.location.pathname);
         window.location.href = "/login?previous=" + path;

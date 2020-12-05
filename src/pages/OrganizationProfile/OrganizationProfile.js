@@ -10,6 +10,10 @@ import SaveBtn from '../../components/SaveBtn/SaveBtn';
 
 require('./organizationProfile.scss');
 
+/**
+* Componente para a página de Perfil da instituição.
+*/
+
 function OrganizationProfile(props) {
 
   const [name, setName] = useState('');
@@ -67,6 +71,7 @@ function OrganizationProfile(props) {
   }
 
   async function cepAutocomplete() {
+    //utilizando API para obter endereço pelo CEP
     const response = await axios({
       url: 'https://viacep.com.br/ws/'  + cep + '/json/',
       method: 'get',

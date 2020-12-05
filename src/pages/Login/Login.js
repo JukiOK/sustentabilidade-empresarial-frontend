@@ -5,6 +5,10 @@ import { paramFromUrl } from '../../utils/functions';
 
 require('./login.scss');
 
+/**
+* Componente para a página de login.
+*/
+
 function Login(props) {
 
   const [email, setEmail] = useState('');
@@ -12,8 +16,10 @@ function Login(props) {
   const [err, setErr] = useState(false);
 
   function login() {
+    //login com firebase
     firebase.auth().signInWithEmailAndPassword(email, pass)
     .then(() => {
+        //retorna para página em que foi deslogado
         let path = paramFromUrl();
         path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
         props.history.push(path);

@@ -4,6 +4,10 @@ import { getMe } from '../../services/requests';
 
 require('./evaluation.scss');
 
+/**
+* Componente para página de Avaliação.
+*/
+
 function Evaluation(props) {
 
   const img = require('../../assets/images/quadro_geral.png');

@@ -2,8 +2,12 @@ import React from 'react';
 import Menu from '../../components/Menu/Menu';
 import Header from '../../components/Header/Header';
 import {Helmet} from 'react-helmet';
+import PropTypes from 'prop-types';
 
 require('./basePage.scss');
+/**
+* Componente com design da tela base, com header e menu.
+*/
 
 function BasePage(props) {
   const img = require('../../assets/images/leaves.png');
@@ -22,3 +26,10 @@ function BasePage(props) {
 }
 
 export default BasePage;
+
+BasePage.propTypes = {
+  /**
+  * Título do Header
+  */
+  title: PropTypes.string,
+}
