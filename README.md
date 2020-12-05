@@ -59,7 +59,15 @@ Dentro tem pastas que dentro terá um arquivo para a componente e outro para o s
 Pasta para armazenar arquivos com constantes. 
 
 #### /constants/_colors.scss
-Arquivo com constantes para as cores, para ser usadas em arquivos .scss
+Arquivo com constantes para as cores, para ser usadas em arquivos .scss <br/>
+As cores no arquivo _colors devem estar no formato:
+``` javascript
+$lightergray: #f6f7f9;
+```
+E o import em algum arquivo .scss  deve ser 
+```javascript
+@import "caminho relativo do arquivo _colors.scss sem o '_'"
+```
 
 #### /constants/colorsobject.js
 Arquivo com objeto com as cores, para ser usadas em arquivos .js
