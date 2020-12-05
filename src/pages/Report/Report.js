@@ -3,6 +3,10 @@ import BasePage from '../BasePage/BasePage';
 
 require('./report.scss');
 
+/**
+* Componente para página de relatório.
+*/
+
 function Report(props) {
 
   return (

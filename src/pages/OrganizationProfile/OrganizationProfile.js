@@ -105,9 +105,11 @@ function OrganizationProfile(props) {
         });
       }
     } else {
+      // se nome da organização esta vazio não pode salvar
       if(!name) {
         setErrorName(true);
       }
+      //se categoria da organização esta vaiza também não pode salvar
       if(!category) {
         setErrorCategory(true);
       }

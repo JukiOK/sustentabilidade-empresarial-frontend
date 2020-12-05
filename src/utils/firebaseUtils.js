@@ -11,10 +11,12 @@ const config = {
   measurementId: "G-HV4HTBHNBF"
 };
 
+//função para inicializar firebase
 export function firebaseImpl() {
   firebase.initializeApp(config);
 }
 
+//função para verificar se token expirou
 export function firebaseCheckToken() {
   return new Promise((resolve, reject) => {
      const unsubscribe = firebase.auth().onAuthStateChanged(user => {

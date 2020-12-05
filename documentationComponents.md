@@ -152,7 +152,14 @@ saveInfoIndicator|func|yes||Função para salvar o indicador no banco de dados, 
 -----
 **src\pages\Dimensions\Dimensions.js**
 
-### 1. Dimensions
+### 1. Card
+
+Componente para o card envolvendo a dimensão.   
+
+
+
+
+### 2. Dimensions
 
 Componente para a página da Lista de dimensões.   
 
@@ -204,6 +211,8 @@ Componente para a página de Perfil da instituição.
 
 ### 1. Organizations
 
+Componente para página de lista de organizações.   
+
 
 
 
@@ -211,6 +220,8 @@ Componente para a página de Perfil da instituição.
 **src\pages\ProfileUser\ProfileUser.js**
 
 ### 1. ProfileUser
+
+Componente para página perfil do usuário.   
 
 
 
@@ -220,6 +231,8 @@ Componente para a página de Perfil da instituição.
 
 ### 1. RecoverPassword
 
+Componente para página de recuperação de senha.   
+
 
 
 
@@ -227,6 +240,8 @@ Componente para a página de Perfil da instituição.
 **src\pages\Register\Register.js**
 
 ### 1. Register
+
+Componente para página de registrar novo usuário.   
 
 
 
@@ -236,6 +251,8 @@ Componente para a página de Perfil da instituição.
 
 ### 1. Report
 
+Componente para página de relatório.   
+
 
 
 
@@ -243,6 +260,8 @@ Componente para a página de Perfil da instituição.
 **src\pages\Users\Users.js**
 
 ### 1. Users
+
+Componente para página de lista de usuários.   
 
 
 

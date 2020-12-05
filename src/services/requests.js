@@ -4,6 +4,7 @@ import {firebaseCheckToken} from '../utils/firebaseUtils';
 
 const url = 'http://localhost:3000';
 
+//configuração do axios
 export const axiosApi = axios.create({
   baseURL: url,
   timeout: 20000,
@@ -12,6 +13,7 @@ export const axiosApi = axios.create({
 	}
 })
 
+//configuração do header da requisição do axios, para obter token do firebase
 axiosApi.interceptors.request.use(async (options) => {
   await firebaseCheckToken();
   options.headers["Authorization"] = await firebase.auth().currentUser.getIdToken();

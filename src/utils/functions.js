@@ -1,3 +1,4 @@
+//função para extrair query strings da url atual, retorna objeto com {label query: valor da query}
 export function paramFromUrl() {
   let url = window.location.href;
   let array = url.substring(url.indexOf('?') + 1).split('&');

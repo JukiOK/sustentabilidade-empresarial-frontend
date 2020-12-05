@@ -7,6 +7,10 @@ import Overlay from '../../components/Overlay/Overlay';
 
 require('./profileUser.scss');
 
+/**
+* Componente para página perfil do usuário.
+*/
+
 function ProfileUser(props) {
 
   const [firstName, setFirstName] = useState('');
@@ -43,12 +47,14 @@ function ProfileUser(props) {
   async function updateUser() {
     setSaving(true);
     changeEmail().then(async () => {
+      //função para atualizar dados do usuário no banco de dados
       await updateMe({firstName, lastName, email});
       setSaving(false);
     })
   }
 
   async function changeEmail() {
+    //função do firebase para atualizar email
     let user = await firebase.auth().currentUser;
     return user.updateEmail(email).then(function() {
       // Update successful.
@@ -59,9 +65,10 @@ function ProfileUser(props) {
   }
 
   async function changePassword() {
-    if(password === confirm) {
+    if(password === confirm) { //checar se a nova senha e sua confirmação são iguais
       let user = firebase.auth().currentUser;
       setSavingPass(true);
+      //atualizar a senha no firebase
       user.updatePassword(password).then(function() {
         // Update successful.
         setSavingPass(false);
@@ -77,6 +84,7 @@ function ProfileUser(props) {
 
   async function deleteUser() {
     let user = firebase.auth().currentUser;
+    //função para deletar conta primeiro no banco de dados e depois no firebase
     await deleteMe();
     user.delete().then(async function() {
       props.history.push('/login');
@@ -93,6 +101,7 @@ function ProfileUser(props) {
   }
 
   async function reauth() {
+    //função para raautenticar o usuário, para permitir mudança de email, senha e deletar conta
     firebase.auth().signInWithEmailAndPassword(oldEmail, oldPass).then(() => {
       setOpenSignin(false);
       let user = firebase.auth().currentUser;

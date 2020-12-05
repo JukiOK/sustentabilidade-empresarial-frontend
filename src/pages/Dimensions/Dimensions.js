@@ -11,7 +11,7 @@ require('./dimensions.scss');
 /**
 * Componente para o card envolvendo a dimensão.
 */
-function Card(props) {
+export function Card(props) {
 
   const [criteriaList, setCriteriaList] = useState();
   const [indicatorsList, setIndicatorsList] = useState();

@@ -5,6 +5,10 @@ import colors from '../../constants/colorsobject';
 
 require('./recoverPassword.scss');
 
+/**
+* Componente para página de recuperação de senha.
+*/
+
 function RecoverPassword(props) {
 
   const [email, setEmail] = useState('');

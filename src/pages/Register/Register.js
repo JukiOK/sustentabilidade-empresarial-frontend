@@ -6,6 +6,10 @@ import { createUser } from '../../services/requests';
 
 require('./register.scss');
 
+/**
+* Componente para página de registrar novo usuário.
+*/
+
 function Register(props) {
 
   const [pass, setPass] = useState('');
@@ -20,7 +24,7 @@ function Register(props) {
   const [textErrorPass, setTextErrorPass] = useState('');
 
   function registerUser() {
-    if(pass !== confirm) {
+    if(pass !== confirm) { //confirmação de senha
       setError(true);
       setTextErrorPass('As senhas não são as mesmas');
     } else {
@@ -32,6 +36,7 @@ function Register(props) {
       .catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
+        //tratamento dos erros de cadastramento
         if(error.code === 'auth/email-already-in-use') {
           setErrorEmail(true);
           setTextErrorEmail('O email já esta sendo utilizado');

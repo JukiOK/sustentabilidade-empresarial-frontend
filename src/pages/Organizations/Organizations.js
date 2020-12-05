@@ -8,6 +8,10 @@ import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 require('./organizations.scss');
 
+/**
+* Componente para página de lista de organizações.
+*/
+
 function Organizations(props) {
 
   const [orgList, setOrgList] = useState([]);
@@ -26,17 +30,19 @@ function Organizations(props) {
 
   async function getInfos() {
     let data = await getList(0);
-    setTotal(Math.ceil(data.total/ data.pageSize));
+    setTotal(Math.ceil(data.total/ data.pageSize)); //para calcular a quantidade de páginas
     let data1 = await getCategories();
     let data2 = await getSectors();
     setCategories(data1);
     setSectors(data2);
     let aux = {};
     let aux1 = {};
+    //guardando categorias por {value: label}, para facilitar a tradução
     for(let i = 0; i < data1.length; i++) {
       aux[data1[i].value] = data1[i].label;
     }
     setTranslateCategory(aux);
+    //guardando setores por {value: label}, para facilitar a tradução
     for(let i = 0; i < data2.length; i++) {
       aux1[data2[i].value] = data2[i].label;
     }
@@ -44,6 +50,7 @@ function Organizations(props) {
   }
 
   async function getList(page) {
+    //função para filtrar lista de organizações
     let body = {page, name, pageSize: 10};
     if(category) {
       body.category = category;

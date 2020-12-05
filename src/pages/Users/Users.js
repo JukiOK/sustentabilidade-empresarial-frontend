@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 require('./users.scss');
 
+/**
+* Componente para página de lista de usuários.
+*/
+
 function Users(props) {
 
   const [userList, setUserList] = useState([]);
