@@ -78,8 +78,8 @@ export const getNumbEmp = async () => {
   .catch(err => {console.log(err);});
 }
 
-export const getAllDimensions = async () => {
-  return axiosApi.get('/dimension')
+export const getAllDimensions = async (year) => {
+  return axiosApi.get('/dimension', {params: year})
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
@@ -208,4 +208,30 @@ export const getOrganizationsList = async (body) => {
   return axiosApi.get('/organization', {params: body})
   .then( response => response.data )
   .catch(err => {console.log(err);});
+}
+
+export const getAllYears = async () => {
+  return axiosApi.get('/year')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const addYear = async (body) => {
+  return axiosApi.post('/year', body)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getYear = async (id) => {
+  return axiosApi.get('/year', {params: id})
+  axiosApi.get('/year')
+ .then( response => response.data )
+ .catch(err => {console.log(err);});
+}
+
+export const deleteYear = async (id) => {
+  return axiosApi.delete('/year', {params: id})
+  axiosApi.get('/year')
+ .then( response => response.data )
+ .catch(err => {console.log(err);});
 }

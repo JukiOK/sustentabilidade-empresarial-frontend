@@ -27,7 +27,7 @@ function Criteria(props) {
           </div>
           <div style={{width: '20%', marginLeft: '10px'}}>
             <span>Peso</span>
-            <input className="input-form" placeholder="Valor entre 0 e 1" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")} onBlur={() => saveInfoCriterion()}/>
+            <input className="input-form" type="number" placeholder="Valor entre 0 e 1" value={criterion.weight} onChange={e => editingCriterion(e.target.value, "weight")} onBlur={() => saveInfoCriterion()}/>
           </div>
         </div>
         <div style={{marginTop: '10px'}}>

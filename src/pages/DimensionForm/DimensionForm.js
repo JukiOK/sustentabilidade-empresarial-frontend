@@ -207,7 +207,7 @@ function DimensionForm(props) {
             </div>
             <div style={{width: '15%'}}>
               <span>Ano</span>
-              <input className="input-form" value={year} onChange={(e) => setYear(e.target.value)} onBlur={() => saveInfoDimension('year', year)}/>
+              <input className="input-form" type="number" value={year} onChange={(e) => setYear(e.target.value)} onBlur={() => saveInfoDimension('year', year)}/>
             </div>
           </div>
           <div className="textarea-container">

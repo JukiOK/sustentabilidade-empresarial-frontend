@@ -31,8 +31,8 @@ function Indicator(props) {
       setInstruction(indicator.question.instruction);
       setTypeAnswer(indicator.question.type);
 
-      if(indicator.question.answer) {
-        setAnswerList(indicator.question.answer);
+      if(indicator.question.options) {
+        setAnswerList(indicator.question.options);
       }
     }
   }, [indicator]);
@@ -43,7 +43,7 @@ function Indicator(props) {
         title: questionTitle,
         instruction,
         type: typeAnswer,
-        answer: answerList,
+        options: answerList,
       }
     }
     saveInfoIndicator(body);
@@ -56,7 +56,7 @@ function Indicator(props) {
         setAnswerList([]);
         break;
       case 'binary': case 'multiple':
-        setAnswerList([{answer:'', points: ''}, {answer:'', points: ''}])
+        setAnswerList([{text:'', points: ''}, {text:'', points: ''}])
       default:
         break;
     }
@@ -70,7 +70,7 @@ function Indicator(props) {
 
   function addAnswer() {
     let aux = answerList.slice();
-    aux.push({answer:'', points: ''});
+    aux.push({text:'', points: ''});
     setAnswerList(aux);
 
   }
@@ -97,7 +97,7 @@ function Indicator(props) {
               </div>
               <div style={{width: '20%', marginLeft: '10px'}}>
                 <span>Peso</span>
-                <input className="input-form" placeholder="Valor entre 0 e 1" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
+                <input className="input-form" type="number" placeholder="Valor entre 0 e 1" value={weight} onChange={e => setWeight(e.target.value)} onBlur={handleSave}/>
               </div>
             </div>
             <div className="dimension-form-row inside-card">
@@ -159,11 +159,11 @@ function Indicator(props) {
                 answerList.map((answer, index) => {
                   return (
                     <div style={{margin: '10px 0px', display: 'flex', alignItems: 'center'}} key={index}>
-                      <input value={answer.answer} placeholder="Insira texto da resposta" style={{width: '75%', marginRight: '10px'}}
-                        onChange={e => editAnswer(index, 'answer', e.target.value)}
+                      <input value={answer.text} placeholder="Insira texto da resposta" style={{width: '75%', marginRight: '10px'}}
+                        onChange={e => editAnswer(index, 'text', e.target.value)}
                         onBlur={handleSave}
                       />
-                      <input value={answer.points} placeholder="Insira pontuação da resposta" style={{width: '20%'}}
+                      <input type="number" value={answer.points} placeholder="Insira pontuação da resposta" style={{width: '20%'}}
                         onChange={e => editAnswer(index, 'points', e.target.value)}
                         onBlur={handleSave}
                       />
