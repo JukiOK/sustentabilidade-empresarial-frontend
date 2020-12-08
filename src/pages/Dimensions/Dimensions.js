@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
 import InputMask from 'react-input-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { saveDimension, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion, deleteDimension } from '../../services/requests';
+import { faPlus, faTrashAlt, faEdit, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import {
+  getAllYears,
+  getYear,
+  addYear,
+  deleteYear,
+  saveDimension,
+  getAllDimensions,
+  getAllCriteriaDimension,
+  getAllIndicatorsCriterion,
+  deleteDimension } from '../../services/requests';
 import Overlay from '../../components/Overlay/Overlay';
 
 require('./dimensions.scss');
@@ -16,6 +25,7 @@ export function Card(props) {
   const [criteriaList, setCriteriaList] = useState();
   const [indicatorsList, setIndicatorsList] = useState();
   const [openOverlay, setOpenOverlay] = useState(false);
+  const [expand, setExpand] = useState(false);
 
   const { dimension, history, deleteDimensionId } = props;
 
@@ -54,42 +64,47 @@ export function Card(props) {
         <span className="card-title">{dimension.name}</span>
         <FontAwesomeIcon icon={faEdit} className="icon-edit" onClick={() => history.push('/dimensions/form/' + dimension._id)}/>
         <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => setOpenOverlay(true)}/>
+        <FontAwesomeIcon icon={expand ? faAngleUp : faAngleDown} className="icon-arrow" onClick={() => setExpand(!expand)} />
       </div>
-      <table className="table-dimension">
-        <thead>
-          <tr>
-            <th className="table-cell">Critérios</th>
-            <th className="table-cell">Indicadores</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            criteriaList && criteriaList.map((criterion, index) => (
-              <tr className="table-row" key={index}>
-                <td className="table-cell">
-                  <div style={{margin: '10px'}}>
-                    <span>{criterion.name}</span>
-                  </div>
-                  <div style={{margin: '10px'}}>
-                    <span>Peso na dimensão: {criterion.weight}</span>
-                  </div>
-                </td>
-                <td className="table-cell">
-                  {
-                    indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
-                      <div className="indicator-cell">
-                        <span>{indicator.name}</span>
-                        <span style={{marginLeft: 'auto'}}>{indicator.weight}</span>
-                      </div>
-                    ))
-                  }
-                </td>
-              </tr>
-            ))
-          }
+      {
+        expand &&
+        <table className="table-dimension">
+          <thead>
+            <tr>
+              <th className="table-cell">Critérios</th>
+              <th className="table-cell">Indicadores</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              criteriaList && criteriaList.map((criterion, index) => (
+                <tr className="table-row" key={index}>
+                  <td className="table-cell">
+                    <div style={{margin: '10px'}}>
+                      <span>{criterion.name}</span>
+                    </div>
+                    <div style={{margin: '10px'}}>
+                      <span>Peso na dimensão: {criterion.weight}</span>
+                    </div>
+                  </td>
+                  <td className="table-cell">
+                    {
+                      indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
+                        <div className="indicator-cell">
+                          <span>{indicator.name}</span>
+                          <span style={{marginLeft: 'auto'}}>{indicator.weight}</span>
+                        </div>
+                      ))
+                    }
+                  </td>
+                </tr>
+              ))
+            }
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      }
+
     </div>
   )
 }
@@ -101,41 +116,92 @@ export function Card(props) {
 function Dimensions(props) {
 
   const [filter, setFilter] = useState();
-  const [dimensionsList, setDimensionsList] = useState();
+  const [yearsList, setYearsList] = useState();
+  const [yearInput, setYearInput] = useState('');
+  const [openOverlay, setOpenOverlay] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {getInfos();}, 300); //delay para garantir que a dimensão não editada foi excluida do banco de dados
   }, []);
 
   async function getInfos() {
-    let data = await getAllDimensions();
-    setDimensionsList(data);
+    let data1 = await getAllYears();
+    //Adicionar lista de dimensões ao seu ano
+    for(let i = 0; i < data1.length; i++) {
+      let data = await getAllDimensions({year: data1[i].year});
+      data1[i].dimensionsList = data;
+    }
+    setYearsList(data1);
   }
 
-  async function newDimension() {
-    let data = await saveDimension();
+  async function newDimension(year) {
+    let data = await saveDimension({year: year});
     props.history.push('/dimensions/form/' + data._id);
   }
 
-  async function deleteDimensionId(id, idArray) {
+  async function deleteDimensionId(id, idArray, indexYear) {
+    //remover dimensão, com id da dimensão, indice da dimensõo no vetor yearsList e indice do ano no vetor
     await deleteDimension(id);
-    let aux = dimensionsList.slice();
-    aux.splice(idArray, 1);
-    setDimensionsList(aux);
+    let aux = yearsList.slice();
+    aux[indexYear].dimensionsList.splice(idArray, 1);
+    setYearsList(aux);
   }
 
-  console.log(dimensionsList);
+  async function newYear() {
+    let data = await addYear({year: yearInput});
+    let aux = yearsList.slice();
+    aux.push(data);
+    setYearsList(aux);
+  }
+
+  async function removeYear(id, idArray) {
+    //remover ano, com id do ano e indice do ano no vetor
+    await deleteYear(id);
+    let aux = yearsList.slice();
+    aux.splice(idArray, 1);
+    setYearsList(aux);
+    setOpenOverlay(false);
+  }
+
+  console.log(yearsList);
 
   return (
     <BasePage title={'Lista de dimensões'}>
       <div className="dimensions-container">
         <div className="dimensions-filter-container">
-          <div className="btn-confirm new-btn" onClick={newDimension}>Nova dimensão</div>
+          <input type="number" placeholder="Adicionar ano" value={yearInput} onChange={e => setYearInput(e.target.value)} />
+          <div className="btn-confirm add-btn" onClick={newYear}>
+            <FontAwesomeIcon icon={faPlus} className="icon-btn"/>
+          </div>
         </div>
+        <hr/>
         {
-          dimensionsList && dimensionsList.map((dimension, index) => (
-            <Card dimension={dimension} key={index} history={props.history} deleteDimensionId={(id) => deleteDimensionId(id, index)}/>
-          ))
+          yearsList && yearsList.map((year, indexYear) => {
+            return (
+            <div>
+              <Overlay openOverlay={openOverlay} setOpenOverlay={(value) => setOpenOverlay(value)} >
+                <div>
+                  <span>Tem certeza que deseja apagar o ano? Essa ação não pode ser desfeita.</span>
+                  <div className="btn-row">
+                    <div className="btn-confirm yes-btn" onClick={() => removeYear(year._id, indexYear)}>Sim</div>
+                    <div className="btn-confirm cancel-btn" onClick={() => setOpenOverlay(false)}>Não</div>
+                  </div>
+                </div>
+              </Overlay>
+              <div className="dimensions-filter-container">
+                <span style={{fontWeight: 'bold', fontSize: '25px'}}>{year.year}</span>
+                <div className="btn-confirm new-btn" onClick={() => newDimension(year.year)}>Nova dimensão</div>
+                <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => setOpenOverlay(true)}/>
+              </div>
+              {
+                year.dimensionsList && year.dimensionsList.map((dimension, index) => (
+                  <Card dimension={dimension} key={index} history={props.history} deleteDimensionId={(id) => deleteDimensionId(id, index, indexYear)}/>
+                ))
+              }
+              <hr/>
+            </div>
+            )
+          })
         }
       </div>
     </BasePage>

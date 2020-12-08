@@ -67,6 +67,7 @@ function DimensionForm(props) {
       setCriteriaList(data1);
     } else {
       isEdited.current = 'no';
+      setYear(data.year);
     }
   }
 

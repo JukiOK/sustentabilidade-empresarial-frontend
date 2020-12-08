@@ -5,15 +5,16 @@
 
   .dimensions-filter-container {
     display: flex;
+    align-items: center;
 
-    .filter-btn {
+    .add-btn {
       background-color: $blue;
       color: $white;
-      margin-top: 0px;
+      border-radius: 50%;
       margin-left: 10px;
     }
 
-    .filter-btn:hover {
+    .add-btn:hover {
       background-color: $darkblue;
     }
 
@@ -25,6 +26,41 @@
     }
   }
 
+  .icon-trash {
+    color: $red;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 20px;
+  }
+
+  .icon-trash:hover {
+    color: $darkred;
+  }
+
+  .btn-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .yes-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+    background-color: $red;
+    margin-left: 10px;
+  }
+
+  .cancel-btn:hover {
+    background-color: $darkred;
+  }
+
   .card-container {
     box-shadow: 0px 0px 10px $gray;
     border-radius: 10px;
@@ -32,54 +68,26 @@
     padding: 10px;
     background-color: $white;
 
-    .btn-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    .yes-btn {
-      color: $white;
-      border-radius: 50px;
-      width: 100px;
-    }
-
-    .cancel-btn {
-      color: $white;
-      border-radius: 50px;
-      width: 100px;
-      background-color: $red;
-      margin-left: 10px;
-    }
-
-    .cancel-btn:hover {
-      background-color: $darkred;
-    }
-
     .card-row {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
 
-      .icon-trash {
-        color: $red;
-        font-size: 24px;
-        cursor: pointer;
-      }
-
-      .icon-trash:hover {
-        color: $darkred;
-      }
-
       .icon-edit {
         color: $blue;
         font-size: 24px;
         cursor: pointer;
-        margin-right: 20px;
       }
 
       .icon-edit:hover {
         color: $darkblue;
+      }
+
+      .icon-arrow {
+        color: $black;
+        font-size: 24px;
+        margin-left: 25px;
+        cursor: pointer;
       }
 
       .card-title {
