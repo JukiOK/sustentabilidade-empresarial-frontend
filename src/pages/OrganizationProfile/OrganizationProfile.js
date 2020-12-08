@@ -145,30 +145,35 @@ function OrganizationProfile(props) {
           <span>Atividade</span>
           <p style={{margin: '10px 0px'}}>Se sua empresa atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
         </div>
-        <select className={"profile-select " + (errorCategory && "error-input")} onChange={e => setCategory(e.target.value)} value={category} onFocus={() => setErrorCategory(false)}>
-          <option value="" disabled selected hidden>Categoria</option>
-          {
-            listCategories && listCategories.map((category, index) => {
-              return (
-                <option key={index} value={category.value}>{category.label}</option>
-              )
-            })
-          }
-        </select>
-        {
-          errorCategory &&
-          <div style={{color: colorsobject.red}}>Campo obrigatório</div>
-        }
-        <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
-          <option value="" disabled selected hidden>Setor</option>
-          {
-            listSectors && listSectors.map((sector, index) => {
-              return (
-                <option key={index} value={sector.value}>{sector.label}</option>
-              )
-            })
-          }
-        </select>
+        <div style={{display: 'flex'}}>
+          <div>
+            <select className={"profile-select " + (errorCategory && "error-input")} onChange={e => setCategory(e.target.value)} value={category} onFocus={() => setErrorCategory(false)}>
+              <option value="" disabled selected hidden>Categoria</option>
+              {
+                listCategories && listCategories.map((category, index) => {
+                  return (
+                    <option key={index} value={category.value}>{category.label}</option>
+                  )
+                })
+              }
+            </select>
+            {
+              errorCategory &&
+              <div style={{color: colorsobject.red}}>Campo obrigatório</div>
+            }
+          </div>          
+          <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
+            <option value="" disabled selected hidden>Setor</option>
+            {
+              listSectors && listSectors.map((sector, index) => {
+                return (
+                  <option key={index} value={sector.value}>{sector.label}</option>
+                )
+              })
+            }
+          </select>
+        </div>
+
         <div className="profile-title size-title">
           <span>Porte da instituição</span>
         </div>

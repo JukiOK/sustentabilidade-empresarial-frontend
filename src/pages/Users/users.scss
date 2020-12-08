@@ -3,6 +3,30 @@
 .users-container {
   padding: 20px;
 
+  .row {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .yes-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+    background-color: $red;
+    margin-left: 10px;
+  }
+
+  .cancel-btn:hover {
+    background-color: $darkred;
+  }
+
   .table-users {
     width: 100%;
     border-collapse: collapse;
@@ -13,15 +37,35 @@
 
     .table-cell {
       padding: 10px;
+      border: 1px solid $black;
+    }
+
+    .admin-cell {
+      display: flex;
+      justify-content: center;
+    }
+
+    .yes-admin {
+      color: $green;
+      cursor: pointer;
+    }
+
+    .yes-admin:hover {
+      color: $darkgreen;
+    }
+
+    .no-admin {
+      color: $red;
+      cursor: pointer;
+    }
+
+    .no-admin:hover {
+      color: $darkred;
     }
 
     .table-row:nth-child(2n), thead {
       background-color: $lightgray;
     }
-  }
-
-  .table-cell {
-    border: 1px solid $black;
   }
 
   .btn-search {

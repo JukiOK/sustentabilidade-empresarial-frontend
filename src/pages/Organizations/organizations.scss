@@ -3,6 +3,30 @@
 .organizations-container {
   padding: 20px;
 
+  .row {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .yes-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn {
+    color: $white;
+    border-radius: 50px;
+    width: 100px;
+    background-color: $red;
+    margin-left: 10px;
+  }
+
+  .cancel-btn:hover {
+    background-color: $darkred;
+  }
+
   .table-users {
     width: 100%;
     border-collapse: collapse;

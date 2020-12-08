@@ -204,8 +204,26 @@ export const getUsersList = async (body) => {
   .catch(err => {console.log(err);});
 }
 
+export const grantAdmin = async (id) => {
+  return axiosApi.put('/user/' + id + '/grant-admin-permission')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const revokeAdmin = async (id) => {
+  return axiosApi.put('/user/' + id + '/revoke-admin-permission')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
 export const getOrganizationsList = async (body) => {
   return axiosApi.get('/organization', {params: body})
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const deleteOrganizationById = async (id) => {
+  return axiosApi.delete('/organization/' + id)
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }

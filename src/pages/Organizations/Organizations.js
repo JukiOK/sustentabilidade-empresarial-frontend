@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import { getOrganizationsList, getCategories, getSectors } from '../../services/requests';
+import { getOrganizationsList, getCategories, getSectors, deleteOrganizationById } from '../../services/requests';
 import ReactPaginate from 'react-paginate';
-import { faSearch, faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faAngleLeft, faAngleRight, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
+import Overlay from '../../components/Overlay/Overlay';
 
 require('./organizations.scss');
 
@@ -23,6 +24,10 @@ function Organizations(props) {
   const [translateSector, setTranslateSector] = useState();
   const [category, setCategory] = useState('');
   const [sector, setSector] = useState('');
+  const [selectedOrg, setSelectedOrg] = useState('');
+  const [indexOrg, setIndexOrg] = useState('');
+  const [open, setOpen] = useState(false);
+  const [selectPage, setSelectPage] = useState(0);
 
   useEffect(() => {
     getInfos();
@@ -51,6 +56,7 @@ function Organizations(props) {
 
   async function getList(page) {
     //função para filtrar lista de organizações
+    setSelectPage(page);
     let body = {page, name, pageSize: 10};
     if(category) {
       body.category = category;
@@ -70,9 +76,32 @@ function Organizations(props) {
     setSector('');
   }
 
+  function handleClickDelete(index) {
+    //função para abrir overlay de confirmação de remoção da organização
+    setIndexOrg(index);
+    setSelectedOrg(orgList[index]);
+    setOpen(true);
+  }
+
+  async function removeOrg() {
+    await deleteOrganizationById(selectedOrg._id);
+    getList(0);
+    setOpen(false);
+    setSelectPage(0);
+  }
+
   return (
     <BasePage title={'Instituições'}>
       <div className="organizations-container">
+        <Overlay openOverlay={open} setOpenOverlay={(value) => setOpen(value)}>
+          <span>
+            Tem certeza que deseja apagar a organização? Essa ação não pode ser desfeita.;
+          </span>
+          <div className="row">
+            <div className="btn-confirm yes-btn" onClick={removeOrg}>Sim</div>
+            <div className="btn-confirm cancel-btn" onClick={() => setOpen(false)}>Não</div>
+          </div>
+        </Overlay>
         <div style={{display: 'flex', marginBottom: '10px'}}>
           <input placeholder={'Nome'} value={name} onChange={e => setName(e.target.value)}/>
           <select value={category} onChange={e => setCategory(e.target.value)} className="filter-category">
@@ -102,6 +131,7 @@ function Organizations(props) {
               <th className="table-cell">Nome</th>
               <th className="table-cell">Categoria</th>
               <th className="table-cell">Setor</th>
+              <th className="table-cell"></th>
             </tr>
           </thead>
           <tbody>
@@ -117,6 +147,9 @@ function Organizations(props) {
                   <td className="table-cell">
                     {translateSector[org.sector]}
                   </td>
+                  <td className="table-cell" style={{width: '10px'}}>
+                    <FontAwesomeIcon icon={faTrashAlt} className="btn-clean" style={{margin: '0px'}} onClick={() => handleClickDelete(index)}/>
+                  </td>
                 </tr>
               ))
             }
@@ -126,6 +159,7 @@ function Organizations(props) {
 
         <ReactPaginate
           pageCount={total}
+          forcePage={selectPage}
           pageRangeDisplayed={15}
           marginPagesDisplayed={2}
           onPageChange={(page) => getList(page.selected)}
