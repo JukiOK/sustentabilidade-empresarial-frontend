@@ -117,7 +117,7 @@ function Dimensions(props) {
   const [yearsList, setYearsList] = useState();
   const [yearInput, setYearInput] = useState('');
   const [openOverlay, setOpenOverlay] = useState(false);
-  const [selectedYear, setSelecedYear] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
   const [indYear, setIndYear] = useState('');
 
   useEffect(() => {
@@ -180,7 +180,7 @@ function Dimensions(props) {
   function handleClickDelete(index) {
     setOpenOverlay(true);
     setIndYear(index);
-    setSelecedYear(yearsList[index]);
+    setSelectedYear(yearsList[index]);
   }
 
   console.log(yearsList);

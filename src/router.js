@@ -43,7 +43,7 @@ export default function Router(props) {
         <Route path="/register" component={Register} />
         <Route path="/recoverpassword" component={RecoverPassword} />
         <Route exact path="/evaluation" component={Evaluation} />
-        <Route path="/evaluation/:id" component={FormEvaluation} />
+        <Route path="/evaluation/form/" component={FormEvaluation} />
         <Route path="/organizationprofile" component={OrganizationProfile} />
         <Route exact path="/dimensions" component={Dimensions} />
         <Route path="/dimensions/form/:id" component={DimensionForm} />
