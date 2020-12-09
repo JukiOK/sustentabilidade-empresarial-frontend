@@ -154,11 +154,11 @@ function Dimensions(props) {
     //colocar ano na lista ordenada
     if(yearInput < aux[0].year) {
       ind = 0;
-    } else if (yearInput > aux[aux.length - 1].year) {
+    } else if (yearInput >= aux[aux.length - 1].year) {
       ind = aux.length;
     } else {
       for(let i = 1; i < aux.length; i++) {
-        if(aux[i - 1].year < yearInput && aux[i].year > yearInput) {
+        if(aux[i - 1].year < yearInput && aux[i].year >= yearInput) {
           ind = i;
           break;
         }
