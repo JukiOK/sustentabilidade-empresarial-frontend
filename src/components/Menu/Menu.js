@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
-import firebase from 'firebase';
 import { useCookies } from 'react-cookie';
 
 require ('./menu.scss');
@@ -80,7 +79,7 @@ function Menu(props) {
       <div className="menu-content">
         {
           tabs.map((tab, index) => {
-            if(!tab.isAdmin || (tab.isAdmin && (cookies.isAdmin == 'true'))) {
+            if(!tab.isAdmin || (tab.isAdmin && (cookies.isAdmin === 'true'))) {
               return (
                 <div
                   key={index}

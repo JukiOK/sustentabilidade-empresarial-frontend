@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import BasePage from '../BasePage/BasePage';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import {
   getDimension ,

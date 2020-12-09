@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import InputMask from 'react-input-mask';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrashAlt, faEdit, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import {
   getAllYears,
-  getYear,
   addYear,
   deleteYear,
   saveDimension,
@@ -119,6 +117,8 @@ function Dimensions(props) {
   const [yearsList, setYearsList] = useState();
   const [yearInput, setYearInput] = useState('');
   const [openOverlay, setOpenOverlay] = useState(false);
+  const [selectedYear, setSelecedYear] = useState('');
+  const [indYear, setIndYear] = useState('');
 
   useEffect(() => {
     setTimeout(() => {getInfos();}, 300); //delay para garantir que a dimensão não editada foi excluida do banco de dados
@@ -150,17 +150,37 @@ function Dimensions(props) {
   async function newYear() {
     let data = await addYear({year: yearInput});
     let aux = yearsList.slice();
-    aux.push(data);
+    let ind;
+    //colocar ano na lista ordenada
+    if(yearInput < aux[0].year) {
+      ind = 0;
+    } else if (yearInput > aux[aux.length - 1].year) {
+      ind = aux.length;
+    } else {
+      for(let i = 1; i < aux.length; i++) {
+        if(aux[i - 1].year < yearInput && aux[i].year > yearInput) {
+          ind = i;
+          break;
+        }
+      }
+    }
+    aux.splice(ind, 0, data);
     setYearsList(aux);
   }
 
-  async function removeYear(id, idArray) {
+  async function removeYear() {
     //remover ano, com id do ano e indice do ano no vetor
-    await deleteYear(id);
+    await deleteYear(selectedYear._id);
     let aux = yearsList.slice();
-    aux.splice(idArray, 1);
+    aux.splice(indYear, 1);
     setYearsList(aux);
     setOpenOverlay(false);
+  }
+
+  function handleClickDelete(index) {
+    setOpenOverlay(true);
+    setIndYear(index);
+    setSelecedYear(yearsList[index]);
   }
 
   console.log(yearsList);
@@ -168,6 +188,15 @@ function Dimensions(props) {
   return (
     <BasePage title={'Lista de dimensões'}>
       <div className="dimensions-container">
+        <Overlay openOverlay={openOverlay} setOpenOverlay={(value) => setOpenOverlay(value)} >
+          <div>
+            <span>Tem certeza que deseja apagar o ano {selectedYear.year}? Essa ação não pode ser desfeita.</span>
+            <div className="btn-row">
+              <div className="btn-confirm yes-btn" onClick={() => removeYear()}>Sim</div>
+              <div className="btn-confirm cancel-btn" onClick={() => setOpenOverlay(false)}>Não</div>
+            </div>
+          </div>
+        </Overlay>
         <div className="dimensions-filter-container">
           <input type="number" placeholder="Adicionar ano" value={yearInput} onChange={e => setYearInput(e.target.value)} />
           <div className="btn-confirm add-btn" onClick={newYear}>
@@ -179,19 +208,10 @@ function Dimensions(props) {
           yearsList && yearsList.map((year, indexYear) => {
             return (
             <div>
-              <Overlay openOverlay={openOverlay} setOpenOverlay={(value) => setOpenOverlay(value)} >
-                <div>
-                  <span>Tem certeza que deseja apagar o ano? Essa ação não pode ser desfeita.</span>
-                  <div className="btn-row">
-                    <div className="btn-confirm yes-btn" onClick={() => removeYear(year._id, indexYear)}>Sim</div>
-                    <div className="btn-confirm cancel-btn" onClick={() => setOpenOverlay(false)}>Não</div>
-                  </div>
-                </div>
-              </Overlay>
               <div className="dimensions-filter-container">
                 <span style={{fontWeight: 'bold', fontSize: '25px'}}>{year.year}</span>
                 <div className="btn-confirm new-btn" onClick={() => newDimension(year.year)}>Nova dimensão</div>
-                <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => setOpenOverlay(true)}/>
+                <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => handleClickDelete(indexYear)}/>
               </div>
               {
                 year.dimensionsList && year.dimensionsList.map((dimension, index) => (

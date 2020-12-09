@@ -249,7 +249,12 @@ export const getYear = async (id) => {
 
 export const deleteYear = async (id) => {
   return axiosApi.delete('/year/' + id)
-  axiosApi.get('/year')
  .then( response => response.data )
  .catch(err => {console.log(err);});
+}
+
+export const getEvaluationsUser = async (year) => {
+  return axiosApi.get('/organization/mine/evaluation/', {params: {year: year}})
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
 }
