@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import { getMe, getAllYears } from '../../services/requests';
+import { getMe, getAllYears, getEvaluationsUser, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
 
 require('./evaluation.scss');
 
@@ -12,16 +12,75 @@ function Evaluation(props) {
 
   const [yearsList, setYearsList] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
+  const [dimensionsList, setDimensionsList] = useState([]);
+  const [pointsGeneral, setPointsGeneral] = useState(0);
+  const [progressGeneral, setProgressGeneral] = useState(0);
   const img = require('../../assets/images/quadro_geral.png');
 
   useEffect(() => {
     getYearsList();
   }, []);
 
+  useEffect(() => {
+    if(selectedYear) {
+      getEvaluationInfo();
+    }
+  }, [selectedYear]);
+
   async function getYearsList() {
     let data = await getAllYears();
     setYearsList(data);
-    setSelectedYear(data[data.length-1]);
+    setSelectedYear(data[data.length-1].year);
+  }
+
+  async function getEvaluationInfo() {
+    let data = await getEvaluationsUser(selectedYear);
+    let answersList = {};
+    let evaluation = data[0];
+    if(evaluation.answers && evaluation.answers.length > 0) {
+      for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
+        answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
+      }
+    }
+    console.log(answersList);
+    let data1 = await getAllDimensions({year: selectedYear});
+    let pointsTotal = 0; //pontuação total da avaliação
+    let progressAll = 0; //progresso total da avaliação
+
+    for(let i = 0; i < data1.length; i++) {
+      let data2 = await getAllCriteriaDimension(data1[i]._id);
+      data1[i].criteriaList = data2;
+      let maxProgress = 0; //progresso total da dimensão
+      let pointDimension = 0; //pontuação da dimensão
+      let progressDimension = 0; //progresso da dimensão
+      for(let j = 0; j < data2.length; j++) {
+        let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
+        maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
+        if(evaluation.answers && evaluation.answers.length > 0) {
+          for(let k = 0; k < data3.length; k++) {
+            if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação das respostas, e o progresso na dimensão
+              let answersIndicator = answersList[data3[k]._id].answer;
+              for(let l = 0; l < answersIndicator.length; l++) { //somar pontuação das respostas
+                let ind = answersIndicator[l].ansId;
+                pointDimension += data3[k].weight * data3[k].question.options[ind].points;
+              }
+              progressDimension += 1; //quantidade de indicadores respondidos
+              console.log(pointDimension);
+            }
+          }
+        }
+      }
+      data1[i].progressTotal = maxProgress;
+      data1[i].progressDimension = progressDimension;
+      data1[i].pointDimension = pointDimension;
+      progressAll += maxProgress;
+      pointsTotal += pointDimension;
+    }
+    if(evaluation.answers) {
+      setProgressGeneral((evaluation.answers.length * 100/progressAll).toFixed(2));
+    }
+    setDimensionsList(data1);
+    setPointsGeneral(pointsTotal);
   }
 
   return (
@@ -35,7 +94,7 @@ function Evaluation(props) {
           <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
             {
               yearsList.map((year, index) => (
-                <option value={year.year}>{year.year}</option>
+                <option key={index} value={year.year}>{year.year}</option>
               ))
             }
           </select>
@@ -45,34 +104,43 @@ function Evaluation(props) {
           <div className="evaluation-container-info">
             <span>Pontuação geral</span>
             <div>
-              <span>0.0</span>
+              <span>{pointsGeneral}</span>
             </div>
           </div>
           <div className="evaluation-container-info">
             <span>Progresso total</span>
             <div>
-              <span>0%</span>
+              <span>{progressGeneral}%</span>
             </div>
           </div>
         </div>
         <span className="evaluation-title">Dimensões</span>
-        <div className="dimension-card">
-          <div>
-            <p className="dimension-name">dimensão</p>
-            <p>critérios</p>
-          </div>
-          <div className="dimension-progress">
-            <div>
-              <span>Pontuação </span>
-              <span>0.0</span>
+        {
+          dimensionsList.map((dimension, indexDimension) => (
+            <div className="dimension-card" key={indexDimension}>
+              <div>
+                <p className="dimension-name">{dimension.name}</p>
+                {
+                  dimension.criteriaList.map((criterion, index) => (
+                    <p key={index}>{criterion.name}</p>
+                  ))
+                }
+              </div>
+              <div className="dimension-progress">
+                <div>
+                  <span>Pontuação </span>
+                  <span>{dimension.pointDimension}</span>
+                </div>
+                <div>
+                  <span>Progresso </span>
+                  <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
+                </div>
+                <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>Começar</div>
+              </div>
             </div>
-            <div>
-              <span>Progresso </span>
-              <span>0/10</span>
-            </div>
-            <div className="btn-confirm" onClick={() => props.history.push('/evaluations/form')}>Começar</div>
-          </div>
-        </div>
+          ))
+        }
+
       </div>
     </BasePage>
   )
