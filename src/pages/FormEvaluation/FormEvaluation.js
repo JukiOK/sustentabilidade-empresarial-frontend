@@ -9,17 +9,27 @@ require('./formEvaluation.scss');
 
 function Indicator(props) {
   const [expand, setExpand] = useState(false);
+  const [newAnswers, setNewAnswers] = useState([]);
+  const { indicator } = props;
+
+  function typeAnswer() {
+
+  }
 
   return (
-    <div className="dimension-card">
+    <div className="indicator-card">
       {
         expand ?
         <div>
           <div style={{display: 'flex'}}>
-            <span className="dimension-name">nome</span>
+            <span className="indicator-name">{indicator.name}</span>
             <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(false)}/>
           </div>
-          <p>bla</p>
+          <p>{indicator.question.title}</p>
+          <p>{indicator.question.instruction}</p>
+          {
+            typeAnswer(indicator.question.type)
+          }
           <span>resposta</span>
           <div style={{display: 'flex', marginTop: '10px'}}>
             <div className="btn-confirm btn-attach">Anexar arquivo</div>
@@ -28,7 +38,7 @@ function Indicator(props) {
         </div>
         :
         <div style={{display: 'flex'}}>
-          <span className="dimension-name">nome</span>
+          <span className="dimension-name">{indicator.name}</span>
           <FontAwesomeIcon icon={faAngleDown} className="icon-arrow" onClick={() => setExpand(true)}/>
         </div>
       }
@@ -44,9 +54,10 @@ function FormEvaluation(props) {
 
   const [dimension, setDimension] = useState([]);
   const [criteriaList, setCriteriaList] = useState([]);
-  const [indicatorsList, setIndicatorsList] = useState([]);
+  const [indicatorsList, setIndicatorsList] = useState();
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [progressGeneral, setProgressGeneral] = useState(0);
+  const [evaluationId, setEvaluationId] = useState('');
   const params = useParams();
   const img = require('../../assets/images/quadro_geral.png');
 
@@ -57,6 +68,7 @@ function FormEvaluation(props) {
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
     let data = await getEvaluationsUser(data1.year);
+    setEvaluationId(data._id);
     let answersList = {};
     let evaluation = data[0];
     if(evaluation.answers && evaluation.answers.length > 0) {
@@ -88,6 +100,7 @@ function FormEvaluation(props) {
             }
             progressDimension += 1;
             console.log(pointDimension);
+            data3[k].answer = answersList[data3[k]._id].answer;
           }
           data3[k].points = pointIndicator;
         }
@@ -95,13 +108,15 @@ function FormEvaluation(props) {
       indicators[data2[j]._id] = data3; //guardar indicadores pelo id do critério para facilitar alterar o state
       data2[j].point = pointCriterion;
     }
-    console.log(indicators);
     setProgressGeneral((progressDimension * 100/maxProgress).toFixed(2));
     setDimension(data1);
     setCriteriaList(data2);
+    console.log(indicators, 'bla');
     setPointsGeneral(pointDimension);
     setIndicatorsList(indicators);
   }
+
+  console.log(indicatorsList, criteriaList);
 
   return (
     <BasePage title={dimension.name}>
@@ -124,18 +139,18 @@ function FormEvaluation(props) {
         </div>
         {
           criteriaList.map((criterion, index) => {
-            console.log(indicatorsList[criterion._id], criterion._id);
             return (
-            <div key={index}>
-              <span className="evaluation-title">{criterion.name}</span>
-              {
-                indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
-                  <Indicator key={index} />
-                ))
-              }
+              <div key={index}>
+                <span className="evaluation-title">{criterion.name}</span>
+                {
+                  indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
+                    <Indicator key={index} indicator={indicator}/>
+                  ))
+                }
 
-            </div>
-          )})
+              </div>
+            )
+          })
         }
 
       </div>
