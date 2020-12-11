@@ -95,7 +95,7 @@ function DimensionForm(props) {
       question: {
         title: "",
         type: "",
-        answer: []
+        answer: [],
       },
     };
     aux[idArray].indicatorsList.push({...newIndicator, ...data});

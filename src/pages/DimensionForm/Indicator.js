@@ -41,7 +41,6 @@ function Indicator(props) {
     let body = {name, weight, evidence, reference, area, responsable, description,
       question: {
         title: questionTitle,
-        instruction,
         type: typeAnswer,
         options: answerList,
       }
@@ -126,10 +125,10 @@ function Indicator(props) {
               <span>Questão</span>
               <textarea className="text-container" value={questionTitle} onChange={e => setQuestionTitle(e.target.value)} onBlur={handleSave}/>
             </div>
-            <div style={{width: '100%'}}>
+            {/* <div style={{width: '100%'}}>
               <span>Instruções</span>
               <textarea className="text-container" value={instruction} onChange={e => setInstruction(e.target.value)} onBlur={handleSave}/>
-            </div>
+            </div> */}
             <div style={{marginTop: '10px'}}>
               <div>
                 <span>Tipo de resposta</span>

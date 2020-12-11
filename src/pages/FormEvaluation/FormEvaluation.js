@@ -8,13 +8,94 @@ import { getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndica
 require('./formEvaluation.scss');
 
 function Indicator(props) {
+  const { indicator } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
-  const { indicator } = props;
 
-  function typeAnswer() {
+  useEffect(() => {
+    if(indicator.answer) {
+      setNewAnswers(indicator.answer);
+    }
+  }, []);
 
+  function handleChangeAnswer(value, type) {
+    console.log(value);
+    let aux = newAnswers.slice();
+    if(aux.length === 0) {
+      aux.push({text: '', ansId: 0});
+    }
+    switch (type) {
+      case 'dissertative':
+        aux[0].text = value;
+        setNewAnswers(aux);
+        break;
+      case 'binary':
+        aux[0].ansId = parseInt(value);
+        aux[0].text = indicator.question.options[value].text;
+        break;
+      case 'multiple':
+        let answ = aux.findIndex(x => x.ansId === value);
+        if(answ){
+          aux.splice(answ, 1);
+        } else {
+          aux.push({ansId: parseInt(value), text: indicator.question.options[value].text})
+        }
+        break;
+      default:
+
+    }
+    setNewAnswers(aux);
   }
+
+  function typeAnswer(type) {
+    switch (type) {
+      case 'dissertative':
+        return (
+          <input value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')}/>
+        )
+        break;
+      case 'binary':
+        return (
+          <div>
+            {
+              indicator.question.options.map((option, index) => {
+                return (
+                <div>
+                  <input type="radio"
+                    name={"option"  + indicator._id} value={index} key={index}
+                    checked={newAnswers && newAnswers[0] && newAnswers[0].ansId === index}
+                    onChange={e => handleChangeAnswer(e.target.value, 'binary')}
+                  />
+                  <span>{option.text}</span>
+                </div>
+              )})
+            }
+          </div>
+        )
+        break;
+      case 'multiple':
+        return (
+          <div>
+            {
+              indicator.question.options.map((option, index) => (
+                <div>
+                  <input type="checkbox" name={"option"  + indicator._id} value={index} key={index}
+                    checked={newAnswers && newAnswers.find(x => x.ansId === index)}
+                    onChange={e => handleChangeAnswer(e.target.value, 'multiple')}
+                  />
+                  <span>{option.text}</span>
+                </div>
+              ))
+            }
+          </div>
+        )
+        break;
+      default:
+        break;
+    }
+  }
+
+  console.log(newAnswers, 'bla');
 
   return (
     <div className="indicator-card">
@@ -26,11 +107,12 @@ function Indicator(props) {
             <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(false)}/>
           </div>
           <p>{indicator.question.title}</p>
-          <p>{indicator.question.instruction}</p>
+          <p className="indicator-description" style={{marginTop: '20px'}}>Descrição:</p>
+          <p className="indicator-description" style={{marginBottom: '20px'}}>{indicator.question.description}</p>
+          <span>Resposta:</span>
           {
             typeAnswer(indicator.question.type)
           }
-          <span>resposta</span>
           <div style={{display: 'flex', marginTop: '10px'}}>
             <div className="btn-confirm btn-attach">Anexar arquivo</div>
             <div className="btn-confirm">Salvar</div>
@@ -111,7 +193,6 @@ function FormEvaluation(props) {
     setProgressGeneral((progressDimension * 100/maxProgress).toFixed(2));
     setDimension(data1);
     setCriteriaList(data2);
-    console.log(indicators, 'bla');
     setPointsGeneral(pointDimension);
     setIndicatorsList(indicators);
   }

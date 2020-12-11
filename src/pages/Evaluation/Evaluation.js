@@ -37,7 +37,7 @@ function Evaluation(props) {
     let data = await getEvaluationsUser(selectedYear);
     let answersList = {};
     let evaluation = data[0];
-    if(evaluation.answers && evaluation.answers.length > 0) {
+    if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
       }
@@ -56,7 +56,7 @@ function Evaluation(props) {
       for(let j = 0; j < data2.length; j++) {
         let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
         maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
-        if(evaluation.answers && evaluation.answers.length > 0) {
+        if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
           for(let k = 0; k < data3.length; k++) {
             if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação das respostas, e o progresso na dimensão
               let answersIndicator = answersList[data3[k]._id].answer;
@@ -76,8 +76,10 @@ function Evaluation(props) {
       progressAll += maxProgress;
       pointsTotal += pointDimension;
     }
-    if(evaluation.answers) {
+    if(evaluation && evaluation.answers) {
       setProgressGeneral((evaluation.answers.length * 100/progressAll).toFixed(2));
+    } else {
+      setProgressGeneral(0);
     }
     setDimensionsList(data1);
     setPointsGeneral(pointsTotal);
