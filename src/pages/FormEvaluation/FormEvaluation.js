@@ -3,14 +3,19 @@ import BasePage from '../BasePage/BasePage';
 import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
-import { getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
+import SaveBtn from '../../components/SaveBtn/SaveBtn';
+import {
+  getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, saveEvaluationsUser, updateEvaluationsUser
+} from '../../services/requests';
 
 require('./formEvaluation.scss');
 
 function Indicator(props) {
-  const { indicator } = props;
+  const { indicator, saveAnswer } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [point, setPoint] = useState(indicator.point);
 
   useEffect(() => {
     if(indicator.answer) {
@@ -21,37 +26,52 @@ function Indicator(props) {
   function handleChangeAnswer(value, type) {
     console.log(value);
     let aux = newAnswers.slice();
-    if(aux.length === 0) {
-      aux.push({text: '', ansId: 0});
-    }
     switch (type) {
       case 'dissertative':
-        aux[0].text = value;
+        if(aux.length === 0) {
+          aux.push({text: value, ansId: 0});
+        } else {
+          if(value === '') {
+            aux.splice(0, 1);
+          } else {
+            aux[0].text = value;
+          }
+        }
         setNewAnswers(aux);
         break;
       case 'binary':
-        aux[0].ansId = parseInt(value);
-        aux[0].text = indicator.question.options[value].text;
+        if(aux.length === 0) {
+          aux.push({text: indicator.question.options[value].text, ansId: parseInt(value)});
+        } else {
+          aux[0].ansId = parseInt(value);
+          aux[0].text = indicator.question.options[value].text;
+        }
+        setPoint(indicator.weight * indicator.question.options[value].points); //alterar pontuação do indicador para pontuação da resposta selecionada
         break;
       case 'multiple':
-        let answ = aux.findIndex(x => x.ansId === value);
-        if(answ){
+        let answ = aux.findIndex(x => x.ansId === parseInt(value));
+        let newPoint = point; //para questão multipla escolha precisa somar ou subtrair a pontuação
+        if(answ !== -1){ //se ja tem a resposta então deve tira-la
           aux.splice(answ, 1);
-        } else {
+          newPoint -= indicator.weight * indicator.question.options[value].points;
+        } else { //senão adiciona a resposta
           aux.push({ansId: parseInt(value), text: indicator.question.options[value].text})
+          newPoint += indicator.weight * indicator.question.options[value].points;
         }
+        setPoint(newPoint);
         break;
       default:
-
+        break;
     }
     setNewAnswers(aux);
   }
 
   function typeAnswer(type) {
+    //função com componente para tipo da resposta
     switch (type) {
       case 'dissertative':
         return (
-          <input value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')}/>
+          <input style={{width: '100%'}} value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')}/>
         )
         break;
       case 'binary':
@@ -66,7 +86,7 @@ function Indicator(props) {
                     checked={newAnswers && newAnswers[0] && newAnswers[0].ansId === index}
                     onChange={e => handleChangeAnswer(e.target.value, 'binary')}
                   />
-                  <span>{option.text}</span>
+                  <span className="label-options">{option.text}</span>
                 </div>
               )})
             }
@@ -83,7 +103,7 @@ function Indicator(props) {
                     checked={newAnswers && newAnswers.find(x => x.ansId === index)}
                     onChange={e => handleChangeAnswer(e.target.value, 'multiple')}
                   />
-                  <span>{option.text}</span>
+                  <span className="label-options">{option.text}</span>
                 </div>
               ))
             }
@@ -109,13 +129,16 @@ function Indicator(props) {
           <p>{indicator.question.title}</p>
           <p className="indicator-description" style={{marginTop: '20px'}}>Descrição:</p>
           <p className="indicator-description" style={{marginBottom: '20px'}}>{indicator.question.description}</p>
-          <span>Resposta:</span>
+          <div style={{marginBottom: '10px'}}>
+            <span>Resposta:</span>
+          </div>
           {
             typeAnswer(indicator.question.type)
           }
           <div style={{display: 'flex', marginTop: '10px'}}>
+            <span>{indicator.point} / {indicator.weight}</span>
             <div className="btn-confirm btn-attach">Anexar arquivo</div>
-            <div className="btn-confirm">Salvar</div>
+            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point)} saving={saving} style={{fontSize: '16px'}}/>
           </div>
         </div>
         :
@@ -136,6 +159,7 @@ function FormEvaluation(props) {
 
   const [dimension, setDimension] = useState([]);
   const [criteriaList, setCriteriaList] = useState([]);
+  const [answersList, setAnswersList] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState();
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [progressGeneral, setProgressGeneral] = useState(0);
@@ -150,7 +174,7 @@ function FormEvaluation(props) {
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
     let data = await getEvaluationsUser(data1.year);
-    setEvaluationId(data._id);
+    setEvaluationId(data[0]._id);
     let answersList = {};
     let evaluation = data[0];
     if(evaluation.answers && evaluation.answers.length > 0) {
@@ -158,7 +182,6 @@ function FormEvaluation(props) {
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
       }
     }
-    console.log(answersList);
 
     let data2 = await getAllCriteriaDimension(data1._id);
     let maxProgress = 0; //progresso total da dimensão
@@ -184,20 +207,80 @@ function FormEvaluation(props) {
             console.log(pointDimension);
             data3[k].answer = answersList[data3[k]._id].answer;
           }
-          data3[k].points = pointIndicator;
+          data3[k].point = pointIndicator;
         }
       }
       indicators[data2[j]._id] = data3; //guardar indicadores pelo id do critério para facilitar alterar o state
       data2[j].point = pointCriterion;
     }
-    setProgressGeneral((progressDimension * 100/maxProgress).toFixed(2));
+    data1.maxProgress = maxProgress;
+    setProgressGeneral(progressDimension);
     setDimension(data1);
     setCriteriaList(data2);
     setPointsGeneral(pointDimension);
     setIndicatorsList(indicators);
+    setAnswersList(data[0].answers);
   }
 
-  console.log(indicatorsList, criteriaList);
+  async function saveAnswer(answer, indicator, setSaving, pointIndicator, indexCriterion, indexInd) {
+    let aux = answersList.slice();
+    let newProgress = progressGeneral;
+    let oldInd = aux.find(x => x.indicatorId === indicator._id);
+    console.log(oldInd, 'oldind');
+    if(answer.length > 0) { //se a resposta esta preenchida
+      newProgress += 1;
+      if(oldInd) { //se ja tem resposta do indicador somente altera ela
+        oldInd.answer = answer;
+      } else { //senão adiciona essa resposta, e altera o progresso
+        aux.push({
+          answer,
+          indicatorId: indicator._id,
+        })
+      }
+    } else { //se a resposta esta vazia
+      newProgress -= 1;
+      if(oldInd) { //se havia uma resposta do indicador deve-se retira-la, senão não acrescenta resposta
+        let index = aux.findIndex(x => x.indicatorId === indicator._id);
+        aux.splice(index, 1);
+      }
+    }
+
+    setSaving(true);
+    let body = {
+      answers: aux,
+      year: dimension.year,
+    }
+    if(evaluationId) {
+      await updateEvaluationsUser(evaluationId, body);
+    } else {
+      let data = await saveEvaluationsUser(body);
+      setEvaluationId(data._id);
+    }
+    setSaving(false);
+
+    //atualizando a lista de todas as respostas
+    setAnswersList(aux);
+
+    setProgressGeneral(newProgress);
+
+    //atualizando a pontuação da dimensão, substituindo a pontuação antiga do indicador pela nova
+    let oldPoint = indicatorsList[indicator.criteriaId][indexInd].point;
+    let newPoints = pointsGeneral - oldPoint + pointIndicator;
+    setPointsGeneral(newPoints);
+
+    //atualizando a pontuação do critério, substituindo a pontuação antiga do indicador pela nova
+    let newCriteriaList = criteriaList.slice();
+    newCriteriaList[indexCriterion].point += - oldPoint + pointIndicator;
+    setCriteriaList(newCriteriaList);
+
+    //atualizando pontuação do indicador
+    let indicList = indicatorsList[indicator.criteriaId].slice();
+    indicList[indexInd].point = pointIndicator;
+    let newIndicatorList = {...indicatorsList};
+    newIndicatorList[indicator.criteriaId] = indicList;
+    setIndicatorsList(newIndicatorList)
+  }
+  console.log(indicatorsList, criteriaList, evaluationId, answersList);
 
   return (
     <BasePage title={dimension.name}>
@@ -214,18 +297,21 @@ function FormEvaluation(props) {
           <div className="evaluation-container-info">
             <span>Progresso total</span>
             <div>
-              <span>{progressGeneral}%</span>
+              <span>{(progressGeneral * 100/dimension.maxProgress).toFixed(2)}%</span>
             </div>
           </div>
         </div>
         {
-          criteriaList.map((criterion, index) => {
+          criteriaList.map((criterion, indexCriterion) => {
             return (
-              <div key={index}>
-                <span className="evaluation-title">{criterion.name}</span>
+              <div key={indexCriterion}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <span className="evaluation-title">{criterion.name}</span>
+                  <span>{criterion.point}</span>
+                </div>
                 {
                   indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
-                    <Indicator key={index} indicator={indicator}/>
+                    <Indicator key={index} indicator={indicator} saveAnswer={(answer, setSaving, point) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index)}/>
                   ))
                 }
 

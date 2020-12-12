@@ -52,10 +52,10 @@ function Indicator(props) {
     setTypeAnswer(value);
     switch (value) {
       case 'dissertative':
-        setAnswerList([]);
+        setAnswerList([{points: 0}]);
         break;
       case 'binary': case 'multiple':
-        setAnswerList([{text:'', points: ''}, {text:'', points: ''}])
+        setAnswerList([{text:'', points: 0}, {text:'', points: 0}])
       default:
         break;
     }
@@ -69,7 +69,7 @@ function Indicator(props) {
 
   function addAnswer() {
     let aux = answerList.slice();
-    aux.push({text:'', points: ''});
+    aux.push({text:'', points: 0});
     setAnswerList(aux);
 
   }

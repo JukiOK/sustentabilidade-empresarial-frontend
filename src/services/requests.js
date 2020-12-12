@@ -258,3 +258,15 @@ export const getEvaluationsUser = async (year) => {
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
+
+export const saveEvaluationsUser = async (body) => {
+  return axiosApi.post('/organization/mine/evaluation', body)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const updateEvaluationsUser = async (id, body) => {
+  return axiosApi.put('/organization/mine/evaluation/' + id, body)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
