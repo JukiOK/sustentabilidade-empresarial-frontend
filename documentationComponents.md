@@ -177,9 +177,26 @@ Componente para página de Avaliação.
 
 
 -----
+**src\pages\EvaluationsUser\EvaluationsUser.js**
+
+### 1. EvaluationsUser
+
+Componente para a tela de lista de avaliações do usuário   
+
+
+
+
+-----
 **src\pages\FormEvaluation\FormEvaluation.js**
 
-### 1. FormEvaluation
+### 1. Indicator
+
+Componente para card do indicador.   
+
+
+
+
+### 2. FormEvaluation
 
 Componente para a página da avaliação de 1 dimensão.   
 

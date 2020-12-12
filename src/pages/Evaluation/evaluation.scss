@@ -15,6 +15,12 @@
       height: 300px;
     }
 
+    @media(max-width: 1300px) {
+      .img {
+        height: 200px;
+      }
+    }
+
     .evaluation-container-info {
       display: flex;
       flex-direction: column;
@@ -29,7 +35,7 @@
     padding: 15px;
     box-shadow: 0px 0px 10px $gray;
     border-radius: 10px;
-    margin: 10px 0px;
+    margin: 15px 0px;
     background-color: $white;
     display: flex;
 

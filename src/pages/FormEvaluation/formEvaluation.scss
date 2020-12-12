@@ -15,21 +15,49 @@
       height: 300px;
     }
 
-    .evaluation-container-info {
+    @media(max-width: 1300px) {
+      .img {
+        height: 200px;
+      }
+    }
+
+    .evaluation-container-texts {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin: 0px 30px;
-      align-items: center;
+
+      .evaluation-container-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0px 30px;
+        align-items: center;
+      }
+
+      .description-container {
+        margin-top: 20px;
+        span {
+          font-size: 16px;
+        }
+      }
+
     }
 
+  }
+
+  .points-text {
+    font-size: 16px;
+  }
+
+  .criterion-container {
+    margin: 30px 0px;
   }
 
   .indicator-card {
     padding: 15px;
     box-shadow: 0px 0px 10px $gray;
     border-radius: 10px;
-    margin: 10px 0px;
+    margin: 15px 0px;
     background-color: $white;
 
     .indicator-name {
@@ -46,6 +74,10 @@
       background-color: $gray;
     }
 
+    .btn-attach:hover {
+      background-color: $darkgray;
+    }
+
     .icon-arrow {
       font-size: 30px;
       color: $black;
@@ -56,12 +88,24 @@
     .label-options {
       margin-left: 5px;
     }
+
+    .row-buttons {
+      display: flex;
+      margin-top: 10px;
+      justify-content: space-between;
+      align-items: center;
+
+      .evidence-input {
+        margin-left: auto;
+        width: 50%;
+      }
+    }
   }
 
-  .btn-confirm {
+  .save-eval {
     color: $white;
-    margin-top: 10px;
     width: 150px;
+    margin-left: 10px;
   }
 
   p {

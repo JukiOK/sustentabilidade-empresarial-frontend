@@ -4,22 +4,30 @@ import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
+import PuffLoader from 'react-spinners/PuffLoader';
 import {
   getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, saveEvaluationsUser, updateEvaluationsUser
 } from '../../services/requests';
+import colors from '../../constants/colorsobject';
 
 require('./formEvaluation.scss');
 
-function Indicator(props) {
+/**
+* Componente para card do indicador.
+*/
+
+export function Indicator(props) {
   const { indicator, saveAnswer } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
   const [saving, setSaving] = useState(false);
   const [point, setPoint] = useState(indicator.point);
+  const [linkEvidence, setLinkEvidence] = useState('');
 
   useEffect(() => {
     if(indicator.answer) {
       setNewAnswers(indicator.answer);
+      setLinkEvidence(indicator.answer.evidence);
     }
   }, []);
 
@@ -127,18 +135,26 @@ function Indicator(props) {
             <FontAwesomeIcon icon={faAngleUp} className="icon-arrow" onClick={() => setExpand(false)}/>
           </div>
           <p>{indicator.question.title}</p>
-          <p className="indicator-description" style={{marginTop: '20px'}}>Descrição:</p>
-          <p className="indicator-description" style={{marginBottom: '20px'}}>{indicator.question.description}</p>
+          {
+            indicator.description &&
+            <div>
+              <p className="indicator-description" style={{marginTop: '20px'}}>Descrição:</p>
+              <p className="indicator-description" style={{marginBottom: '20px'}}>{indicator.description}</p>
+            </div>
+          }
           <div style={{marginBottom: '10px'}}>
             <span>Resposta:</span>
           </div>
           {
             typeAnswer(indicator.question.type)
           }
-          <div style={{display: 'flex', marginTop: '10px'}}>
-            <span>{indicator.point} / {indicator.weight}</span>
-            <div className="btn-confirm btn-attach">Anexar arquivo</div>
-            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point)} saving={saving} style={{fontSize: '16px'}}/>
+          <div className="row-buttons" >
+            <span className="points-text">Pontos: {indicator.point} / {indicator.maxPoints}</span>
+            {
+              indicator.evidence &&
+              <input className="evidence-input" placeholder="Link para arquivo com todas evidências" value={linkEvidence} onChange={(e) => setLinkEvidence(e.target.value)}/>
+            }
+            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point, linkEvidence)} saving={saving} style={{fontSize: '16px'}} classBtn="save-eval"/>
           </div>
         </div>
         :
@@ -158,7 +174,7 @@ function Indicator(props) {
 function FormEvaluation(props) {
 
   const [dimension, setDimension] = useState([]);
-  const [criteriaList, setCriteriaList] = useState([]);
+  const [criteriaList, setCriteriaList] = useState();
   const [answersList, setAnswersList] = useState([]);
   const [indicatorsList, setIndicatorsList] = useState();
   const [pointsGeneral, setPointsGeneral] = useState(0);
@@ -195,20 +211,27 @@ function FormEvaluation(props) {
       if(evaluation.answers && evaluation.answers.length > 0) {
         for(let k = 0; k < data3.length; k++) {
           let pointIndicator = 0; //pontuação do indicador
+          let pointIndicatorMax = 0;
+          let options = data3[k].question.options;
+          for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
+            pointIndicatorMax += options[l].points;
+          }
+          data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
           if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
-            let answersIndicator = answersList[data3[k]._id].answer;
+            let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
             for(let l = 0; l < answersIndicator.length; l++) {
-              let ind = answersList[data3[k]._id].answer[l].ansId;
-              pointDimension += data3[k].weight * data3[k].question.options[ind].points;
-              pointCriterion += data3[k].weight * data3[k].question.options[ind].points;
+              let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
               pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
             }
             progressDimension += 1;
             console.log(pointDimension);
-            data3[k].answer = answersList[data3[k]._id].answer;
+            data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
           }
           data3[k].point = pointIndicator;
+          pointCriterion += pointIndicator;
         }
+        pointDimension += pointCriterion;
+
       }
       indicators[data2[j]._id] = data3; //guardar indicadores pelo id do critério para facilitar alterar o state
       data2[j].point = pointCriterion;
@@ -222,7 +245,7 @@ function FormEvaluation(props) {
     setAnswersList(data[0].answers);
   }
 
-  async function saveAnswer(answer, indicator, setSaving, pointIndicator, indexCriterion, indexInd) {
+  async function saveAnswer(answer, indicator, setSaving, pointIndicator, indexCriterion, indexInd, linkEvidence) {
     let aux = answersList.slice();
     let newProgress = progressGeneral;
     let oldInd = aux.find(x => x.indicatorId === indicator._id);
@@ -231,10 +254,12 @@ function FormEvaluation(props) {
       newProgress += 1;
       if(oldInd) { //se ja tem resposta do indicador somente altera ela
         oldInd.answer = answer;
+        oldInd.evidence = linkEvidence;
       } else { //senão adiciona essa resposta, e altera o progresso
         aux.push({
           answer,
           indicatorId: indicator._id,
+          evidence: linkEvidence,
         })
       }
     } else { //se a resposta esta vazia
@@ -284,43 +309,62 @@ function FormEvaluation(props) {
 
   return (
     <BasePage title={dimension.name}>
-      <div className="form-evaluation-container">
-        <span className="evaluation-title">Quadro Geral</span>
-        <div className="evaluation-container-general">
-          <img src={img} className="img"/>
-          <div className="evaluation-container-info">
-            <span>Pontuação geral</span>
-            <div>
-              <span>{pointsGeneral}</span>
+      {
+        criteriaList ?
+        <div>
+          <div className="form-evaluation-container">
+            <span className="evaluation-title">Quadro Geral</span>
+            <div className="evaluation-container-general">
+              <img src={img} className="img"/>
+              <div className="evaluation-container-texts">
+                <div style={{display: 'flex'}}>
+                  <div className="evaluation-container-info" style={{marginLeft: '0px'}}>
+                    <span>Pontuação geral</span>
+                    <div>
+                      <span>{pointsGeneral}</span>
+                    </div>
+                  </div>
+                  <div className="evaluation-container-info">
+                    <span>Progresso total</span>
+                    <div>
+                      <span>{(progressGeneral * 100/dimension.maxProgress).toFixed(2)}%</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="description-container">
+                  <span>Descrição: {dimension.description}</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="evaluation-container-info">
-            <span>Progresso total</span>
-            <div>
-              <span>{(progressGeneral * 100/dimension.maxProgress).toFixed(2)}%</span>
-            </div>
+            {
+              criteriaList.map((criterion, indexCriterion) => {
+                return (
+                  <div key={indexCriterion} className="criterion-container">
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                      <span className="evaluation-title">{criterion.name}</span>
+                      <span className="points-text">Pontuação: {criterion.point}</span>
+                    </div>
+                    {
+                      indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
+                        <Indicator key={index} indicator={indicator}
+                          saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
+                        />
+                      ))
+                    }
+
+                  </div>
+                )
+              })
+            }
+
           </div>
         </div>
-        {
-          criteriaList.map((criterion, indexCriterion) => {
-            return (
-              <div key={indexCriterion}>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                  <span className="evaluation-title">{criterion.name}</span>
-                  <span>{criterion.point}</span>
-                </div>
-                {
-                  indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
-                    <Indicator key={index} indicator={indicator} saveAnswer={(answer, setSaving, point) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index)}/>
-                  ))
-                }
+        :
+        <div className="loader-container">
+          <PuffLoader loading={criteriaList} size={100} color={colors.black}/>
+        </div>
+      }
 
-              </div>
-            )
-          })
-        }
-
-      </div>
     </BasePage>
   )
 }
