@@ -14,9 +14,10 @@ function Evaluation(props) {
 
   const [yearsList, setYearsList] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
-  const [dimensionsList, setDimensionsList] = useState();
+  const [dimensionsList, setDimensionsList] = useState([]);
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [progressGeneral, setProgressGeneral] = useState(0);
+  const [loading, setLoading] = useState(true);
   const img = require('../../assets/images/quadro_geral.png');
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function Evaluation(props) {
     let data = await getAllYears();
     setYearsList(data);
     if(data.length > 0) {
-      setSelectedYear(data[data.length-1].year);      
+      setSelectedYear(data[data.length-1].year);
     }
   }
 
@@ -87,75 +88,83 @@ function Evaluation(props) {
     }
     setDimensionsList(data1);
     setPointsGeneral(pointsTotal);
+    setLoading(false);
+
+  }
+
+  function changeYear(value) {
+    setSelectedYear(value);
+    setLoading(true);
   }
 
   return (
     <BasePage
       title={'Avaliação'}
     >
-      {
-        dimensionsList ?
-        <div className="evaluation-container">
-          <span className="evaluation-title">Quadro Geral</span>
+      <div className="evaluation-container">
+        <span className="evaluation-title">Quadro Geral</span>
+        <div>
+          <span>Selecione o ano da avaliação:</span>
+          <select value={selectedYear} onChange={e => changeYear(e.target.value)} style={{marginLeft: '10px'}}>
+            {
+              yearsList.map((year, index) => (
+                <option key={index} value={year.year}>{year.year}</option>
+              ))
+            }
+          </select>
+        </div>
+        {
+          !loading ?
           <div>
-            <span>Selecione o ano da avaliação:</span>
-            <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)} style={{marginLeft: '10px'}}>
-              {
-                yearsList.map((year, index) => (
-                  <option key={index} value={year.year}>{year.year}</option>
-                ))
-              }
-            </select>
-          </div>
-          <div className="evaluation-container-general">
-            <img src={img} className="img"/>
-            <div className="evaluation-container-info">
-              <span>Pontuação geral</span>
-              <div>
-                <span>{pointsGeneral}</span>
-              </div>
-            </div>
-            <div className="evaluation-container-info">
-              <span>Progresso total</span>
-              <div>
-                <span>{progressGeneral}%</span>
-              </div>
-            </div>
-          </div>
-          <span className="evaluation-title">Dimensões</span>
-          {
-            dimensionsList.map((dimension, indexDimension) => (
-              <div className="dimension-card" key={indexDimension}>
+            <div className="evaluation-container-general">
+              <img src={img} className="img"/>
+              <div className="evaluation-container-info">
+                <span>Pontuação geral</span>
                 <div>
-                  <p className="dimension-name">{dimension.name}</p>
-                  {
-                    dimension.criteriaList.map((criterion, index) => (
-                      <p key={index}>{criterion.name}</p>
-                    ))
-                  }
-                </div>
-                <div className="dimension-progress">
-                  <div>
-                    <span>Pontuação </span>
-                    <span>{dimension.pointDimension}</span>
-                  </div>
-                  <div>
-                    <span>Progresso </span>
-                    <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
-                  </div>
-                  <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>Começar</div>
+                  <span>{pointsGeneral}</span>
                 </div>
               </div>
-            ))
-          }
+              <div className="evaluation-container-info">
+                <span>Progresso total</span>
+                <div>
+                  <span>{progressGeneral}%</span>
+                </div>
+              </div>
+            </div>
+            <span className="evaluation-title">Dimensões</span>
+            {
+              dimensionsList.map((dimension, indexDimension) => (
+                <div className="dimension-card" key={indexDimension}>
+                  <div>
+                    <p className="dimension-name">{dimension.name}</p>
+                    {
+                      dimension.criteriaList.map((criterion, index) => (
+                        <p key={index}>{criterion.name}</p>
+                      ))
+                    }
+                  </div>
+                  <div className="dimension-progress">
+                    <div>
+                      <span>Pontuação </span>
+                      <span>{dimension.pointDimension}</span>
+                    </div>
+                    <div>
+                      <span>Progresso </span>
+                      <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
+                    </div>
+                    <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>Começar</div>
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+          :
+          <div className="loader-container">
+            <PuffLoader loading={loading} size={100} color={colors.black}/>
+          </div>
+        }
 
-        </div>
-        :
-        <div className="loader-container">
-          <PuffLoader loading={dimensionsList} size={100} color={colors.black}/>
-        </div>
-      }
-
+      </div>
     </BasePage>
   )
 }
