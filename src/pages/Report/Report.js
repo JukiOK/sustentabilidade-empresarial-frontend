@@ -126,10 +126,10 @@ function Report(props) {
             <span className="report-title">Pontuação geral</span>
             <div className="report-container-general">
               <div className="report-container-info">
-                <span>Pontuação não atingiu o mínimo para o certificado.</span>
-                <span>Saiba mais</span>
+                {/* <span>Pontuação não atingiu o mínimo para o certificado.</span>
+                <span>Saiba mais</span> */}
               </div>
-              <div className="report-circular">
+              <div className="report-circular" style={{borderColor: pointsGeneral === pointsGeneralTotal ? colors.brightgreen : colors.red}}>
                 <span style={{fontSize: '30px'}}>{pointsGeneral} / {pointsGeneralTotal}</span>
               </div>
             </div>
