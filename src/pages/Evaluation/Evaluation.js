@@ -32,7 +32,9 @@ function Evaluation(props) {
   async function getYearsList() {
     let data = await getAllYears();
     setYearsList(data);
-    setSelectedYear(data[data.length-1].year);
+    if(data.length > 0) {
+      setSelectedYear(data[data.length-1].year);      
+    }
   }
 
   async function getEvaluationInfo() {
@@ -97,7 +99,7 @@ function Evaluation(props) {
           <span className="evaluation-title">Quadro Geral</span>
           <div>
             <span>Selecione o ano da avaliação:</span>
-            <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)}>
+            <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)} style={{marginLeft: '10px'}}>
               {
                 yearsList.map((year, index) => (
                   <option key={index} value={year.year}>{year.year}</option>

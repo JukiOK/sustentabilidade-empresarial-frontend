@@ -208,31 +208,28 @@ function FormEvaluation(props) {
       let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
       let pointCriterion = 0; //pontuação do critério
       maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
-      if(evaluation.answers && evaluation.answers.length > 0) {
-        for(let k = 0; k < data3.length; k++) {
-          let pointIndicator = 0; //pontuação do indicador
-          let pointIndicatorMax = 0;
-          let options = data3[k].question.options;
-          for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
-            pointIndicatorMax += options[l].points;
-          }
-          data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
-          if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
-            let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
-            for(let l = 0; l < answersIndicator.length; l++) {
-              let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
-              pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
-            }
-            progressDimension += 1;
-            console.log(pointDimension);
-            data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
-          }
-          data3[k].point = pointIndicator;
-          pointCriterion += pointIndicator;
+      for(let k = 0; k < data3.length; k++) {
+        let pointIndicator = 0; //pontuação do indicador
+        let pointIndicatorMax = 0;
+        let options = data3[k].question.options;
+        for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
+          pointIndicatorMax += options[l].points;
         }
-        pointDimension += pointCriterion;
-
+        data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
+        if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
+          let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
+          for(let l = 0; l < answersIndicator.length; l++) {
+            let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
+            pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
+          }
+          progressDimension += 1;
+          data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
+        }
+        data3[k].point = pointIndicator;
+        pointCriterion += pointIndicator;
       }
+      pointDimension += pointCriterion;
+
       indicators[data2[j]._id] = data3; //guardar indicadores pelo id do critério para facilitar alterar o state
       data2[j].point = pointCriterion;
     }
