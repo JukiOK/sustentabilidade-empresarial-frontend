@@ -40,7 +40,7 @@ function OrganizationProfile(props) {
   const [saving, setSaving] = useState(false);
   const dispatch = useDispatch();
   const org = useSelector(state => state.organization && state.organization.mineOrg);
-
+  
   useEffect(() => {
     getLists();
   }, []);

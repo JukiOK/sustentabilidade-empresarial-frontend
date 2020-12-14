@@ -6,6 +6,8 @@ import { faSearch, faAngleLeft, faAngleRight, faTrashAlt } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import Overlay from '../../components/Overlay/Overlay';
+import { removeOrganization } from '../../redux/actions/organizationAction';
+import { useDispatch, useSelector } from 'react-redux';
 
 require('./organizations.scss');
 
@@ -28,6 +30,8 @@ function Organizations(props) {
   const [indexOrg, setIndexOrg] = useState('');
   const [open, setOpen] = useState(false);
   const [selectPage, setSelectPage] = useState(0);
+  const dispatch = useDispatch();
+  const org = useSelector(state => state.organization && state.organization.mineOrg);
 
   useEffect(() => {
     getInfos();
@@ -85,6 +89,9 @@ function Organizations(props) {
 
   async function removeOrg() {
     await deleteOrganizationById(selectedOrg._id);
+    if(selectedOrg._id === org._id) {
+      dispatch(removeOrganization());
+    }
     getList(0);
     setOpen(false);
     setSelectPage(0);
@@ -95,7 +102,7 @@ function Organizations(props) {
       <div className="organizations-container">
         <Overlay openOverlay={open} setOpenOverlay={(value) => setOpen(value)}>
           <span>
-            Tem certeza que deseja apagar a organização? Essa ação não pode ser desfeita.;
+            Tem certeza que deseja apagar a organização? Essa ação não pode ser desfeita.
           </span>
           <div className="row">
             <div className="btn-confirm yes-btn" onClick={removeOrg}>Sim</div>

@@ -11,7 +11,7 @@ export default (state = {}, action) => {
     case REMOVE_ORGANIZATION:
       return {
         ...state,
-        mineOrg: {}
+        mineOrg: undefined
       }
     default:
       return state;
