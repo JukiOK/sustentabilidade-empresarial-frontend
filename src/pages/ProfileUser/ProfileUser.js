@@ -4,6 +4,8 @@ import { getMe, updateMe, deleteMe, getOrganization } from '../../services/reque
 import firebase from 'firebase';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
 import Overlay from '../../components/Overlay/Overlay';
+import { setUser } from '../../redux/actions/userAction';
+import { useDispatch } from 'react-redux';
 
 require('./profileUser.scss');
 
@@ -28,6 +30,7 @@ function ProfileUser(props) {
   const [oldPass, setOldPass] = useState('');
   const [type, setType] = useState();
   const [errorSign, setErrorSign] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getInfos();
@@ -48,7 +51,8 @@ function ProfileUser(props) {
     setSaving(true);
     changeEmail().then(async () => {
       //função para atualizar dados do usuário no banco de dados
-      await updateMe({firstName, lastName, email});
+      let data = await updateMe({firstName, lastName, email});
+      dispatch(setUser(data));
       setSaving(false);
     })
   }

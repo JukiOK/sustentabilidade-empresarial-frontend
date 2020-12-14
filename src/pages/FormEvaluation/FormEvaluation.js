@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
 import PuffLoader from 'react-spinners/PuffLoader';
 import {
-  getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, saveEvaluationsUser, updateEvaluationsUser
+  getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, updateEvaluationsUser, saveEvaluationsUser
 } from '../../services/requests';
 import colors from '../../constants/colorsobject';
 
@@ -22,12 +22,11 @@ export function Indicator(props) {
   const [newAnswers, setNewAnswers] = useState([]);
   const [saving, setSaving] = useState(false);
   const [point, setPoint] = useState(indicator.point);
-  const [linkEvidence, setLinkEvidence] = useState('');
+  const [linkEvidence, setLinkEvidence] = useState(indicator.evidenceLink);
 
   useEffect(() => {
     if(indicator.answer) {
       setNewAnswers(indicator.answer);
-      setLinkEvidence(indicator.answer.evidence);
     }
   }, []);
 
@@ -190,10 +189,13 @@ function FormEvaluation(props) {
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
     let data = await getEvaluationsUser(data1.year);
-    setEvaluationId(data[0]._id);
+    if(data.length > 0) { //se tem uma avaliação salva
+      setEvaluationId(data[0]._id);
+      setAnswersList(data[0].answers);
+    }
     let answersList = {};
     let evaluation = data[0];
-    if(evaluation.answers && evaluation.answers.length > 0) {
+    if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
       }
@@ -224,6 +226,7 @@ function FormEvaluation(props) {
           }
           progressDimension += 1;
           data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
+          data3[k].evidenceLink = answersList[data3[k]._id].evidence; //guardar link da evidência
         }
         data3[k].point = pointIndicator;
         pointCriterion += pointIndicator;
@@ -239,7 +242,6 @@ function FormEvaluation(props) {
     setCriteriaList(data2);
     setPointsGeneral(pointDimension);
     setIndicatorsList(indicators);
-    setAnswersList(data[0].answers);
   }
 
   async function saveAnswer(answer, indicator, setSaving, pointIndicator, indexCriterion, indexInd, linkEvidence) {
