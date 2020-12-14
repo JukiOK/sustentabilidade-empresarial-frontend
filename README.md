@@ -82,6 +82,15 @@ Pasta com arquivos referentes as requisições e suas configurações.
 #### /services/requests.js
 Arquivo com a configuração da biblioteca [axios](https://www.npmjs.com/package/axios) para fazer as requisições, junto com as funções que executam as requisições.
 
+### /redux
+Pasta com funções para arquivos do [redux](https://react-redux.js.org/), com configuração do redux persist.
+
+#### /redux/actions
+Pasta com as ações do redux.
+
+#### /redux/reducers
+Pasta com os reducers do redux.
+
 ### /utils
 Pasta arquivos de utilidades variadas.
 
