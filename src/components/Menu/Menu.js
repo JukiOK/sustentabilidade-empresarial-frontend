@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
-import { useCookies } from 'react-cookie';
+import { useSelector } from 'react-redux'
 
 require ('./menu.scss');
 
@@ -16,20 +16,7 @@ function Menu(props) {
   const hids = require('../../assets/images/logohids.png');
   const unicamp = require('../../assets/images/UNICAMP_logo.png');
   const url = window.location.href;
-
-  const [cookies, setCookie] = useCookies(['isAdmin']); //state para guardar cookie para saber se usuário é administrador
-
-  useEffect(() => {
-    getInfo();
-  }, []);
-
-  async function getInfo() {
-    let data = await getMe(); //função para obter as informações do usuário
-    if(data) {
-      setCookie('isAdmin', data.isAdmin);
-    }
-  }
-
+  const admin = useSelector(state => state.user.userInfo && state.user.userInfo.isAdmin);
   //itens do menu, com url, nome e icone, e se pode ser acessado somente com a permissão de administrador
   const tabs = [
     {
@@ -79,7 +66,7 @@ function Menu(props) {
       <div className="menu-content">
         {
           tabs.map((tab, index) => {
-            if(!tab.isAdmin || (tab.isAdmin && (cookies.isAdmin === 'true'))) {
+            if(!tab.isAdmin || (tab.isAdmin && admin)) {
               return (
                 <div
                   key={index}

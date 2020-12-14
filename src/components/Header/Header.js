@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
-import { useCookies } from 'react-cookie';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { removeUser } from '../../redux/actions/userAction';
 
 require('./header.scss');
 
@@ -13,11 +14,11 @@ require('./header.scss');
 */
 function Header(props) {
 
-  const [cookies, setCookie] = useCookies(['isAdmin']); //state para guardar cookie para saber se usuário é administrador
+  const dispatch = useDispatch();
 
   function logout() { //função para fazer o logout através da função do firebase
     firebase.auth().signOut().then(function() {
-      setCookie('isAdmin', 'false');
+      dispatch(removeUser());
       props.history.push('/login');
     }).catch(function(error) {
       // An error happened.

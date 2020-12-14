@@ -3,6 +3,8 @@ import BasePageLogin from '../BasePageLogin/BasePageLogin';
 import InputMask from 'react-input-mask';
 import firebase from 'firebase';
 import { createUser } from '../../services/requests';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/actions/userAction';
 
 require('./register.scss');
 
@@ -22,6 +24,7 @@ function Register(props) {
   const [errorEmail, setErrorEmail] = useState(false);
   const [textErrorEmail, setTextErrorEmail] = useState('');
   const [textErrorPass, setTextErrorPass] = useState('');
+  const dispatch = useDispatch();
 
   function registerUser() {
     if(pass !== confirm) { //confirmação de senha
@@ -30,7 +33,8 @@ function Register(props) {
     } else {
       firebase.auth().createUserWithEmailAndPassword(email, pass)
       .then(async () => {
-        await createUser({firstName, lastName, email, phone});
+        let data = await createUser({firstName, lastName, email, phone});
+        dispatch(setUser(data));
         props.history.push('/organizationprofile');
       })
       .catch(function(error) {

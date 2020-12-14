@@ -4,12 +4,16 @@ import './index.scss';
 import Router from './router';
 import * as serviceWorker from './serviceWorker';
 import {firebaseImpl} from './utils/firebaseUtils';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
 firebaseImpl();
 
 ReactDOM.render(
   <React.StrictMode>
-    {<Router/>}
+    <Provider store={store}>
+      {<Router/>}      
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

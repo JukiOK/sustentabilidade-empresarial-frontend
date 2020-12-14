@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
 import firebase from 'firebase';
 import { paramFromUrl } from '../../utils/functions';
-
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/actions/userAction';
+import { getMe } from '../../services/requests';
 require('./login.scss');
 
 /**
@@ -14,14 +16,17 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [err, setErr] = useState(false);
+  const dispatch = useDispatch();
 
   function login() {
     //login com firebase
     firebase.auth().signInWithEmailAndPassword(email, pass)
-    .then(() => {
+    .then(async () => {
         //retorna para página em que foi deslogado
         let path = paramFromUrl();
         path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
+        let data = await getMe();
+        dispatch(setUser(data));
         props.history.push(path);
       }
     )
