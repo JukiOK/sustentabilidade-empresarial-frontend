@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
 import Overlay from '../../components/Overlay/Overlay';
 import { setUser } from '../../redux/actions/userAction';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 require('./profileUser.scss');
 
@@ -31,20 +31,20 @@ function ProfileUser(props) {
   const [type, setType] = useState();
   const [errorSign, setErrorSign] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user && state.user.userInfo);
+  const org = useSelector(state => state.organization && state.organization.mineOrg);
 
   useEffect(() => {
-    getInfos();
-  }, []);
+    if(user && org) {
+      getInfos();
+    }
+  }, [user, org]);
 
   async function getInfos() {
-    let data = await getMe();
-    setFirstName(data.firstName);
-    setLastName(data.lastName);
-    setEmail(data.email);
-    data = await getOrganization();
-    if(data) {
-      setOrganization(data.name);
-    }
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setEmail(user.email);
+    setOrganization(org.name);
   }
 
   async function updateUser() {

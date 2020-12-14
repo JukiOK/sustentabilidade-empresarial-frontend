@@ -15,7 +15,7 @@ import ProfileUser from './pages/ProfileUser/ProfileUser';
 import Users from './pages/Users/Users';
 import Organizations from './pages/Organizations/Organizations';
 import { useDispatch } from 'react-redux';
-import { removeUser } from './redux/actions/userAction';
+import { userLogout } from './redux/actions/userAction';
 
 export default function Router(props) {
 
@@ -32,7 +32,7 @@ export default function Router(props) {
         setToken(currentToken);
       } else if (!window.location.pathname.includes('login') && window.location.pathname !== '/register' && window.location.pathname !== '/recoverpassword') { //Redireciona para tela de login se token for invalido
         alert("Desculpe, sua sessão expirou. Por favor entre novamente.");
-        dispatch(removeUser());
+        dispatch(userLogout());
         let path = encodeURIComponent(window.location.pathname);
         window.location.href = "/login?previous=" + path;
       }

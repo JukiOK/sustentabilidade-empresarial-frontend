@@ -1,5 +1,4 @@
 export const SET_USER = 'SET_USER';
-export const REMOVE_USER = 'REMOVE_USER';
 
 export function setUser(user) {
   return {
@@ -8,9 +7,8 @@ export function setUser(user) {
   }
 }
 
-export function removeUser() {
+export function userLogout() {
   return {
-    type: REMOVE_USER,
-
+    type: 'USER_LOGOUT',
   }
 }

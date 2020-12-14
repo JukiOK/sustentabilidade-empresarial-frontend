@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { removeUser } from '../../redux/actions/userAction';
+import { userLogout } from '../../redux/actions/userAction';
 
 require('./header.scss');
 
@@ -18,7 +18,7 @@ function Header(props) {
 
   function logout() { //função para fazer o logout através da função do firebase
     firebase.auth().signOut().then(function() {
-      dispatch(removeUser());
+      dispatch(userLogout());
       props.history.push('/login');
     }).catch(function(error) {
       // An error happened.

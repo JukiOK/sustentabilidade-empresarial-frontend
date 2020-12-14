@@ -3,6 +3,8 @@ import BasePage from '../BasePage/BasePage';
 import { getMe, getAllYears, getEvaluationsUser, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
 import PuffLoader from 'react-spinners/PuffLoader';
 import colors from '../../constants/colorsobject';
+import { useDispatch, useSelector } from 'react-redux';
+import { setYearEvaluation } from '../../redux/actions/evaluationAction';
 
 require('./evaluation.scss');
 
@@ -19,6 +21,8 @@ function Evaluation(props) {
   const [progressGeneral, setProgressGeneral] = useState(0);
   const [loading, setLoading] = useState(true);
   const img = require('../../assets/images/quadro_geral.png');
+  const dispatch = useDispatch();
+  const yearSaved = useSelector(state => state.evaluation && state.evaluation.year);
 
   useEffect(() => {
     getYearsList();
@@ -34,7 +38,12 @@ function Evaluation(props) {
     let data = await getAllYears();
     setYearsList(data);
     if(data.length > 0) {
-      setSelectedYear(data[data.length-1].year);
+      if(yearSaved) { //se o ano esta salvo no redux
+        setSelectedYear(yearSaved);
+      } else {
+        setSelectedYear(data[data.length-1].year);
+        dispatch(setYearEvaluation(data[data.length-1].year));
+      }
     }
   }
 
@@ -94,6 +103,7 @@ function Evaluation(props) {
 
   function changeYear(value) {
     setSelectedYear(value);
+    dispatch(setYearEvaluation(value));
     setLoading(true);
   }
 

@@ -1,15 +1,14 @@
-import { SET_USER } from '../actions/userAction';
+import { SET_YEAR_EVALUATION } from '../actions/evaluationAction';
 
 export default (state = {}, action) => {
   switch (action.type) {
-    case SET_USER:
+    case SET_YEAR_EVALUATION:
       return {
         ...state,
-        userInfo: action.user,
+        year: action.year,
       }
       break;
     default:
       return state;
-
   }
 }

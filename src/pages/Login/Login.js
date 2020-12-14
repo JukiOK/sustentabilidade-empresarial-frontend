@@ -4,7 +4,9 @@ import firebase from 'firebase';
 import { paramFromUrl } from '../../utils/functions';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/actions/userAction';
-import { getMe } from '../../services/requests';
+import { setOrganization } from '../../redux/actions/organizationAction';
+import { getMe, getOrganization } from '../../services/requests';
+
 require('./login.scss');
 
 /**
@@ -27,6 +29,8 @@ function Login(props) {
         path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
         let data = await getMe();
         dispatch(setUser(data));
+        data = await getOrganization();
+        dispatch(setOrganization(data));
         props.history.push(path);
       }
     )

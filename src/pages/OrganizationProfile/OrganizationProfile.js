@@ -5,8 +5,11 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
-import { createOrganization, getOrganization, getMe, updateOrganization, getCategories, getSectors, getNumbEmp } from '../../services/requests';
+import { createOrganization, updateOrganization, getCategories, getSectors, getNumbEmp } from '../../services/requests';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../../redux/actions/userAction';
+import { setOrganization } from '../../redux/actions/organizationAction';
 
 require('./organizationProfile.scss');
 
@@ -35,35 +38,41 @@ function OrganizationProfile(props) {
   const [errorName, setErrorName] = useState(false);
   const [errorCategory, setErrorCategory] = useState(false);
   const [saving, setSaving] = useState(false);
+  const dispatch = useDispatch();
+  const org = useSelector(state => state.organization && state.organization.mineOrg);
+
+  useEffect(() => {
+    getLists();
+  }, []);
 
   useEffect(() => {
     getOrg();
-  }, []);
+  }, [org]);
 
-  async function getOrg() {
+  async function getLists() {
     let categoryList = await getCategories();
     let sectorsList = await getSectors();
     let numbEmpList = await getNumbEmp();
     setListCategories(categoryList);
     setListSectors(sectorsList);
     setListNumbEmp(numbEmpList);
-    let me = await getMe();
-    if(me && me.orgId) {
+  }
+
+  async function getOrg() {
+    if(org) {
       setIsNew(false);
-      setOrgId(me.orgId);
-      let data = await getOrganization(me.orgId);
-      setName(data.name);
-      setPhone(data.phone);
-      setSite(data.site);
-      setCategory(data.category);
-      setSector(data.sector);
-      setNumberEmp(data.size);
-      if(data.address) {
-        setAddress(data.address.address);
-        setNumber(data.address.number);
-        setCep(data.address.cep);
-        setState(data.address.state);
-        setCity(data.address.city);
+      setName(org.name);
+      setPhone(org.phone);
+      setSite(org.site);
+      setCategory(org.category);
+      setSector(org.sector);
+      setNumberEmp(org.size);
+      if(org.address) {
+        setAddress(org.address.address);
+        setNumber(org.address.number);
+        setCep(org.address.cep);
+        setState(org.address.state);
+        setCity(org.address.city);
       }
     } else {
       setIsNew(true);
@@ -87,9 +96,10 @@ function OrganizationProfile(props) {
       setSaving(true);
       if(isNew) {
         createOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
-        .then(() => {
+        .then((data) => {
           setIsNew(false);
           setSaving(false);
+          dispatch(setOrganization(data));
         })
         .catch((error) => {
           console.log(error);
@@ -97,8 +107,9 @@ function OrganizationProfile(props) {
         });
       } else {
         updateOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
-        .then(() => {
+        .then((data) => {
           setSaving(false);
+          dispatch(setOrganization(data));
         })
         .catch((error) => {
           alert(error);
@@ -161,7 +172,7 @@ function OrganizationProfile(props) {
               errorCategory &&
               <div style={{color: colorsobject.red}}>Campo obrigatório</div>
             }
-          </div>          
+          </div>
           <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
             <option value="" disabled selected hidden>Setor</option>
             {
