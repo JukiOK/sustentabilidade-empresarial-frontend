@@ -3,7 +3,10 @@ import BasePage from '../BasePage/BasePage';
 import { getEvaluationsList, getAllYears, getOrganizationsList } from '../../services/requests';
 import ReactPaginate from 'react-paginate';
 import { faSearch, faAngleLeft, faAngleRight, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Overlay from '../../components/Overlay/Overlay';
+import Organizations from '../../components/Organizations/Organizations';
 
 require('./evaluationsList.scss');
 
@@ -18,23 +21,17 @@ function EvaluationsList(props) {
   const [total, setTotal] = useState(0);
   const [yearSelected, setYearSelected] = useState();
   const [yearsList, setYearsList] = useState([]);
-  const [orgSelected, setOrgSelected] = useState();
-  const [orgList, setOrgList] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectOrg, setSelectOrg] = useState('');
 
   useEffect(() => {
     getYears();
-    getOrgList();
     getList();
   }, []);
 
   async function getYears() {
     let data = await getAllYears();
     setYearsList(data);
-  }
-
-  async function getOrgList() {
-    let data = await getOrganizationsList();
-    setOrgList(data.results);
   }
 
   async function getList(page) {
@@ -44,23 +41,35 @@ function EvaluationsList(props) {
     if(yearSelected) {
       body.year = yearSelected;
     }
-    if(orgSelected) {
-      body.orgId = orgSelected;
+    if(selectOrg) {
+      body.orgId = selectOrg._id;
     }
     let data = await getEvaluationsList(body);
     setEvaluationsList(data.results);
     setTotal(Math.ceil(data.total/ data.pageSize)); //para calcular a quantidade de páginas
   }
 
-  function filter() {
-    getList();
+  function handleSelectOrg(value) {
+    setSelectOrg(value);
+    setOpen(false);
+  }
+
+  function cleanFilters() {
+    setSelectOrg('');
+    setYearSelected('');
   }
 
   return (
     <BasePage title={'Lista de avaliações'}>
+      <Overlay openOverlay={open} setOpenOverlay={(value) => setOpen(value)}>
+        <Organizations isFilter setOrg={(value) => handleSelectOrg(value)}/>
+      </Overlay>
       <div className="evaluations-list-container">
         <div className="evaluations-list-filters">
-          <select value={yearSelected} onChange={e => setYearSelected(e.target.value)}>
+          <div className="filter-org" onClick={() => setOpen(true)}>
+            {selectOrg ? selectOrg.name : 'Selecione uma organização'}
+          </div>
+          <select value={yearSelected} onChange={e => setYearSelected(e.target.value)} >
             <option value="" >Selecionar ano</option>
             {
               yearsList.map((year, index) => (
@@ -68,9 +77,12 @@ function EvaluationsList(props) {
               ))
             }
           </select>
-          <button className="btn-search" onClick={filter}>
+          <button className="btn-search" onClick={getList}>
             <FontAwesomeIcon icon={faSearch} />
           </button>
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <FontAwesomeIcon icon={faTimesCircle} className="btn-clean" onClick={cleanFilters}/>
+          </div>
         </div>
         <table className="table">
           <thead>
@@ -92,7 +104,6 @@ function EvaluationsList(props) {
         </table>
         <ReactPaginate
           pageCount={total}
-          forcePage={selectPage}
           pageRangeDisplayed={15}
           marginPagesDisplayed={2}
           onPageChange={(page) => getList(page.selected)}

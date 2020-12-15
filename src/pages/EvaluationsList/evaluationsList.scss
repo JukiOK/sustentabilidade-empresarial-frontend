@@ -7,6 +7,16 @@
     display: flex;
     margin-bottom: 10px;
 
+    .filter-org {
+      background-color: $white;
+      border: 1px solid $black;
+      width: 30%;
+      padding: 10px;
+      font-size: 15px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
     .btn-search {
       background-color: $blue;
       color: $white;
@@ -16,6 +26,17 @@
 
     .btn-search:hover {
       background-color: $darkblue;
+    }
+
+    .btn-clean {
+      font-size: 30px;
+      color: $red;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .btn-clean:hover {
+      color: $darkred;
     }
   }
 

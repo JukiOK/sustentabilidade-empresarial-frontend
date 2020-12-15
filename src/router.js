@@ -13,7 +13,7 @@ import Report from './pages/Report/Report';
 import FormEvaluation from './pages/FormEvaluation/FormEvaluation';
 import ProfileUser from './pages/ProfileUser/ProfileUser';
 import Users from './pages/Users/Users';
-import Organizations from './pages/Organizations/Organizations';
+import OrganizationsList from './pages/OrganizationsList/OrganizationsList';
 import EvaluationsList from './pages/EvaluationsList/EvaluationsList';
 import EvaluationOrg from './pages/EvaluationOrg/EvaluationOrg';
 import EvaluationOrgDimension from './pages/EvaluationOrgDimension/EvaluationOrgDimension';
@@ -57,7 +57,7 @@ export default function Router(props) {
         <Route path="/report" component={Report} />
         <Route path="/userprofile" component={ProfileUser} />
         <Route path="/users" component={Users} />
-        <Route path="/organizations" component={Organizations} />
+        <Route path="/organizations" component={OrganizationsList} />
         <Route exact path="/testslist" component={EvaluationsList} />
         <Route exact path="/testslist/:orgId?/:evaluationId?/:year?" component={EvaluationOrg}/>
         <Route path="/testslist/form/:id/:orgId?/:evaluationId?" component={EvaluationOrgDimension}/>
