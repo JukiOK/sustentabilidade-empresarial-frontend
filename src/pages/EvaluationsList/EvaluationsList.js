@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
 import { getEvaluationsList, getAllYears, getOrganizationsList } from '../../services/requests';
 import ReactPaginate from 'react-paginate';
-import { faSearch, faAngleLeft, faAngleRight, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faAngleLeft, faAngleRight, faTrashAlt, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Overlay from '../../components/Overlay/Overlay';
@@ -89,6 +89,7 @@ function EvaluationsList(props) {
             <tr>
               <th className="table-cell">Organização</th>
               <th className="table-cell">Ano</th>
+              <th className="table-cell">Validado?</th>
             </tr>
           </thead>
           <tbody>
@@ -97,6 +98,16 @@ function EvaluationsList(props) {
                 <tr key={index} className="table-row" onClick={() => props.history.push('/testslist/' + evaluation.organization._id + '/' + evaluation._id + '/' + evaluation.year)}>
                   <td className="table-cell">{evaluation.organization && evaluation.organization.name}</td>
                   <td className="table-cell">{evaluation.year}</td>
+                  <td className="table-cell" style={{width: '30px'}}>
+                    <div className="validated-cell">
+                      {
+                        evaluation.validated ?
+                        <FontAwesomeIcon icon={faCheck} className="yes-icon"/>
+                        :
+                        <FontAwesomeIcon icon={faTimes} className="no-icon"/>
+                      }
+                    </div>
+                  </td>
                 </tr>
               ))
             }

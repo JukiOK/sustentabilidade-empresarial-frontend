@@ -21,6 +21,7 @@ Componente para header da pagina.
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
 title|string|no||Titulo do header
+backBtn|bool|no||Se tem botão de voltar
 -----
 **src\components\Menu\Menu.js**
 
@@ -31,6 +32,20 @@ Componente para o menu lateral.
 
 
 
+-----
+**src\components\Organizations\Organizations.js**
+
+### 1. Organizations
+
+Componente com lista das organizações.   
+
+
+
+
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+isFilter|bool|no||Se será usado como filtro
+setOrg|func|no||Escolhe organização
 -----
 **src\components\Overlay\Overlay.js**
 
@@ -81,6 +96,7 @@ saving|bool|yes||Se esta executando a requisição
 classBtn|string|no||className da div do botão
 style|object|no||Modificar o estilo do texto do botão
 save|func|yes||Função executada quando botão é pressionado, não há prametro
+disabled|bool|no||Desativar botão
 -----
 **src\pages\BasePage\BasePage.js**
 
@@ -94,6 +110,7 @@ Componente com design da tela base, com header e menu.
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
 title|string|no||Título do Header
+backBtn|bool|no||Se tem botão de voltar
 -----
 **src\pages\BasePageLogin\BasePageLogin.js**
 
@@ -176,12 +193,36 @@ Componente para página de Avaliação.
 
 
 
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+history|object|no||history do router-dom
+backBtn|bool|no||Se tem botão de voltar
 -----
-**src\pages\EvaluationsUser\EvaluationsUser.js**
+**src\pages\EvaluationOrg\EvaluationOrg.js**
 
-### 1. EvaluationsUser
+### 1. EvaluationOrg
 
-Componente para a tela de lista de avaliações do usuário   
+Componente para tela da avaliação de uma organização   
+
+
+
+
+-----
+**src\pages\EvaluationOrgDimension\EvaluationOrgDimension.js**
+
+### 1. EvaluationOrgDimension
+
+Componente para página da avaliação da dimensão de uma organização   
+
+
+
+
+-----
+**src\pages\EvaluationsList\EvaluationsList.js**
+
+### 1. EvaluationsList
+
+Componente para a tela de lista de avaliações   
 
 
 
@@ -196,6 +237,11 @@ Componente para card do indicador.
 
 
 
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+indicator|object|yes||Objeto do indicador
+saveAnswer|func|yes||Salvar resposta do indicador
+isFromOrg|bool|yes||Indicar se é tela para avaliação de uma organização
 ### 2. FormEvaluation
 
 Componente para a página da avaliação de 1 dimensão.   
@@ -203,6 +249,10 @@ Componente para a página da avaliação de 1 dimensão.
 
 
 
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+history|object|no||history do router-dom
+backBtn|bool|no||Se tem botão de voltar
 -----
 **src\pages\Login\Login.js**
 
@@ -224,9 +274,9 @@ Componente para a página de Perfil da instituição.
 
 
 -----
-**src\pages\Organizations\Organizations.js**
+**src\pages\OrganizationsList\OrganizationsList.js**
 
-### 1. Organizations
+### 1. OrganizationsList
 
 Componente para página de lista de organizações.   
 

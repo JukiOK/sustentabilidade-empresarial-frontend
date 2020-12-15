@@ -48,4 +48,17 @@
     background-color: $gray !important;
     color: $white;
   }
+
+  .validated-cell {
+    justify-content: center;
+    display: flex;
+
+    .yes-icon {
+      color: $green;
+    }
+
+    .no-icon {
+      color: $red;
+    }
+  }
 }
