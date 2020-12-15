@@ -161,6 +161,8 @@ function Evaluation(props) {
     setSelectedYear(value);
     dispatch(setYearEvaluation(value));
     setLoading(true);
+    setPointsGeneral(0);
+    setProgressGeneral(0);
   }
 
   console.log(dimensionsList);

@@ -107,6 +107,8 @@ function Report(props) {
   function changeYear(value) {
     setSelectedYear(value);
     setLoading(true);
+    setPointsGeneralTotal(0);
+    setPointsGeneral(0);
   }
 
   return (
@@ -153,7 +155,7 @@ function Report(props) {
                           dimension.criteriaList.map((criterion, index) => (
                             <div style={{display: 'flex', margin: '5px 0px'}}>
                               <span>{criterion.name}</span>
-                              <span style={{marginLeft: 'auto'}}>{criterion.point} / {criterion.pointMax}</span>
+                              <span style={{marginLeft: 'auto'}}>{criterion.point ? criterion.point : 0} / {criterion.pointMax ? criterion.pointMax : 0}</span>
                             </div>
                           ))
                         }
