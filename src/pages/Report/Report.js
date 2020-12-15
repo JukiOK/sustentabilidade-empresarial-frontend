@@ -43,8 +43,18 @@ function Report(props) {
     }
   }
 
+  function updateDimensionList(index, obj, value){
+    setDimensionsList(oldDimList => {
+      let newDimList = [...oldDimList];
+      newDimList[index][obj] = value;
+      return newDimList;
+    })
+  }
+
   async function getEvaluationInfo() {
     let data1 = await getAllDimensions({year: selectedYear});
+    setDimensionsList(data1);
+    setLoading(false);
     let data = await getEvaluationsUser(selectedYear);
     let answersList = {};
     let evaluation = data[0];
@@ -54,50 +64,42 @@ function Report(props) {
       }
     }
 
-    let pointsTotal = 0; //pontuação total
-    let pointsTotalMax = 0; //pontuação total máxima
-
     for(let i = 0; i < data1.length; i++) {
-      let data2 = await getAllCriteriaDimension(data1[i]._id);
-      let pointDimension = 0; //pontuação da dimensão
-      let pointDimensionMax = 0; //pontuação máxima da dimensão
-      for(let j = 0; j < data2.length; j++) {
-        let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
-        let pointCriterion = 0; //pontuação do critério
-        let pointCriterionMax = 0; //pontuação máxima do critério
-        for(let k = 0; k < data3.length; k++) {
-          let pointIndicator = 0; //pontuação do indicador
-          let pointIndicatorMax = 0; //pontuação máxima do indicador
-          let options = data3[k].question.options;
-          for(let l = 0; l < options.length; l++) {
-            pointIndicatorMax += options[l].points;
-          }
-          if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
-            let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
-            for(let l = 0; l < answersIndicator.length; l++) {
-              let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
-              pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
+      data1[i].point = 0;
+      data1[i].pointMax = 0;
+      getAllCriteriaDimension(data1[i]._id).then(data2 => {
+        updateDimensionList(i, 'criteriaList', data2);
+        for(let j = 0; j < data2.length; j++) {
+          data2[j].point = 0;
+          data2[j].pointMax = 0;
+          getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id).then(data3 => {
+            for(let k = 0; k < data3.length; k++) {
+              let options = data3[k].question.options;
+              for(let l = 0; l < options.length; l++) {
+                let points = options[l].points;
+                data2[j].pointMax += points;
+                data1[i].pointMax += points;
+                setPointsGeneralTotal(oldPoitsTotal => oldPoitsTotal + points);
+                updateDimensionList(i, 'criteriaList', data2);
+                updateDimensionList(i, 'pointMax', data1[i].pointMax);
+              }
+              if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
+                let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
+                for(let l = 0; l < answersIndicator.length; l++) {
+                  let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
+                  let points = data3[k].weight * data3[k].question.options[ind].points;
+                  data2[j].point += points;
+                  data1[i].point += points;
+                  setPointsGeneral(oldPoints => oldPoints + points);
+                  updateDimensionList(i, 'criteriaList', data2);
+                  updateDimensionList(i, 'point', data1[i].point);
+                }
+              }
             }
-          }
-          pointCriterion += pointIndicator;
-          pointCriterionMax += pointIndicatorMax;
+          });
         }
-        pointDimension += pointCriterion;
-        pointDimensionMax += pointCriterionMax;
-        data2[j].point = pointCriterion;
-        data2[j].pointMax = pointCriterionMax;
-      }
-      data1[i].point = pointDimension;
-      data1[i].pointMax = pointDimensionMax;
-      data1[i].criteriaList = data2;
-      pointsTotal += pointDimension;
-      pointsTotalMax += pointDimensionMax;
+      });
     }
-
-    setDimensionsList(data1);
-    setPointsGeneral(pointsTotal);
-    setPointsGeneralTotal(pointsTotalMax);
-    setLoading(false);
   }
 
   console.log(dimensionsList);
@@ -147,6 +149,7 @@ function Report(props) {
                           <span>{dimension.point} / {dimension.pointMax}</span>
                         </div>
                         {
+                          dimension.criteriaList &&
                           dimension.criteriaList.map((criterion, index) => (
                             <div style={{display: 'flex', margin: '5px 0px'}}>
                               <span>{criterion.name}</span>
