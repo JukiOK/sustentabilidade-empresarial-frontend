@@ -223,8 +223,10 @@ function Evaluation(props) {
                   <span>Progresso total</span>
                   <div>
                     {
-                      evaluation &&
+                      evaluation ?
                       <span>{(evaluation.answers.length * 100/progressGeneral).toFixed(2)}%</span>
+                      :
+                      <span>-%</span>
                     }
                   </div>
                 </div>
@@ -252,11 +254,11 @@ function Evaluation(props) {
                     <div className="dimension-progress">
                       <div>
                         <span>Pontuação </span>
-                        <span>{dimension.pointDimension}</span>
+                        <span>{dimension.pointDimension ? dimension.pointDimension : 0}</span>
                       </div>
                       <div>
                         <span>Progresso </span>
-                        <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
+                        <span>{dimension.progressDimension ? dimension.progressDimension : 0}/{dimension.progressTotal}</span>
                       </div>
                       <div className="btn-confirm" onClick={() => handleClickDimension(dimension._id)}>{params.orgId ? 'Ver' : 'Começar'}</div>
                     </div>
