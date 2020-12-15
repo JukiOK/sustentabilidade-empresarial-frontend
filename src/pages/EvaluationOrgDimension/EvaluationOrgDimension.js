@@ -7,7 +7,7 @@ import FormEvaluation from '../FormEvaluation/FormEvaluation';
 
 function EvaluationOrgDimension(props) {
   return (
-    <FormEvaluation history={props.history} />
+    <FormEvaluation history={props.history} backBtn/>
   )
 }
 

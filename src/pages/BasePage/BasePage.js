@@ -27,10 +27,10 @@ function BasePage(props) {
   const img = require('../../assets/images/leaves.png');
   return (
     <div className="base-page-container">
-      <Helmet defaultTitle={'HIDS-Sustentabilidade Corporativa'} />
+      <Helmet defaultTitle={'HIDS-Sustentabilidade Corporativa'}/>
       <Menu />
       <div className="base-page-container-content">
-        <Header title={props.title}/>
+        <Header title={props.title} backBtn={props.backBtn}/>
         <div className="base-page-content">
           {props.children}
         </div>
@@ -46,4 +46,8 @@ BasePage.propTypes = {
   * Título do Header
   */
   title: PropTypes.string,
+  /**
+  * Se tem botão de voltar
+  */
+  backBtn: PropTypes.bool,
 }

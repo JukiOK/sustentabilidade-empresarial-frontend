@@ -6,7 +6,9 @@ import { useParams } from 'react-router-dom';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
 import PuffLoader from 'react-spinners/PuffLoader';
 import {
-  getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, updateEvaluationsUser, saveEvaluationsUser
+  getEvaluationsUser, getDimension,
+  getAllCriteriaDimension, getAllIndicatorsCriterion,
+  updateEvaluationsUser, saveEvaluationsUser, getEvaluationOrgById
 } from '../../services/requests';
 import colors from '../../constants/colorsobject';
 import PropTypes from 'prop-types';
@@ -18,7 +20,7 @@ require('./formEvaluation.scss');
 */
 
 export function Indicator(props) {
-  const { indicator, saveAnswer } = props;
+  const { indicator, saveAnswer, isFromOrg } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -32,7 +34,6 @@ export function Indicator(props) {
   }, []);
 
   function handleChangeAnswer(value, type) {
-    console.log(value);
     let aux = newAnswers.slice();
     switch (type) {
       case 'dissertative':
@@ -79,7 +80,7 @@ export function Indicator(props) {
     switch (type) {
       case 'dissertative':
         return (
-          <input style={{width: '100%'}} value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')}/>
+          <input style={{width: '100%'}} value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')} disabled={isFromOrg}/>
         )
         break;
       case 'binary':
@@ -93,6 +94,7 @@ export function Indicator(props) {
                     name={"option"  + indicator._id} value={index} key={index}
                     checked={newAnswers && newAnswers[0] && newAnswers[0].ansId === index}
                     onChange={e => handleChangeAnswer(e.target.value, 'binary')}
+                    disabled={isFromOrg}
                   />
                   <span className="label-options">{option.text}</span>
                 </div>
@@ -110,6 +112,7 @@ export function Indicator(props) {
                   <input type="checkbox" name={"option"  + indicator._id} value={index} key={index}
                     checked={newAnswers && newAnswers.find(x => x.ansId === index)}
                     onChange={e => handleChangeAnswer(e.target.value, 'multiple')}
+                    disabled={isFromOrg}
                   />
                   <span className="label-options">{option.text}</span>
                 </div>
@@ -123,7 +126,7 @@ export function Indicator(props) {
     }
   }
 
-  console.log(newAnswers, 'bla');
+  // console.log(newAnswers, 'bla');
 
   return (
     <div className="indicator-card">
@@ -152,9 +155,9 @@ export function Indicator(props) {
             <span className="points-text">Pontos: {indicator.point} / {indicator.maxPoints}</span>
             {
               indicator.evidence &&
-              <input className="evidence-input" placeholder="Link para arquivo com todas evidências" value={linkEvidence} onChange={(e) => setLinkEvidence(e.target.value)}/>
+              <input className="evidence-input" placeholder="Link para arquivo com todas evidências" value={linkEvidence} onChange={(e) => setLinkEvidence(e.target.value)} disabled={isFromOrg}/>
             }
-            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point, linkEvidence)} saving={saving} style={{fontSize: '16px'}} classBtn="save-eval"/>
+            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point, linkEvidence)} saving={saving} style={{fontSize: '16px'}} classBtn="save-eval" disabled={isFromOrg}/>
           </div>
         </div>
         :
@@ -189,13 +192,24 @@ function FormEvaluation(props) {
 
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
-    let data = await getEvaluationsUser(data1.year);
-    if(data.length > 0) { //se tem uma avaliação salva
-      setEvaluationId(data[0]._id);
-      setAnswersList(data[0].answers);
+    let data;
+    let evaluation;
+    if(params.orgId) { //se esta na tela da avaliação de uma organização
+      data = await getEvaluationOrgById(params.orgId, params.evaluationId);
+      if(data) {
+        setEvaluationId(data._id);
+        setAnswersList(data.answers);
+      }
+      evaluation = data;
+    } else {
+      data = await getEvaluationsUser(data1.year);
+      if(data.length > 0) { //se tem uma avaliação salva
+        setEvaluationId(data[0]._id);
+        setAnswersList(data[0].answers);
+      }
+      evaluation = data[0];
     }
     let answersList = {};
-    let evaluation = data[0];
     if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
@@ -249,7 +263,6 @@ function FormEvaluation(props) {
     let aux = answersList.slice();
     let newProgress = progressGeneral;
     let oldInd = aux.find(x => x.indicatorId === indicator._id);
-    console.log(oldInd, 'oldind');
     if(answer.length > 0) { //se a resposta esta preenchida
       newProgress += 1;
       if(oldInd) { //se ja tem resposta do indicador somente altera ela
@@ -308,7 +321,7 @@ function FormEvaluation(props) {
   console.log(indicatorsList, criteriaList, evaluationId, answersList);
 
   return (
-    <BasePage title={dimension.name}>
+    <BasePage title={dimension.name} backBtn={props.backBtn}>
       {
         criteriaList ?
         <div>
@@ -348,6 +361,7 @@ function FormEvaluation(props) {
                       indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
                         <Indicator key={index} indicator={indicator}
                           saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
+                          isFromOrg={params.orgId ? true : false}
                         />
                       ))
                     }
@@ -376,4 +390,23 @@ FormEvaluation.propTypes = {
   * history do router-dom
   */
   history: PropTypes.object,
+  /**
+  * Se tem botão de voltar
+  */
+  backBtn: PropTypes.bool,
+}
+
+Indicator.propTypes = {
+  /**
+  * Objeto do indicador
+  */
+  indicator: PropTypes.object.isRequired,
+  /**
+  * Salvar resposta do indicador
+  */
+  saveAnswer: PropTypes.func.isRequired,
+  /**
+  * Indicar se é tela para avaliação de uma organização
+  */
+  isFromOrg: PropTypes.bool.isRequired,
 }

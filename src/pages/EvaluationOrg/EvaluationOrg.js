@@ -7,7 +7,7 @@ import Evaluation from '../Evaluation/Evaluation';
 
 function EvaluationOrg(props) {
   return (
-    <Evaluation history={props.history}/>
+    <Evaluation history={props.history} backBtn/>
   )
 }
 

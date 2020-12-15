@@ -39,7 +39,7 @@ function SaveBtn(props) {
   }, [props.saving])
 
   return (
-    <div className={"btn-confirm " + props.classBtn} onClick={props.save}>
+    <button className={"btn-confirm " + props.classBtn} onClick={props.save} disabled={props.disabled}>
       {
         !saving &&
         <span style={{...{color: colorsobject.white}, ...props.style}}>
@@ -52,7 +52,7 @@ function SaveBtn(props) {
         loading={saving}
         css={override}
       />
-    </div>
+    </button>
   )
 }
 
@@ -75,4 +75,8 @@ SaveBtn.propTypes = {
   * Função executada quando botão é pressionado, não há prametro
   */
   save: PropTypes.func.isRequired,
+  /**
+  * Desativar botão
+  */
+  disabled: PropTypes.bool,
 }

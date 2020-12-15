@@ -20,14 +20,23 @@
   }
 
   .icon-header {
-    margin-left: auto;
     cursor: pointer;
+  }
+
+  .logout:hover {
+    color: $darkred;
+  }
+
+  .logout {
     font-size: 40px;
+    margin-left: auto;
     color: $red;
   }
 
-  .icon-header:hover {
-    color: $darkred;
+  .back {
+    margin-right: 10px;
+    color: $black;
+    font-size: 30px;
   }
 
 }

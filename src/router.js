@@ -59,8 +59,8 @@ export default function Router(props) {
         <Route path="/users" component={Users} />
         <Route path="/organizations" component={Organizations} />
         <Route exact path="/testslist" component={EvaluationsList} />
-        <Route path="/testslist/:orgId?/:evaluationId?/:year?" component={EvaluationOrg}/>
-        <Route path="/testslist/form/:id/:orgId?/:evaluationId?/" component={EvaluationOrg}/>
+        <Route exact path="/testslist/:orgId?/:evaluationId?/:year?" component={EvaluationOrg}/>
+        <Route path="/testslist/form/:id/:orgId?/:evaluationId?" component={EvaluationOrgDimension}/>
       </Switch>
     </BrowserRouter>
   )

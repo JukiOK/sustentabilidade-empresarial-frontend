@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignOutAlt, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { withRouter } from 'react-router-dom';
 import firebase from 'firebase';
 import PropTypes from 'prop-types';
@@ -25,10 +25,18 @@ function Header(props) {
     });
   }
 
+  function handleBack() {
+    props.history.goBack();
+  }
+
   return (
     <div className="header-container">
+      {
+        props.backBtn &&
+        <FontAwesomeIcon icon={faArrowLeft} className="icon-header back" onClick={handleBack}/>
+      }
       <span className="header-title">{props.title}</span>
-      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header" onClick={logout}/>
+      <FontAwesomeIcon icon={faSignOutAlt} className="icon-header logout" onClick={logout}/>
     </div>
   )
 }
@@ -38,6 +46,10 @@ Header.propTypes = {
   * Titulo do header
   */
   title: PropTypes.string,
+  /**
+  * Se tem botão de voltar
+  */
+  backBtn: PropTypes.bool,
 
 }
 

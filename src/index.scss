@@ -43,10 +43,16 @@ input {
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  border: none;
 }
 
 .btn-confirm:hover {
   background-color: $darkgreen;
+}
+
+.btn-confirm[disabled] {
+  background-color: $gray;
+  cursor: default;
 }
 
 a {

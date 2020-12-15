@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import { getAllYears, getEvaluationsUser, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion, getEvaluationOrgById } from '../../services/requests';
+import {
+  getAllYears,
+  getEvaluationsUser,
+  getAllDimensions,
+  getAllCriteriaDimension,
+  getAllIndicatorsCriterion,
+  getEvaluationOrgById,
+  validateEvaluation,
+  invalidateEvaluation
+} from '../../services/requests';
 import PuffLoader from 'react-spinners/PuffLoader';
 import colors from '../../constants/colorsobject';
 import { useDispatch, useSelector } from 'react-redux';
@@ -129,10 +138,28 @@ function Evaluation(props) {
   }
 
   console.log(dimensionsList);
+  function handleClickDimension(id) {
+    if(params.orgId) {
+      props.history.push('/testslist/form/' + id + '/' + params.orgId + '/' + params.evaluationId);
+    } else {
+      props.history.push('/evaluation/form/' + id)
+    }
+  }
+
+  async function handleValidate() {
+    let data;
+    if(!evaluation.validate) {
+      data = await validateEvaluation(params.orgId, params.evaluationId);
+    } else {
+      data = await invalidateEvaluation(params.orgId, params.evaluationId);
+    }
+    setEvaluation(data);
+  }
 
   return (
     <BasePage
       title={'Avaliação'}
+      backBtn={props.backBtn}
     >
       {
         (org || params.orgId) ?
@@ -176,7 +203,7 @@ function Evaluation(props) {
                   params.orgId &&
                   <div className="evaluation-container-info">
                     <span>Avaliação {evaluation.validated ? 'válida' : 'inválida'}</span>
-                    <div className="btn-confirm">{evaluation.validated ? 'Invalidar' : 'Validar'}</div>
+                    <div className="btn-confirm" onClick={handleValidate}>{evaluation.validated ? 'Invalidar' : 'Validar'}</div>
                   </div>
                 }
               </div>
@@ -201,7 +228,7 @@ function Evaluation(props) {
                         <span>Progresso </span>
                         <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
                       </div>
-                      <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>{params.orgId ? 'Ver' : 'Começar'}</div>
+                      <div className="btn-confirm" onClick={() => handleClickDimension(dimension._id)}>{params.orgId ? 'Ver' : 'Começar'}</div>
                     </div>
                   </div>
                 ))
@@ -229,4 +256,8 @@ Evaluation.propTypes = {
   * history do router-dom
   */
   history: PropTypes.object,
+  /**
+  * Se tem botão de voltar
+  */
+  backBtn: PropTypes.bool,
 }
