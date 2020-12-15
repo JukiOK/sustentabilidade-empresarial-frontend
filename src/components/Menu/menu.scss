@@ -20,6 +20,7 @@
 
   .menu-content {
     padding: 20px;
+    overflow: auto;
 
     .menu-item {
       margin: 25px 0px;
@@ -41,5 +42,9 @@
       cursor: pointer;
     }
 
+  }
+
+  .menu-content::-webkit-scrollbar {
+    display: none;
   }
 }

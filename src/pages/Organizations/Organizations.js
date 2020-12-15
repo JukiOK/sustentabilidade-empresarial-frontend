@@ -98,7 +98,7 @@ function Organizations(props) {
   }
 
   return (
-    <BasePage title={'Instituições'}>
+    <BasePage title={'Lista de instituições'}>
       <div className="organizations-container">
         <Overlay openOverlay={open} setOpenOverlay={(value) => setOpen(value)}>
           <span>
@@ -132,7 +132,7 @@ function Organizations(props) {
             <FontAwesomeIcon icon={faTimesCircle}/>
           </div>
         </div>
-        <table className="table-users">
+        <table className="table">
           <thead>
             <tr>
               <th className="table-cell">Nome</th>

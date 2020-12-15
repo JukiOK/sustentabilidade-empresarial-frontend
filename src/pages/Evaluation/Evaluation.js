@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import { getMe, getAllYears, getEvaluationsUser, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion } from '../../services/requests';
+import { getAllYears, getEvaluationsUser, getAllDimensions, getAllCriteriaDimension, getAllIndicatorsCriterion, getEvaluationOrgById } from '../../services/requests';
 import PuffLoader from 'react-spinners/PuffLoader';
 import colors from '../../constants/colorsobject';
 import { useDispatch, useSelector } from 'react-redux';
 import { setYearEvaluation } from '../../redux/actions/evaluationAction';
+import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 require('./evaluation.scss');
 
@@ -19,17 +21,24 @@ function Evaluation(props) {
   const [dimensionsList, setDimensionsList] = useState([]);
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [progressGeneral, setProgressGeneral] = useState(0);
+  const [evaluation, setEvaluation] = useState();
   const [loading, setLoading] = useState(true);
   const img = require('../../assets/images/quadro_geral.png');
   const dispatch = useDispatch();
   const yearSaved = useSelector(state => state.evaluation && state.evaluation.year);
   const org = useSelector(state => state.organization && state.organization.mineOrg);
+  const params = useParams();
 
   useEffect(() => {
-    if(org) { //se tem organização pode renderizar a tela
-      getYearsList();
-    } else {
-      setLoading(false);
+    if(params.orgId) { //se é a tela de validação da avaliação
+      setSelectedYear(params.year);
+    } else { //se é a tela da avaliação do usuário
+      if(org) { //se tem usuário tem organização
+        setLoading(true);
+        getYearsList();
+      } else {
+        setLoading(false);
+      }
     }
   }, [org]);
 
@@ -53,15 +62,23 @@ function Evaluation(props) {
   }
 
   async function getEvaluationInfo() {
-    let data = await getEvaluationsUser(selectedYear);
+    let data;
+    let evaluation;
+    if(params.orgId) { //se é a tela de validação da avaliação
+      data = await getEvaluationOrgById(params.orgId, params.evaluationId);
+      evaluation = data;
+    } else {
+      data = await getEvaluationsUser(selectedYear);
+      evaluation = data[0];
+    }
     let answersList = {};
-    let evaluation = data[0];
     if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
       }
     }
-    console.log(answersList);
+    setEvaluation(evaluation);
+    console.log(answersList, evaluation);
     let data1 = await getAllDimensions({year: selectedYear});
     let pointsTotal = 0; //pontuação total da avaliação
     let progressAll = 0; //progresso total da avaliação
@@ -103,7 +120,6 @@ function Evaluation(props) {
     setDimensionsList(data1);
     setPointsGeneral(pointsTotal);
     setLoading(false);
-
   }
 
   function changeYear(value) {
@@ -112,24 +128,33 @@ function Evaluation(props) {
     setLoading(true);
   }
 
+  console.log(dimensionsList);
+
   return (
     <BasePage
       title={'Avaliação'}
     >
       {
-        org ?
+        (org || params.orgId) ?
         <div className="evaluation-container">
           <span className="evaluation-title">Quadro Geral</span>
-          <div>
-            <span>Selecione o ano da avaliação:</span>
-            <select value={selectedYear} onChange={e => changeYear(e.target.value)} style={{marginLeft: '10px'}}>
-              {
-                yearsList.map((year, index) => (
-                  <option key={index} value={year.year}>{year.year}</option>
-                ))
-              }
-            </select>
-          </div>
+          {
+            params.orgId ?
+            <div>
+              <span>Avaliação do ano {params.year}</span>
+            </div>
+            :
+            <div>
+              <span>Selecione o ano da avaliação:</span>
+              <select value={selectedYear} onChange={e => changeYear(e.target.value)} style={{marginLeft: '10px'}}>
+                {
+                  yearsList.map((year, index) => (
+                    <option key={index} value={year.year}>{year.year}</option>
+                  ))
+                }
+              </select>
+            </div>
+          }
           {
             !loading ?
             <div>
@@ -147,6 +172,13 @@ function Evaluation(props) {
                     <span>{progressGeneral}%</span>
                   </div>
                 </div>
+                {
+                  params.orgId &&
+                  <div className="evaluation-container-info">
+                    <span>Avaliação {evaluation.validated ? 'válida' : 'inválida'}</span>
+                    <div className="btn-confirm">{evaluation.validated ? 'Invalidar' : 'Validar'}</div>
+                  </div>
+                }
               </div>
               <span className="evaluation-title">Dimensões</span>
               {
@@ -169,7 +201,7 @@ function Evaluation(props) {
                         <span>Progresso </span>
                         <span>{dimension.progressDimension}/{dimension.progressTotal}</span>
                       </div>
-                      <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>Começar</div>
+                      <div className="btn-confirm" onClick={() => props.history.push('/evaluation/form/' + dimension._id)}>{params.orgId ? 'Ver' : 'Começar'}</div>
                     </div>
                   </div>
                 ))
@@ -191,3 +223,10 @@ function Evaluation(props) {
 }
 
 export default Evaluation;
+
+Evaluation.propTypes = {
+  /**
+  * history do router-dom
+  */
+  history: PropTypes.object,
+}

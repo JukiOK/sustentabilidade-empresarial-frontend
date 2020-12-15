@@ -270,3 +270,24 @@ export const updateEvaluationsUser = async (id, body) => {
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
+
+export const getEvaluationsList = async (body) => {
+  return axiosApi.get('/evaluation', {params: body})
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getEvaluationOrgById = async (orgId, evalId) => {
+  return axiosApi.get('/organization/' + orgId + '/evaluation/' + evalId)
+  .then( response => response.data )
+}
+
+export const validateEvaluation = async (orgId, evalId) => {
+  return axiosApi.put('/organization/' + orgId + '/evaluation/' + evalId + '/validate')
+  .then( response => response.data )
+}
+
+export const invalidateEvaluation = async (orgId, evalId) => {
+  return axiosApi.put('/organization/' + orgId + '/evaluation/' + evalId + '/invalidate')
+  .then( response => response.data )
+}

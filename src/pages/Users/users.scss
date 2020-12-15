@@ -27,46 +27,30 @@
     background-color: $darkred;
   }
 
-  .table-users {
-    width: 100%;
-    border-collapse: collapse;
 
-    .table-row {
-      background-color: $white;
-    }
-
-    .table-cell {
-      padding: 10px;
-      border: 1px solid $black;
-    }
-
-    .admin-cell {
-      display: flex;
-      justify-content: center;
-    }
-
-    .yes-admin {
-      color: $green;
-      cursor: pointer;
-    }
-
-    .yes-admin:hover {
-      color: $darkgreen;
-    }
-
-    .no-admin {
-      color: $red;
-      cursor: pointer;
-    }
-
-    .no-admin:hover {
-      color: $darkred;
-    }
-
-    .table-row:nth-child(2n), thead {
-      background-color: $lightgray;
-    }
+  .admin-cell {
+    display: flex;
+    justify-content: center;
   }
+
+  .yes-admin {
+    color: $green;
+    cursor: pointer;
+  }
+
+  .yes-admin:hover {
+    color: $darkgreen;
+  }
+
+  .no-admin {
+    color: $red;
+    cursor: pointer;
+  }
+
+  .no-admin:hover {
+    color: $darkred;
+  }
+
 
   .btn-search {
     background-color: $blue;

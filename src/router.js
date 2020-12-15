@@ -14,6 +14,9 @@ import FormEvaluation from './pages/FormEvaluation/FormEvaluation';
 import ProfileUser from './pages/ProfileUser/ProfileUser';
 import Users from './pages/Users/Users';
 import Organizations from './pages/Organizations/Organizations';
+import EvaluationsList from './pages/EvaluationsList/EvaluationsList';
+import EvaluationOrg from './pages/EvaluationOrg/EvaluationOrg';
+import EvaluationOrgDimension from './pages/EvaluationOrgDimension/EvaluationOrgDimension';
 import { useDispatch } from 'react-redux';
 import { userLogout } from './redux/actions/userAction';
 
@@ -46,7 +49,7 @@ export default function Router(props) {
         <Route exact path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/recoverpassword" component={RecoverPassword} />
-        <Route exact path="/evaluation" component={Evaluation} />
+        <Route path="/evaluation" component={Evaluation} />
         <Route path="/evaluation/form/:id" component={FormEvaluation} />
         <Route path="/organizationprofile" component={OrganizationProfile} />
         <Route exact path="/dimensions" component={Dimensions} />
@@ -55,6 +58,9 @@ export default function Router(props) {
         <Route path="/userprofile" component={ProfileUser} />
         <Route path="/users" component={Users} />
         <Route path="/organizations" component={Organizations} />
+        <Route exact path="/testslist" component={EvaluationsList} />
+        <Route path="/testslist/:orgId?/:evaluationId?/:year?" component={EvaluationOrg}/>
+        <Route path="/testslist/form/:id/:orgId?/:evaluationId?/" component={EvaluationOrg}/>
       </Switch>
     </BrowserRouter>
   )

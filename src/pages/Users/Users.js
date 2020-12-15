@@ -72,7 +72,7 @@ function Users(props) {
           <input placeholder={'Filtrar por nome'} value={name} onChange={e => setName(e.target.value)}/>
           <button className="btn-search" onClick={getList}><FontAwesomeIcon icon={faSearch} /></button>
         </div>
-        <table className="table-users">
+        <table className="table">
           <thead>
             <tr>
               <th className="table-cell">Nome</th>

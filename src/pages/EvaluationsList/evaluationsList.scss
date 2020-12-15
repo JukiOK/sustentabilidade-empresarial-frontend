@@ -1,0 +1,30 @@
+@import '../../constants/colors.scss';
+
+.evaluations-list-container {
+  padding: 20px;
+
+  .evaluations-list-filters {
+    display: flex;
+    margin-bottom: 10px;
+
+    .btn-search {
+      background-color: $blue;
+      color: $white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-search:hover {
+      background-color: $darkblue;
+    }
+  }
+
+  .table-row {
+    cursor: pointer;
+  }
+
+  .table-row:hover {
+    background-color: $gray !important;
+    color: $white;
+  }
+}

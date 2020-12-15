@@ -27,26 +27,7 @@
     background-color: $darkred;
   }
 
-  .table-users {
-    width: 100%;
-    border-collapse: collapse;
-
-    .table-row {
-      background-color: $white;
-    }
-
-    .table-cell {
-      padding: 10px;
-    }
-
-    .table-row:nth-child(2n), thead {
-      background-color: $lightgray;
-    }
-  }
-
-  .table-cell {
-    border: 1px solid $black;
-  }
+  
 
   .btn-search {
     background-color: $blue;

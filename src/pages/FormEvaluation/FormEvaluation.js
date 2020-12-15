@@ -9,6 +9,7 @@ import {
   getEvaluationsUser, getDimension, getAllCriteriaDimension, getAllIndicatorsCriterion, updateEvaluationsUser, saveEvaluationsUser
 } from '../../services/requests';
 import colors from '../../constants/colorsobject';
+import PropTypes from 'prop-types';
 
 require('./formEvaluation.scss');
 
@@ -369,3 +370,10 @@ function FormEvaluation(props) {
 }
 
 export default FormEvaluation;
+
+FormEvaluation.propTypes = {
+  /**
+  * history do router-dom
+  */
+  history: PropTypes.object,
+}

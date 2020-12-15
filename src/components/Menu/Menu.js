@@ -30,7 +30,7 @@ function Menu(props) {
       icon: (<FontAwesomeIcon icon={faFileAlt} className="icon-menu"/>)
     },
     {
-      name: 'Instituição',
+      name: 'Minha instituição',
       path: '/organizationprofile',
       icon: (<FontAwesomeIcon icon={faBuilding} className="icon-menu"/>)
     },
@@ -52,9 +52,15 @@ function Menu(props) {
       isAdmin: true,
     },
     {
-      name: 'Organizações',
+      name: 'Instituições',
       path: '/organizations',
       icon: (<FontAwesomeIcon icon={faCity} className="icon-menu"/>),
+      isAdmin: true,
+    },
+    {
+      name: 'Avaliações',
+      path: '/testslist',
+      icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdmin: true,
     },
   ];
