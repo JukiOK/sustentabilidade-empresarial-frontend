@@ -192,6 +192,8 @@ function FormEvaluation(props) {
 
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
+    data1.maxProgress = 0;
+    setDimension(data1);
     let data;
     let evaluation;
     if(params.orgId) { //se esta na tela da avaliação de uma organização
@@ -217,46 +219,59 @@ function FormEvaluation(props) {
     }
 
     let data2 = await getAllCriteriaDimension(data1._id);
+    setCriteriaList(data2);
     let maxProgress = 0; //progresso total da dimensão
     let pointDimension = 0; //pontuação da dimensão
     let progressDimension = 0; //progresso da dimensão
-    let indicators = {};
+    setIndicatorsList({});
     for(let j = 0; j < data2.length; j++) {
-      let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
-      let pointCriterion = 0; //pontuação do critério
-      maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
-      for(let k = 0; k < data3.length; k++) {
-        let pointIndicator = 0; //pontuação do indicador
-        let pointIndicatorMax = 0;
-        let options = data3[k].question.options;
-        for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
-          pointIndicatorMax += options[l].points;
-        }
-        data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
-        if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
-          let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
-          for(let l = 0; l < answersIndicator.length; l++) {
-            let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
-            pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
+      setIndicatorsList(old => {
+        let newInd = {...old};
+        newInd[data2[j]._id] = [];
+        return newInd;
+      });
+      getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id).then(data3 => {
+        let pointCriterion = 0; //pontuação do critério
+        setDimension(oldDim => {
+          let newDim = {...oldDim};
+          newDim.maxProgress += data3.length;
+          return newDim;
+        })
+        for(let k = 0; k < data3.length; k++) {
+          let pointIndicator = 0; //pontuação do indicador
+          let pointIndicatorMax = 0;
+          let options = data3[k].question.options;
+          for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
+            pointIndicatorMax += options[l].points;
           }
-          progressDimension += 1;
-          data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
-          data3[k].evidenceLink = answersList[data3[k]._id].evidence; //guardar link da evidência
+          data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
+          if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
+            let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
+            for(let l = 0; l < answersIndicator.length; l++) {
+              let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
+              pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
+              setPointsGeneral(old => old + data3[k].weight * data3[k].question.options[ind].points);
+            }
+            setProgressGeneral(old => old + 1);
+            data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador
+            data3[k].evidenceLink = answersList[data3[k]._id].evidence; //guardar link da evidência
+          }
+          data3[k].point = pointIndicator;
+          pointCriterion += pointIndicator;
+          setIndicatorsList(old => {
+            let newInd = {...old};
+            newInd[data2[j]._id][k] = data3[k];
+            return newInd;
+          });
         }
-        data3[k].point = pointIndicator;
-        pointCriterion += pointIndicator;
-      }
-      pointDimension += pointCriterion;
 
-      indicators[data2[j]._id] = data3; //guardar indicadores pelo id do critério para facilitar alterar o state
-      data2[j].point = pointCriterion;
+        //guardar indicadores pelo id do critério para facilitar alterar o state
+        data2[j].point = pointCriterion;
+        setCriteriaList([...data2]);
+      });
     }
-    data1.maxProgress = maxProgress;
-    setProgressGeneral(progressDimension);
-    setDimension(data1);
-    setCriteriaList(data2);
-    setPointsGeneral(pointDimension);
-    setIndicatorsList(indicators);
+    // data1.maxProgress = maxProgress;
+    // setIndicatorsList(indicators);
   }
 
   async function saveAnswer(answer, indicator, setSaving, pointIndicator, indexCriterion, indexInd, linkEvidence) {
@@ -358,7 +373,9 @@ function FormEvaluation(props) {
                       <span className="points-text">Pontuação: {criterion.point}</span>
                     </div>
                     {
-                      indicatorsList && indicatorsList[criterion._id].map((indicator, index) => (
+                      indicatorsList &&
+                      indicatorsList[criterion._id] &&
+                      indicatorsList[criterion._id].map((indicator, index) => (
                         <Indicator key={index} indicator={indicator}
                           saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
                           isFromOrg={params.orgId ? true : false}
