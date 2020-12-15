@@ -77,7 +77,7 @@ function EvaluationsList(props) {
               ))
             }
           </select>
-          <button className="btn-search" onClick={getList}>
+          <button className="btn-search" onClick={() => getList(0)}>
             <FontAwesomeIcon icon={faSearch} />
           </button>
           <div style={{display: 'flex', alignItems: 'center'}}>
