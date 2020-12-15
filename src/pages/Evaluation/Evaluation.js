@@ -89,46 +89,72 @@ function Evaluation(props) {
     setEvaluation(evaluation);
     console.log(answersList, evaluation);
     let data1 = await getAllDimensions({year: selectedYear});
+    setDimensionsList(data1);
+    setLoading(false);
     let pointsTotal = 0; //pontuação total da avaliação
     let progressAll = 0; //progresso total da avaliação
 
     for(let i = 0; i < data1.length; i++) {
-      let data2 = await getAllCriteriaDimension(data1[i]._id);
-      data1[i].criteriaList = data2;
-      let maxProgress = 0; //progresso total da dimensão
-      let pointDimension = 0; //pontuação da dimensão
-      let progressDimension = 0; //progresso da dimensão
-      for(let j = 0; j < data2.length; j++) {
-        let data3 = await getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id);
-        maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
-        if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
-          for(let k = 0; k < data3.length; k++) {
-            if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação das respostas, e o progresso na dimensão
-              let answersIndicator = answersList[data3[k]._id].answer;
-              for(let l = 0; l < answersIndicator.length; l++) { //somar pontuação das respostas
-                let ind = answersIndicator[l].ansId;
-                pointDimension += data3[k].weight * data3[k].question.options[ind].points;
+      getAllCriteriaDimension(data1[i]._id).then(data2 => {
+        setDimensionsList(oldDimList => {
+          let newDimList = [...oldDimList];
+          newDimList[i].criteriaList = data2;
+          return newDimList;
+        });
+        data1[i].criteriaList = data2;
+        let maxProgress = 0; //progresso total da dimensão
+        let pointDimension = 0; //pontuação da dimensão
+        let progressDimension = 0; //progresso da dimensão
+        for(let j = 0; j < data2.length; j++) {
+          getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id).then(data3 => {
+            maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
+            setDimensionsList(oldDimList => {
+              let newDimList = [...oldDimList];
+              newDimList[i].progressTotal = maxProgress;
+              return newDimList;
+            });
+            if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
+              for(let k = 0; k < data3.length; k++) {
+                if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação das respostas, e o progresso na dimensão
+                  let answersIndicator = answersList[data3[k]._id].answer;
+                  for(let l = 0; l < answersIndicator.length; l++) { //somar pontuação das respostas
+                    let ind = answersIndicator[l].ansId;
+                    pointDimension += data3[k].weight * data3[k].question.options[ind].points;
+                    setDimensionsList(oldDimList => {
+                      let newDimList = [...oldDimList];
+                      newDimList[i].pointDimension = pointDimension;
+                      return newDimList;
+                    });
+                    setPointsGeneral(oldPoints => oldPoints + data3[k].weight * data3[k].question.options[ind].points);
+                  }
+                  progressDimension += 1; //quantidade de indicadores respondidos
+
+                  setProgressGeneral(oldProgress => oldProgress + 1);
+
+                  setDimensionsList(oldDimList => {
+                    let newDimList = [...oldDimList];
+                    newDimList[i].progressDimension = progressDimension;
+                    return newDimList;
+                  });
+                  // console.log(pointDimension);
+                }
               }
-              progressDimension += 1; //quantidade de indicadores respondidos
-              console.log(pointDimension);
             }
-          }
+          });
         }
-      }
-      data1[i].progressTotal = maxProgress;
-      data1[i].progressDimension = progressDimension;
-      data1[i].pointDimension = pointDimension;
-      progressAll += maxProgress;
-      pointsTotal += pointDimension;
+        // data1[i].progressTotal = maxProgress;
+        // data1[i].progressDimension = progressDimension;
+        // data1[i].pointDimension = pointDimension;
+        // progressAll += maxProgress;
+        // pointsTotal += pointDimension;
+      });
     }
-    if(evaluation && evaluation.answers) {
-      setProgressGeneral((evaluation.answers.length * 100/progressAll).toFixed(2));
-    } else {
-      setProgressGeneral(0);
-    }
-    setDimensionsList(data1);
-    setPointsGeneral(pointsTotal);
-    setLoading(false);
+    // if(evaluation && evaluation.answers) {
+    //   setProgressGeneral((evaluation.answers.length * 100/progressAll).toFixed(2));
+    // } else {
+    //   setProgressGeneral(0);
+    // }
+    // setPointsGeneral(pointsTotal);
   }
 
   function changeYear(value) {
@@ -196,7 +222,10 @@ function Evaluation(props) {
                 <div className="evaluation-container-info">
                   <span>Progresso total</span>
                   <div>
-                    <span>{progressGeneral}%</span>
+                    {
+                      evaluation &&
+                      <span>{(evaluation.answers.length * 100/progressGeneral).toFixed(2)}%</span>
+                    }
                   </div>
                 </div>
                 {
@@ -214,6 +243,7 @@ function Evaluation(props) {
                     <div>
                       <p className="dimension-name">{dimension.name}</p>
                       {
+                        dimension.criteriaList &&
                         dimension.criteriaList.map((criterion, index) => (
                           <p key={index}>{criterion.name}</p>
                         ))
