@@ -108,6 +108,8 @@ function Evaluation(props) {
         for(let j = 0; j < data2.length; j++) {
           getAllIndicatorsCriterion(data2[j].dimensionId, data2[j]._id).then(data3 => {
             maxProgress += data3.length; //progresso maximo da dimensão será a quantidade total de indicadores
+            setProgressGeneral(oldProgress => oldProgress + data3.length);
+
             setDimensionsList(oldDimList => {
               let newDimList = [...oldDimList];
               newDimList[i].progressTotal = maxProgress;
@@ -129,7 +131,6 @@ function Evaluation(props) {
                   }
                   progressDimension += 1; //quantidade de indicadores respondidos
 
-                  setProgressGeneral(oldProgress => oldProgress + 1);
 
                   setDimensionsList(oldDimList => {
                     let newDimList = [...oldDimList];
