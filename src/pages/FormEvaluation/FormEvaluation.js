@@ -20,7 +20,7 @@ require('./formEvaluation.scss');
 */
 
 export function Indicator(props) {
-  const { indicator, saveAnswer, isFromOrg } = props;
+  const { indicator, saveAnswer, isFromOrg, isFinished } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -80,7 +80,9 @@ export function Indicator(props) {
     switch (type) {
       case 'dissertative':
         return (
-          <input style={{width: '100%'}} value={newAnswers && newAnswers[0] && newAnswers[0].text} onChange={e => handleChangeAnswer(e.target.value, 'dissertative')} disabled={isFromOrg}/>
+          <input style={{width: '100%'}}
+            value={newAnswers && newAnswers[0] && newAnswers[0].text}
+            onChange={e => handleChangeAnswer(e.target.value, 'dissertative')} disabled={isFromOrg || isFinished}/>
         )
         break;
       case 'binary':
@@ -94,7 +96,7 @@ export function Indicator(props) {
                     name={"option"  + indicator._id} value={index} key={index}
                     checked={newAnswers && newAnswers[0] && newAnswers[0].ansId === index}
                     onChange={e => handleChangeAnswer(e.target.value, 'binary')}
-                    disabled={isFromOrg}
+                    disabled={isFromOrg || isFinished}
                   />
                   <span className="label-options">{option.text}</span>
                 </div>
@@ -112,7 +114,7 @@ export function Indicator(props) {
                   <input type="checkbox" name={"option"  + indicator._id} value={index} key={index}
                     checked={newAnswers && newAnswers.find(x => x.ansId === index)}
                     onChange={e => handleChangeAnswer(e.target.value, 'multiple')}
-                    disabled={isFromOrg}
+                    disabled={isFromOrg || isFinished}
                   />
                   <span className="label-options">{option.text}</span>
                 </div>
@@ -155,9 +157,10 @@ export function Indicator(props) {
             <span className="points-text">Pontos: {indicator.point} / {indicator.maxPoints}</span>
             {
               indicator.evidence &&
-              <input className="evidence-input" placeholder="Link para arquivo com todas evidências" value={linkEvidence} onChange={(e) => setLinkEvidence(e.target.value)} disabled={isFromOrg}/>
+              <input className="evidence-input" placeholder="Link para arquivo com todas evidências" value={linkEvidence}
+                onChange={(e) => setLinkEvidence(e.target.value)} disabled={isFromOrg || isFinished}/>
             }
-            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point, linkEvidence)} saving={saving} style={{fontSize: '16px'}} classBtn="save-eval" disabled={isFromOrg}/>
+            <SaveBtn save={() => saveAnswer(newAnswers, setSaving, point, linkEvidence)} saving={saving} style={{fontSize: '16px'}} classBtn="save-eval" disabled={isFromOrg || isFinished}/>
           </div>
         </div>
         :
@@ -183,6 +186,7 @@ function FormEvaluation(props) {
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [progressGeneral, setProgressGeneral] = useState(0);
   const [evaluationId, setEvaluationId] = useState('');
+  const [isFinished, setIsFinished] = useState('');
   const params = useParams();
   const img = require('../../assets/images/quadro_geral.png');
 
@@ -211,6 +215,7 @@ function FormEvaluation(props) {
       }
       evaluation = data[0];
     }
+    setIsFinished(evaluation && evaluation.finished);
     let answersList = {};
     if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
@@ -378,7 +383,8 @@ function FormEvaluation(props) {
                       indicatorsList[criterion._id].map((indicator, index) => (
                         <Indicator key={index} indicator={indicator}
                           saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
-                          isFromOrg={params.orgId ? true : false}
+                          isFromOrg={params.orgId}
+                          isFinished={isFinished}
                         />
                       ))
                     }
@@ -426,4 +432,7 @@ Indicator.propTypes = {
   * Indicar se é tela para avaliação de uma organização
   */
   isFromOrg: PropTypes.bool.isRequired,
+  /** Indicar se a avaliação esta finalizada
+  */
+  isFinished: PropTypes.bool.isRequired,
 }

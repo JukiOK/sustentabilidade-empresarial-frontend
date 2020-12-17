@@ -291,3 +291,8 @@ export const invalidateEvaluation = async (orgId, evalId) => {
   return axiosApi.put('/organization/' + orgId + '/evaluation/' + evalId + '/invalidate')
   .then( response => response.data )
 }
+
+export const finishEvaluation = async (evalId) => {
+  return axiosApi.put('/organization/mine/evaluation/' + evalId + '/finish')
+  .then( response => response.data )
+}

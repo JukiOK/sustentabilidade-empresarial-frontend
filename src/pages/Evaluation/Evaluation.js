@@ -8,7 +8,8 @@ import {
   getAllIndicatorsCriterion,
   getEvaluationOrgById,
   validateEvaluation,
-  invalidateEvaluation
+  invalidateEvaluation,
+  finishEvaluation,
 } from '../../services/requests';
 import PuffLoader from 'react-spinners/PuffLoader';
 import colors from '../../constants/colorsobject';
@@ -185,6 +186,11 @@ function Evaluation(props) {
     setEvaluation(data);
   }
 
+  async function handleFinishEval() {
+    let data = await finishEvaluation(evaluation._id);
+    setEvaluation(data);
+  }
+
   return (
     <BasePage
       title={'Avaliação'}
@@ -234,10 +240,16 @@ function Evaluation(props) {
                   </div>
                 </div>
                 {
-                  params.orgId &&
+                  params.orgId ?
                   <div className="evaluation-container-info">
                     <span>Avaliação {evaluation.validated ? 'válida' : 'inválida'}</span>
                     <div className="btn-confirm" onClick={handleValidate}>{evaluation.validated ? 'Invalidar' : 'Validar'}</div>
+                  </div>
+                  : evaluation &&
+                  <div className="evaluation-container-info">
+                    <button className="btn-confirm" disabled={evaluation.finished || (evaluation.answers.length !== progressGeneral)} onClick={handleFinishEval}>
+                      {evaluation.finished ? 'Finalizada' : 'Finalizar avaliação'}
+                    </button>
                   </div>
                 }
               </div>
@@ -263,7 +275,7 @@ function Evaluation(props) {
                         <span>Progresso </span>
                         <span>{dimension.progressDimension ? dimension.progressDimension : 0}/{dimension.progressTotal}</span>
                       </div>
-                      <div className="btn-confirm" onClick={() => handleClickDimension(dimension._id)}>{params.orgId ? 'Ver' : 'Começar'}</div>
+                      <div className="btn-confirm" onClick={() => handleClickDimension(dimension._id)}>{(params.orgId || (evaluation && evaluation.finished)) ? 'Ver' : 'Começar'}</div>
                     </div>
                   </div>
                 ))

@@ -89,7 +89,8 @@ function EvaluationsList(props) {
             <tr>
               <th className="table-cell">Organização</th>
               <th className="table-cell">Ano</th>
-              <th className="table-cell">Validado?</th>
+              <th className="table-cell">Validada?</th>
+              <th className="table-cell">Finalizada?</th>
             </tr>
           </thead>
           <tbody>
@@ -102,6 +103,16 @@ function EvaluationsList(props) {
                     <div className="validated-cell">
                       {
                         evaluation.validated ?
+                        <FontAwesomeIcon icon={faCheck} className="yes-icon"/>
+                        :
+                        <FontAwesomeIcon icon={faTimes} className="no-icon"/>
+                      }
+                    </div>
+                  </td>
+                  <td className="table-cell" style={{width: '40px'}}>
+                    <div className="validated-cell">
+                      {
+                        evaluation.finished ?
                         <FontAwesomeIcon icon={faCheck} className="yes-icon"/>
                         :
                         <FontAwesomeIcon icon={faTimes} className="no-icon"/>
