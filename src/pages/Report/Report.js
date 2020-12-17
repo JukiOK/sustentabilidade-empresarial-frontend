@@ -21,6 +21,7 @@ function Report(props) {
   const [pointsGeneral, setPointsGeneral] = useState(0);
   const [pointsGeneralTotal, setPointsGeneralTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [evaluation, setEvaluation] = useState();
   const org = useSelector(state => state.organization && state.organization.mineOrg);
 
   useEffect(() => {
@@ -58,6 +59,7 @@ function Report(props) {
     let data = await getEvaluationsUser(selectedYear);
     let answersList = {};
     let evaluation = data[0];
+    setEvaluation(evaluation);
     if(evaluation && evaluation.answers && evaluation.answers.length > 0) {
       for(let i = 0; i < evaluation.answers.length; i++) { //guarda as respostas pelo id de seu indicador
         answersList[evaluation.answers[i].indicatorId] = evaluation.answers[i];
@@ -140,6 +142,13 @@ function Report(props) {
                   <div className="report-circular" style={{borderColor: pointsGeneral === pointsGeneralTotal ? colors.brightgreen : colors.red}}>
                     <span style={{fontSize: '30px'}}>{pointsGeneral} / {pointsGeneralTotal}</span>
                   </div>
+                  {
+                    evaluation &&
+                    <div style={{marginLeft: '20px'}}>
+                      <span>Status da avaliação:</span>
+                      <span>{evaluation.validated ? ' Válida' : ' Inválida'}</span>
+                    </div>
+                  }
                 </div>
                 <span className="report-title">Pontuação por dimensão</span>
                 <div className="row">
