@@ -166,7 +166,7 @@ function Dimensions(props) {
         }
       }
       aux.splice(ind, 0, data);
-      setYearsList(aux);      
+      setYearsList(aux);
     }
   }
 
@@ -188,7 +188,7 @@ function Dimensions(props) {
   console.log(yearsList);
 
   return (
-    <BasePage title={'Lista de dimensões'}>
+    <BasePage title={'Versões da avaliação'}>
       <div className="dimensions-container">
         <Overlay openOverlay={openOverlay} setOpenOverlay={(value) => setOpenOverlay(value)} >
           <div>

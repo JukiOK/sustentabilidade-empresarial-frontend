@@ -40,7 +40,7 @@ function Menu(props) {
       icon: (<FontAwesomeIcon icon={faUserCircle} className="icon-menu"/>),
     },
     {
-      name: 'Dimensões',
+      name: 'Versões',
       path: '/dimensions',
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdmin: true,
