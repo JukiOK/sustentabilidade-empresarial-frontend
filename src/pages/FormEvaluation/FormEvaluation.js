@@ -284,11 +284,11 @@ function FormEvaluation(props) {
     let newProgress = progressGeneral;
     let oldInd = aux.find(x => x.indicatorId === indicator._id);
     if(answer.length > 0) { //se a resposta esta preenchida
-      newProgress += 1;
       if(oldInd) { //se ja tem resposta do indicador somente altera ela
         oldInd.answer = answer;
         oldInd.evidence = linkEvidence;
       } else { //senão adiciona essa resposta, e altera o progresso
+        newProgress += 1;
         aux.push({
           answer,
           indicatorId: indicator._id,
