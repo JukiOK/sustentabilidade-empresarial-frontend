@@ -2,11 +2,11 @@ import axios from 'axios';
 import firebase from 'firebase';
 import {firebaseCheckToken} from '../utils/firebaseUtils';
 
-const url = 'http://localhost:3000';
-
 //configuração do axios
+const apiUrl = process.env.NODE_ENV === 'production' ? 'http://bla' : 'http://localhost:3000';
+
 export const axiosApi = axios.create({
-  baseURL: url,
+  baseURL: apiUrl,
   timeout: 20000,
 	headers: {
 	  'Content-Type': 'application/json',

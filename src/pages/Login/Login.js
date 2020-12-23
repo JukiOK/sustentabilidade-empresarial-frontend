@@ -23,10 +23,14 @@ function Login(props) {
   function login() {
     //login com firebase
     firebase.auth().signInWithEmailAndPassword(email, pass)
-    .then(async () => {
-        //retorna para página em que foi deslogado
+    .then(async (info) => {
+        //retorna para página em que foi deslogado, ou para verificação de email
         let path = paramFromUrl();
-        path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
+        if(info.user.emailVerified) {
+          path = (path.previous && decodeURIComponent(path.previous) )|| '/evaluation';
+        } else {
+          path = '/verifyemail';
+        }
         let data = await getMe();
         dispatch(setUser(data));
         data = await getOrganization();

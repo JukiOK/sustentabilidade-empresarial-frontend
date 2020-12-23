@@ -17,13 +17,13 @@ import OrganizationsList from './pages/OrganizationsList/OrganizationsList';
 import EvaluationsList from './pages/EvaluationsList/EvaluationsList';
 import EvaluationOrg from './pages/EvaluationOrg/EvaluationOrg';
 import EvaluationOrgDimension from './pages/EvaluationOrgDimension/EvaluationOrgDimension';
+import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import { useDispatch } from 'react-redux';
 import { userLogout } from './redux/actions/userAction';
 
 export default function Router(props) {
 
   const [token, setToken] = useState();
-  const [user, setUser] = useState();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function Router(props) {
         <Redirect exact from="/" to="/evaluation" />
         <Route exact path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/verifyemail" component={VerifyEmail}/>
         <Route path="/recoverpassword" component={RecoverPassword} />
         <Route exact path="/evaluation" component={Evaluation} />
         <Route path="/evaluation/form/:id" component={FormEvaluation} />

@@ -32,10 +32,14 @@ function Register(props) {
       setTextErrorPass('As senhas não são as mesmas');
     } else {
       firebase.auth().createUserWithEmailAndPassword(email, pass)
-      .then(async () => {
+      .then(async (info) => {
         let data = await createUser({firstName, lastName, email, phone});
         dispatch(setUser(data));
-        props.history.push('/organizationprofile');
+        if(info.user.emailVerified) {
+          props.history.push('/organizationprofile');
+        } else {
+          props.history.push('/verifyemail');
+        }
       })
       .catch(function(error) {
         var errorCode = error.code;

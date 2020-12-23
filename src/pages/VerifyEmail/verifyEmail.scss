@@ -1,0 +1,13 @@
+@import '../../constants/colors.scss';
+
+.verify-email-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .btn-confirm {
+    color: $white;
+    width: 200px;
+  }
+}
