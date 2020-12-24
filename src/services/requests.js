@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import {firebaseCheckToken} from '../utils/firebaseUtils';
 
 //configuração do axios
-const apiUrl = process.env.NODE_ENV === 'production' ? 'http://bla' : 'http://localhost:3000';
+const apiUrl = 'http://143.106.73.67:3000/';
 
 export const axiosApi = axios.create({
   baseURL: apiUrl,
@@ -36,7 +36,7 @@ export const createUser = async (body) => {
   .catch(err => {console.log(err);});
 }
 
-export const getOrganization = async (orgId) => {
+export const getOrganization = async () => {
   return axiosApi.get('/organization/mine')
   .then( response => response.data )
   .catch(err => {console.log(err);});
@@ -280,19 +280,58 @@ export const getEvaluationsList = async (body) => {
 export const getEvaluationOrgById = async (orgId, evalId) => {
   return axiosApi.get('/organization/' + orgId + '/evaluation/' + evalId)
   .then( response => response.data )
+  .catch(err => {console.log(err);});
 }
 
 export const validateEvaluation = async (orgId, evalId) => {
   return axiosApi.put('/organization/' + orgId + '/evaluation/' + evalId + '/validate')
   .then( response => response.data )
+  .catch(err => {console.log(err);});
 }
 
 export const invalidateEvaluation = async (orgId, evalId) => {
   return axiosApi.put('/organization/' + orgId + '/evaluation/' + evalId + '/invalidate')
   .then( response => response.data )
+  .catch(err => {console.log(err);});
 }
 
 export const finishEvaluation = async (evalId) => {
   return axiosApi.put('/organization/mine/evaluation/' + evalId + '/finish')
   .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getInvitesList = async () => {
+  return axiosApi.get('/invite')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const sendInvite = async (body) => {
+  return axiosApi.post('/organization/mine/invite', body)
+  .then( response => response.data )
+}
+
+export const getInvite = async (id) => {
+  return axiosApi.get('/invite/' + id)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const deleteInvite = async (id) => {
+  return axiosApi.delete('/invite/' + id)
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const markInvite = async (id) => {
+  return axiosApi.put('/invite/' + id + '/mark')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const acceptInvite = async (id) => {
+  return axiosApi.put('/invite/' + id + '/accept')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
 }

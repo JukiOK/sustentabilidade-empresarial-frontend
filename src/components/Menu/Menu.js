@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
 import { useSelector } from 'react-redux'
@@ -33,6 +33,11 @@ function Menu(props) {
       name: 'Minha instituição',
       path: '/organizationprofile',
       icon: (<FontAwesomeIcon icon={faBuilding} className="icon-menu"/>)
+    },
+    {
+      name: 'Convites',
+      path: '/invites',
+      icon: (<FontAwesomeIcon icon={faEnvelope} className="icon-menu"/>)
     },
     {
       name: 'Meu perfil',
