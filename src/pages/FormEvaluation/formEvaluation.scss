@@ -113,4 +113,25 @@
     color: $black;
     margin: 0px;
   }
+
+  .navigate-buttons-container {
+    display: flex;
+    justify-content: space-between;
+
+    .navigate-button {
+      cursor: pointer;
+    }
+
+    .right {
+      margin-left: auto;
+    }
+
+    .navigate-button:hover {
+      color: $gray;
+
+      span {
+        color: $gray;
+      }
+    }
+  }
 }

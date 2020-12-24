@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BasePage from '../BasePage/BasePage';
-import { faTrashAlt, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faAngleDown, faAngleUp, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
@@ -8,7 +8,7 @@ import PuffLoader from 'react-spinners/PuffLoader';
 import {
   getEvaluationsUser, getDimension,
   getAllCriteriaDimension, getAllIndicatorsCriterion,
-  updateEvaluationsUser, saveEvaluationsUser, getEvaluationOrgById
+  updateEvaluationsUser, saveEvaluationsUser, getEvaluationOrgById, getAllDimensions
 } from '../../services/requests';
 import colors from '../../constants/colorsobject';
 import PropTypes from 'prop-types';
@@ -187,17 +187,24 @@ function FormEvaluation(props) {
   const [progressGeneral, setProgressGeneral] = useState(0);
   const [evaluationId, setEvaluationId] = useState('');
   const [isFinished, setIsFinished] = useState('');
+  const [dimensionsList, setDimensionsList] = useState([]);
+  const [indexDimension, setIndexDimension] = useState();
   const params = useParams();
   const img = require('../../assets/images/quadro_geral.png');
 
   useEffect(() => {
+    setPointsGeneral(0);
+    setProgressGeneral(0);
     getEvaluationInfo();
-  }, [])
+  }, [params])
 
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
     data1.maxProgress = 0;
     setDimension(data1);
+    let list = await getAllDimensions({year: data1.year});
+    setIndexDimension(list.findIndex(x => x._id === params.id));
+    setDimensionsList(list);
     let data;
     let evaluation;
     if(params.orgId) { //se esta na tela da avaliação de uma organização
@@ -338,62 +345,75 @@ function FormEvaluation(props) {
     newIndicatorList[indicator.criteriaId] = indicList;
     setIndicatorsList(newIndicatorList)
   }
-  console.log(indicatorsList, criteriaList, evaluationId, answersList);
+  console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension);
 
   return (
     <BasePage title={dimension.name} backBtn={props.backBtn}>
       {
         criteriaList ?
-        <div>
-          <div className="form-evaluation-container">
-            <span className="evaluation-title">Quadro Geral</span>
-            <div className="evaluation-container-general">
-              <img src={img} className="img"/>
-              <div className="evaluation-container-texts">
-                <div style={{display: 'flex'}}>
-                  <div className="evaluation-container-info" style={{marginLeft: '0px'}}>
-                    <span>Pontuação geral</span>
-                    <div>
-                      <span>{pointsGeneral}</span>
-                    </div>
-                  </div>
-                  <div className="evaluation-container-info">
-                    <span>Progresso total</span>
-                    <div>
-                      <span>{(progressGeneral * 100/dimension.maxProgress).toFixed(2)}%</span>
-                    </div>
+        <div className="form-evaluation-container">
+          <span className="evaluation-title">Quadro Geral</span>
+          <div className="evaluation-container-general">
+            <img src={img} className="img"/>
+            <div className="evaluation-container-texts">
+              <div style={{display: 'flex'}}>
+                <div className="evaluation-container-info" style={{marginLeft: '0px'}}>
+                  <span>Pontuação geral</span>
+                  <div>
+                    <span>{pointsGeneral}</span>
                   </div>
                 </div>
-                <div className="description-container">
-                  <span>Descrição: {dimension.description}</span>
+                <div className="evaluation-container-info">
+                  <span>Progresso total</span>
+                  <div>
+                    <span>{(progressGeneral * 100/dimension.maxProgress).toFixed(2)}%</span>
+                  </div>
                 </div>
               </div>
+              <div className="description-container">
+                <span>Descrição: {dimension.description}</span>
+              </div>
             </div>
-            {
-              criteriaList.map((criterion, indexCriterion) => {
-                return (
-                  <div key={indexCriterion} className="criterion-container">
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <span className="evaluation-title">{criterion.name}</span>
-                      <span className="points-text">Pontuação: {criterion.point}</span>
-                    </div>
-                    {
-                      indicatorsList &&
-                      indicatorsList[criterion._id] &&
-                      indicatorsList[criterion._id].map((indicator, index) => (
-                        <Indicator key={index} indicator={indicator}
-                          saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
-                          isFromOrg={params.orgId}
-                          isFinished={isFinished}
-                        />
-                      ))
-                    }
-
+          </div>
+          {
+            criteriaList.map((criterion, indexCriterion) => {
+              return (
+                <div key={indexCriterion} className="criterion-container">
+                  <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <span className="evaluation-title">{criterion.name}</span>
+                    <span className="points-text">Pontuação: {criterion.point}</span>
                   </div>
-                )
-              })
-            }
+                  {
+                    indicatorsList &&
+                    indicatorsList[criterion._id] &&
+                    indicatorsList[criterion._id].map((indicator, index) => (
+                      <Indicator key={index} indicator={indicator}
+                        saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
+                        isFromOrg={params.orgId}
+                        isFinished={isFinished}
+                      />
+                    ))
+                  }
 
+                </div>
+              )
+            })
+          }
+          <div className="navigate-buttons-container">
+            {
+              dimensionsList && indexDimension > 0 &&
+              <div className="navigate-button" onClick={() => props.history.replace('/evaluation/form/' + dimensionsList[indexDimension - 1]._id)}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+                <span style={{marginLeft: '5px'}}>{ dimensionsList[indexDimension - 1].name }</span>
+              </div>
+            }
+            {
+              dimensionsList && 
+              <div className="navigate-button right" onClick={() => indexDimension === dimensionsList.length - 1 ? props.history.push('/evaluation') : props.history.replace('/evaluation/form/' + dimensionsList[indexDimension + 1]._id)}>
+                <span style={{marginRight: '5px'}}>{ indexDimension === dimensionsList.length - 1 ? 'Voltar para quadro geral' :dimensionsList[indexDimension + 1].name }</span>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </div>
+            }
           </div>
         </div>
         :
