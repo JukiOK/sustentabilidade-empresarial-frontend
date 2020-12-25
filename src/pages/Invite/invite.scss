@@ -1,0 +1,26 @@
+@import '../../constants/colors.scss';
+
+.invite-container {
+  padding: 20px;
+
+  .yes-btn {
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn {
+    color: $white;
+    background-color: $red;
+    margin-left: 10px;
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn:hover {
+    background-color: $darkred;
+  }
+
+  .btn-confirm {
+    color: $white;
+  }
+}

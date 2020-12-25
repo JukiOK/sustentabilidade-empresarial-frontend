@@ -1,0 +1,104 @@
+@import '../../constants/colors.scss';
+
+.invites-container {
+  padding: 20px;
+
+  .invites-user-container {
+    display: flex;
+    margin-bottom: 20px;
+  }
+
+  .invites-tab-container {
+    display: flex;
+
+    .invites-tab {
+      background-color: $lightgray;
+      border-top: 1px solid $black;
+      border-left: 1px solid $black;
+      border-right: 1px solid $black;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .sent-tab {
+      margin-left: 10px;
+    }
+
+    .inactive-tab {
+      background-color: $lightergray;
+
+      span {
+        color: $gray !important;        
+      }
+    }
+
+  }
+
+  .icon-container {
+    display: flex;
+  }
+
+  .icon-check {
+    color: $green;
+    margin: auto;
+  }
+
+  .icon-times {
+    color: $red;
+    margin: auto;
+  }
+
+  .invite-btn {
+    color: $white;
+    background-color: $blue;
+    margin-left: 10px;
+  }
+
+  .invite-btn:hover {
+    background-color: $darkblue;
+  }
+
+  .yes-btn {
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn {
+    color: $white;
+    background-color: $red;
+    margin-left: 10px;
+    border-radius: 50px;
+    width: 100px;
+  }
+
+  .cancel-btn:hover {
+    background-color: $darkred;
+  }
+
+  .btn-confirm {
+    color: $white;
+  }
+
+  .row {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+  }
+
+  .received-invites:hover {
+    background-color: $gray !important;
+    color: $white;
+    cursor: pointer;
+  }
+
+  .icon-trash {
+    font-size: 30px;
+    color: $red;
+    cursor: pointer;
+  }
+
+  .icon-trash:hover {
+    color: $darkred;
+  }
+
+}
