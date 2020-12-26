@@ -3,11 +3,12 @@ import BasePage from '../BasePage/BasePage';
 import { getInvitesList, sendInvite, acceptInvite, markInvite, deleteInvite } from '../../services/requests';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInvites } from '../../redux/actions/invitesAction';
-import { faCheck, faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faTrashAlt, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Overlay from '../../components/Overlay/Overlay';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { setHasNew } from '../../redux/actions/invitesAction';
 
 require('./invitesList.scss');
 
@@ -143,6 +144,7 @@ function InvitesList(props) {
   const [selectedIndex, setSelectedIndex] = useState();
   const dispatch = useDispatch();
   const user = useSelector(state => state.user && state.user.userInfo);
+  const invitesList = useSelector(state => state.invites && state.invites.list);
 
   useEffect(() => {
     if(user) {
@@ -167,8 +169,10 @@ function InvitesList(props) {
         receive.push(invite);
       }
     }
+    // dispatch(setHasNew(false));
     setInvitesSentList(sent);
     setInvitesReceivedList(receive);
+    dispatch(setInvites({sent, receive}))
   }
 
   async function handleMarkSeen(id) {
@@ -217,6 +221,7 @@ function InvitesList(props) {
         <div className="invites-user-container">
           <input style={{width: '300px'}} value={email} onChange={e => setEmail(e.target.value)}/>
           <div className="btn-confirm invite-btn" onClick={inviteUser}>Convidar usuário</div>
+          <FontAwesomeIcon icon={faUndo} className="icon-refresh" onClick={getInvites}/>
         </div>
         <div className="invites-tab-container">
           <div className={"invites-tab " + (!isReceive && 'inactive-tab') } onClick={() => setIsReceive(true)}>
@@ -238,3 +243,41 @@ function InvitesList(props) {
 }
 
 export default InvitesList;
+
+SentInvites.propTypes = {
+  /**
+  * lista de convites
+  */
+  inviteList: PropTypes.array.isRequired,
+  /**
+  * função para atribuir id do convite selecionado
+  */
+  setId: PropTypes.func.isRequired,
+  /**
+  * função para atribuir o indice no vetor de convites do convite selecionado
+  */
+  setSelectedIndex: PropTypes.func.isRequired,
+  /**
+  * função para abrir ou fechar o popup
+  */
+  setOpenOverlay: PropTypes.func.isRequired,
+}
+
+ReceivedInvites.propTypes = {
+  /**
+  * lista de convites
+  */
+  inviteList: PropTypes.array.isRequired,
+  /**
+  * função para atribuir id do convite selecionado
+  */
+  setId: PropTypes.func.isRequired,
+  /**
+  * função para atribuir o indice no vetor de convites do convite selecionado
+  */
+  setSelectedIndex: PropTypes.func.isRequired,
+  /**
+  * função para abrir ou fechar o popup
+  */
+  setOpenOverlay: PropTypes.func.isRequired,
+}

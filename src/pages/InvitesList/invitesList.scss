@@ -6,6 +6,13 @@
   .invites-user-container {
     display: flex;
     margin-bottom: 20px;
+
+    .icon-refresh {
+      margin-left: auto;
+      color: $black;
+      cursor: pointer;
+      font-size: 30px;
+    }
   }
 
   .invites-tab-container {
@@ -28,7 +35,7 @@
       background-color: $lightergray;
 
       span {
-        color: $gray !important;        
+        color: $gray !important;
       }
     }
 

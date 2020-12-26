@@ -29,10 +29,21 @@
       align-items: center;
       color: $white;
       justify-content: space-between;
+      position: relative;
 
       .icon-menu {
         width: 30%;
         font-size: 25px;
+      }
+
+      .notification {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: $red;
+        position: absolute;
+        right: 0;
+        top: 0;
       }
 
     }

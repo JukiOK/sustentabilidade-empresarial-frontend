@@ -23,7 +23,7 @@ function Invite(props) {
   async function accept() {
     await acceptInvite(params.id);
     let aux = {...invite};
-    aux.accept = true;
+    aux.accepted = true;
     setInvite(aux);
     setOpenOverlay(false);
   }
@@ -40,15 +40,30 @@ function Invite(props) {
             </div>
           </div>
         </Overlay>
-        <div>
+        <div className="invite-content">
           <span>Enviado por: {invite.fromUserEmail}</span>
           {
             invite.organization  &&
             <div>
               <span>Organização</span>
-              <span>{invite.organization.name}</span>              
+              <p>Nome: {invite.organization.name}</p>
+              {
+                invite.organization.address &&
+                <div>
+                  <p>Endereço:</p>
+                  <p>{invite.organization.address.address}, {invite.organization.address.number} </p>
+                  <p>{invite.organization.address.cep} - {invite.organization.address.city}, {invite.organization.address.state}</p>
+                </div>
+              }
             </div>
           }
+          <div style={{display: 'flex', alignItems: 'center'}}>
+            <span>Status: {invite.accepted ? 'Aceito' : 'Não aceito'}</span>
+            {
+              !invite.accepted &&
+              <div className="btn-confirm" onClick={() => setOpenOverlay(true)}>Aceitar</div>
+            }
+          </div>
         </div>
       </div>
     </BasePage>

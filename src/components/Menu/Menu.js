@@ -1,10 +1,12 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
+import { getInvitesList } from '../../services/requests';
+import { setHasNew,setInvites } from '../../redux/actions/invitesAction';
 
 require ('./menu.scss');
 
@@ -16,7 +18,48 @@ function Menu(props) {
   const hids = require('../../assets/images/logohids.png');
   const unicamp = require('../../assets/images/UNICAMP_logo.png');
   const url = window.location.href;
-  const admin = useSelector(state => state.user.userInfo && state.user.userInfo.isAdmin);
+  const user = useSelector(state => state.user.userInfo || {});
+  const invitesList = useSelector(state => (state.invites && state.invites.list) || []);
+  const hasNew = useSelector(state => state.invites && state.invites.hasNew);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let interval;
+    if(user) {
+      interval = setInterval(getInvites, 10000);
+    }
+    console.log(interval);
+    return (() => {
+      clearInterval(interval);
+    })
+  }, [user]);
+
+  async function getInvites() {
+    getInvitesList().then((data) => {
+      let sent = [];
+      let receive = [];
+      for(let i = 0; i < data.length; i++) {
+        let invite = invitesList.find(x => x._id === data[i]._id);
+        if(user.email === data[i].toUserEmail){
+          receive.push(data[i]);
+          //checar se tem algum convite recebido não visto
+          if(!hasNew && !data[i].seen) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
+            dispatch(setHasNew(true));
+          }
+        } else if(user.email === data[i].fromUserEmail) {
+          sent.push(data[i]);
+          //checar se convite enviado foi aceito
+          if(!hasNew && invite && !invite.accepted && data[i].accepted) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
+            dispatch(setHasNew(true));
+          }
+        }
+      }
+      dispatch(setInvites({sent, receive}));
+    });
+  }
+
+  console.log(hasNew, invitesList, 'bla');
+
   //itens do menu, com url, nome e icone, e se pode ser acessado somente com a permissão de administrador
   const tabs = [
     {
@@ -76,8 +119,9 @@ function Menu(props) {
       <div className="line"></div>
       <div className="menu-content">
         {
+          user &&
           tabs.map((tab, index) => {
-            if(!tab.isAdmin || (tab.isAdmin && admin)) {
+            if(!tab.isAdmin || (tab.isAdmin && user.isAdmin)) {
               return (
                 <div
                   key={index}
@@ -87,6 +131,10 @@ function Menu(props) {
                   >
                     {tab.name}
                     {tab.icon}
+                    {
+                      hasNew && tab.name === 'Convites' &&
+                      <div className="notification"></div>
+                    }
                   </div>
                 )
             }

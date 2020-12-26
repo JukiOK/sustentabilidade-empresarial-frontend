@@ -1,4 +1,4 @@
-import { SET_INVITES } from '../actions/invitesAction';
+import { SET_INVITES, SET_HAS_NEW } from '../actions/invitesAction';
 
 export default (state = {}, action) => {
   switch (action.type) {
@@ -8,6 +8,11 @@ export default (state = {}, action) => {
         list: action.list,
       };
       break;
+    case SET_HAS_NEW:
+      return {
+        ...state,
+        hasNew: action.bool,
+      }
     default:
       return state;
   }
