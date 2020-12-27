@@ -8,7 +8,7 @@ const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['invites'],
+  blacklist: [''],
 };
 
 const pReducer = persistReducer(persistConfig, rootReducer);

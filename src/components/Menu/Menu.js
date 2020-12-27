@@ -19,27 +19,31 @@ function Menu(props) {
   const unicamp = require('../../assets/images/UNICAMP_logo.png');
   const url = window.location.href;
   const user = useSelector(state => state.user.userInfo || {});
-  const invitesList = useSelector(state => (state.invites && state.invites.list) || []);
+  const invitesList = useSelector(state => state.invites && state.invites.list);
   const hasNew = useSelector(state => state.invites && state.invites.hasNew);
   const dispatch = useDispatch();
 
   useEffect(() => {
     let interval;
     if(user) {
-      interval = setInterval(getInvites, 10000);
+      interval = setTimeout(getInvites, 10000);
     }
     console.log(interval);
     return (() => {
-      clearInterval(interval);
+      clearTimeout(interval);
     })
-  }, [user]);
+  }, [user, invitesList]);
 
   async function getInvites() {
     getInvitesList().then((data) => {
       let sent = [];
       let receive = [];
       for(let i = 0; i < data.length; i++) {
-        let invite = invitesList.find(x => x._id === data[i]._id);
+        let invite;
+        console.log(invitesList, 'a');
+        if(invitesList && invitesList.sent) {
+          invite = invitesList.sent.find(x => x._id === data[i]._id);
+        }
         if(user.email === data[i].toUserEmail){
           receive.push(data[i]);
           //checar se tem algum convite recebido não visto

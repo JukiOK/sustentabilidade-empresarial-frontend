@@ -169,7 +169,7 @@ function InvitesList(props) {
         receive.push(invite);
       }
     }
-    // dispatch(setHasNew(false));
+    dispatch(setHasNew(false));
     setInvitesSentList(sent);
     setInvitesReceivedList(receive);
     dispatch(setInvites({sent, receive}))
