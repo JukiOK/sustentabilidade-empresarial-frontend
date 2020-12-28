@@ -26,7 +26,7 @@ function Menu(props) {
   useEffect(() => {
     let interval;
     if(user) {
-      interval = setTimeout(getInvites, 10000);
+      interval = setTimeout(getInvites, 60000);
     }
     console.log(interval);
     return (() => {
@@ -47,13 +47,13 @@ function Menu(props) {
         if(user.email === data[i].toUserEmail){
           receive.push(data[i]);
           //checar se tem algum convite recebido não visto
-          if(!hasNew && !data[i].seen) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
+          if(!hasNew && !data[i].seen && !url.includes('/invites')) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
             dispatch(setHasNew(true));
           }
         } else if(user.email === data[i].fromUserEmail) {
           sent.push(data[i]);
           //checar se convite enviado foi aceito
-          if(!hasNew && invite && !invite.accepted && data[i].accepted) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
+          if(!hasNew && invite && !invite.accepted && data[i].accepted && !url.includes('/invites')) { //se já não tem uma notificação verifica se precisa notificar usuário de novos convites
             dispatch(setHasNew(true));
           }
         }

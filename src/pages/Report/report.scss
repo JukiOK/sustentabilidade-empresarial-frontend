@@ -40,6 +40,7 @@
   .row {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
   }
 
   .dimension-card {
@@ -71,5 +72,11 @@
     font-size: 20px;
     color: $black;
     margin: 0px;
+  }
+
+  @media(max-width: 1100px) {
+    .dimension-card {
+      width: 40%;
+    }
   }
 }

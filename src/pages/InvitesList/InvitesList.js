@@ -27,42 +27,52 @@ export function SentInvites(props) {
   }
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th className="table-cell">Enviado para</th>
-          <th className="table-cell">Visto</th>
-          <th className="table-cell">Aceito</th>
-          <th className="table-cell"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          inviteList.map((invite, index) => (
-            <tr key={index} className="table-row">
-              <td className="table-cell">{invite.toUserEmail}</td>
-              <td className="table-cell">
-                <div className="icon-container">
-                  {
-                    invite.seen ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
-                  }
-                </div>
-              </td>
-              <td className="table-cell">
-                <div className="icon-container">
-                  {
-                    invite.accepted ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
-                  }
-                </div>
-              </td>
-              <td className="table-cell" style={{width: '10px'}}>
-                <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => handleDelete(invite._id, index)}/>
-              </td>
+    <div>
+      {
+        inviteList.length > 0 ?
+        <table className="table">
+          <thead>
+            <tr>
+              <th className="table-cell">Enviado para</th>
+              <th className="table-cell">Visto</th>
+              <th className="table-cell">Aceito</th>
+              <th className="table-cell"></th>
             </tr>
-          ))
-        }
-      </tbody>
-    </table>
+          </thead>
+          <tbody>
+            {
+              inviteList.map((invite, index) => (
+                <tr key={index} className="table-row">
+                  <td className="table-cell">{invite.toUserEmail}</td>
+                  <td className="table-cell">
+                    <div className="icon-container">
+                      {
+                        invite.seen ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
+                      }
+                    </div>
+                  </td>
+                  <td className="table-cell">
+                    <div className="icon-container">
+                      {
+                        invite.accepted ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
+                      }
+                    </div>
+                  </td>
+                  <td className="table-cell" style={{width: '10px'}}>
+                    <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => handleDelete(invite._id, index)}/>
+                  </td>
+                </tr>
+              ))
+
+            }
+          </tbody>
+        </table>
+        :
+        <div className="no-msg">
+          <span>Não há convites</span>
+        </div>
+      }
+    </div>
   )
 }
 
@@ -84,47 +94,55 @@ export function ReceivedInvites(props) {
 
   return (
     <div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th className="table-cell">Enviado por</th>
-            <th className="table-cell">Organização</th>
-            <th className="table-cell">Visto</th>
-            <th className="table-cell">Aceito</th>
-            <th className="table-cell"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            inviteList.map((invite, index) => (
-              <tr key={index} className="table-row received-invites" onClick={() => history.push('/invites/' + invite._id)}>
-                <td className="table-cell">{invite.fromUserEmail}</td>
-                <td className="table-cell">{invite.organization && invite.organization.name}</td>
-                <td className="table-cell">
-                  <div className="icon-container">
-                    {
-                      invite.seen ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
-                    }
-                  </div>
-                </td>
-                <td className="table-cell">
-                  <div className="icon-container" onClick={(e) => e.stopPropagation()}>
-                    {
-                      invite.accepted ?
-                      <FontAwesomeIcon icon={faCheck} className="icon-check"/>
-                      :
-                      <FontAwesomeIcon icon={faTimes} className="icon-times"/>
-                    }
-                  </div>
-                </td>
-                <td className="table-cell" style={{width: '10px'}} onClick={(e) => e.stopPropagation()}>
-                  <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => handleDelete(invite._id, index)}/>
-                </td>
+        {
+          inviteList.length > 0 ?
+          <table className="table">
+            <thead>
+              <tr>
+                <th className="table-cell">Enviado por</th>
+                <th className="table-cell">Organização</th>
+                <th className="table-cell">Visto</th>
+                <th className="table-cell">Aceito</th>
+                <th className="table-cell"></th>
               </tr>
-            ))
-          }
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {
+                inviteList.map((invite, index) => (
+                  <tr key={index} className="table-row received-invites" onClick={() => history.push('/invites/' + invite._id)}>
+                    <td className="table-cell">{invite.fromUserEmail}</td>
+                    <td className="table-cell">{invite.organization && invite.organization.name}</td>
+                    <td className="table-cell">
+                      <div className="icon-container">
+                        {
+                          invite.seen ? <FontAwesomeIcon icon={faCheck} className="icon-check"/> : <FontAwesomeIcon icon={faTimes} className="icon-times"/>
+                        }
+                      </div>
+                    </td>
+                    <td className="table-cell">
+                      <div className="icon-container" onClick={(e) => e.stopPropagation()}>
+                        {
+                          invite.accepted ?
+                          <FontAwesomeIcon icon={faCheck} className="icon-check"/>
+                          :
+                          <FontAwesomeIcon icon={faTimes} className="icon-times"/>
+                        }
+                      </div>
+                    </td>
+                    <td className="table-cell" style={{width: '10px'}} onClick={(e) => e.stopPropagation()}>
+                      <FontAwesomeIcon icon={faTrashAlt} className="icon-trash" onClick={() => handleDelete(invite._id, index)}/>
+                    </td>
+                  </tr>
+                ))
+
+              }
+            </tbody>
+          </table>
+        :
+        <div className="no-msg">
+          <span>Não há convites</span>
+        </div>
+      }
     </div>
   )
 }
