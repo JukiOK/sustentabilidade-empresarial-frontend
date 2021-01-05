@@ -200,6 +200,7 @@ function InvitesList(props) {
   function inviteUser() {
     sendInvite({email}).then(() => {
       getInvites();
+      setIsReceive(false);
     })
     .catch((err) => {
       if(err.response && err.response.data) {
