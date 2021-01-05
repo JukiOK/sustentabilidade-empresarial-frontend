@@ -169,7 +169,7 @@ function DimensionForm(props) {
     });
   }
 
-  console.log(criteriaList);
+  // console.log(criteriaList);
   const override = css`margin-left: auto;`;
 
   return (

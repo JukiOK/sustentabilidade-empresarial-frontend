@@ -28,7 +28,7 @@ function Menu(props) {
     if(user) {
       interval = setTimeout(getInvites, 60000);
     }
-    console.log(interval);
+    // console.log(interval);
     return (() => {
       clearTimeout(interval);
     })
@@ -40,7 +40,7 @@ function Menu(props) {
       let receive = [];
       for(let i = 0; i < data.length; i++) {
         let invite;
-        console.log(invitesList, 'a');
+        // console.log(invitesList, 'a');
         if(invitesList && invitesList.sent) {
           invite = invitesList.sent.find(x => x._id === data[i]._id);
         }
@@ -62,7 +62,7 @@ function Menu(props) {
     });
   }
 
-  console.log(hasNew, invitesList, 'bla');
+  // console.log(hasNew, invitesList, 'bla');
 
   //itens do menu, com url, nome e icone, e se pode ser acessado somente com a permissão de administrador
   const tabs = [

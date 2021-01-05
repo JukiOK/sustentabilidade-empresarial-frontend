@@ -31,4 +31,35 @@
   .error-text {
     color: $red;
   }
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .overlay-container {
+    height: auto;
+  }
+
+  .overlay-content {
+    width: 80%;
+    overflow: hidden;
+  }
+
+  .term-text-popup {
+    color: $blue;
+    cursor: pointer;
+  }
+
+  table {
+    border-spacing: 0px;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid $black;
+    padding: 5px;
+    border-collapse: collapse;
+  }
+
 }

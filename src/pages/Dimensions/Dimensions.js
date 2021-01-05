@@ -185,7 +185,7 @@ function Dimensions(props) {
     setSelectedYear(yearsList[index]);
   }
 
-  console.log(yearsList);
+  // console.log(yearsList);
 
   return (
     <BasePage title={'Versões da avaliação'}>

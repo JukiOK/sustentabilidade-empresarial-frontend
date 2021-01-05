@@ -237,7 +237,7 @@ function InvitesList(props) {
           </div>
         </Overlay>
         <div className="invites-user-container">
-          <input style={{width: '300px'}} value={email} onChange={e => setEmail(e.target.value)}/>
+          <input style={{width: '300px'}} value={email} onChange={e => setEmail(e.target.value)} placeholder="Insira email do usuário a ser convidado"/>
           <div className="btn-confirm invite-btn" onClick={inviteUser}>Convidar usuário</div>
           <FontAwesomeIcon icon={faUndo} className="icon-refresh" onClick={getInvites}/>
         </div>

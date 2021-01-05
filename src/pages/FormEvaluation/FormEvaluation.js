@@ -345,7 +345,7 @@ function FormEvaluation(props) {
     newIndicatorList[indicator.criteriaId] = indicList;
     setIndicatorsList(newIndicatorList)
   }
-  console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension);
+  // console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension);
 
   return (
     <BasePage title={dimension.name} backBtn={props.backBtn}>
@@ -408,7 +408,7 @@ function FormEvaluation(props) {
               </div>
             }
             {
-              dimensionsList && 
+              dimensionsList &&
               <div className="navigate-button right" onClick={() => indexDimension === dimensionsList.length - 1 ? props.history.push('/evaluation') : props.history.replace('/evaluation/form/' + dimensionsList[indexDimension + 1]._id)}>
                 <span style={{marginRight: '5px'}}>{ indexDimension === dimensionsList.length - 1 ? 'Voltar para quadro geral' :dimensionsList[indexDimension + 1].name }</span>
                 <FontAwesomeIcon icon={faArrowRight} />

@@ -104,7 +104,7 @@ function Report(props) {
     }
   }
 
-  console.log(dimensionsList);
+  // console.log(dimensionsList);
 
   function changeYear(value) {
     setSelectedYear(value);

@@ -88,7 +88,7 @@ function Evaluation(props) {
       }
     }
     setEvaluation(evaluation);
-    console.log(answersList, evaluation);
+    // console.log(answersList, evaluation);
     let data1 = await getAllDimensions({year: selectedYear});
     setDimensionsList(data1);
     setLoading(false);
@@ -167,7 +167,7 @@ function Evaluation(props) {
     setProgressGeneral(0);
   }
 
-  console.log(dimensionsList);
+  // console.log(dimensionsList);
   function handleClickDimension(id) {
     if(params.orgId) {
       props.history.push('/testslist/form/' + id + '/' + params.orgId + '/' + params.evaluationId);

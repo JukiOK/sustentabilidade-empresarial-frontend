@@ -5,6 +5,8 @@ import firebase from 'firebase';
 import { createUser } from '../../services/requests';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/actions/userAction';
+import Overlay from '../../components/Overlay/Overlay';
+import Terms from './Terms';
 
 require('./register.scss');
 
@@ -24,6 +26,9 @@ function Register(props) {
   const [errorEmail, setErrorEmail] = useState(false);
   const [textErrorEmail, setTextErrorEmail] = useState('');
   const [textErrorPass, setTextErrorPass] = useState('');
+  const [acceptTerm, setAcceptTerm] = useState(false);
+  const [noAccepted, setNoAccepted] = useState(false);
+  const [openTerm, setOpenTerm] = useState(false);
   const dispatch = useDispatch();
 
   function registerUser() {
@@ -31,39 +36,51 @@ function Register(props) {
       setError(true);
       setTextErrorPass('As senhas não são as mesmas');
     } else {
-      firebase.auth().createUserWithEmailAndPassword(email, pass)
-      .then(async (info) => {
-        let data = await createUser({firstName, lastName, email, phone});
-        dispatch(setUser(data));
-        if(info.user.emailVerified) {
-          props.history.push('/organizationprofile');
-        } else {
-          props.history.push('/verifyemail');
-        }
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        //tratamento dos erros de cadastramento
-        if(error.code === 'auth/email-already-in-use') {
-          setErrorEmail(true);
-          setTextErrorEmail('O email já esta sendo utilizado');
-        } else if(error.code === 'auth/invalid-email') {
-          setErrorEmail(true);
-          setTextErrorEmail('O email é inválido');
-        } else if(error.code === 'auth/weak-password') {
-          setError(true);
-          setTextErrorPass('A senha deve ter no mínimo 6 caracteres');
-        } else {
-          console.log(error);
-        }
-      });
+      if(acceptTerm) { //se termo foi aceito
+        setNoAccepted(false);
+        firebase.auth().createUserWithEmailAndPassword(email, pass)
+        .then(async (info) => {
+          let data = await createUser({firstName, lastName, email, phone});
+          dispatch(setUser(data));
+          if(info.user.emailVerified) {
+            props.history.push('/organizationprofile');
+          } else {
+            props.history.push('/verifyemail');
+          }
+        })
+        .catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          //tratamento dos erros de cadastramento
+          if(error.code === 'auth/email-already-in-use') {
+            setErrorEmail(true);
+            setTextErrorEmail('O email já esta sendo utilizado');
+          } else if(error.code === 'auth/invalid-email') {
+            setErrorEmail(true);
+            setTextErrorEmail('O email é inválido');
+          } else if(error.code === 'auth/weak-password') {
+            setError(true);
+            setTextErrorPass('A senha deve ter no mínimo 6 caracteres');
+          } else {
+            console.log(error);
+          }
+        });
+      } else {
+        setNoAccepted(true); //mostrar texto avisando que termo não foi aceito
+      }
     }
+  }
+
+  function handleOpenTerm() {
+    setOpenTerm(true);
   }
 
   return (
     <BasePageLogin>
       <div className="register-container">
+        <Overlay openOverlay={openTerm} setOpenOverlay={(value) => setOpenTerm(value)}>
+          <Terms/>
+        </Overlay>
         <span>Faça seu cadastro:</span>
         <div style={{marginTop: '40px', marginBottom: '10px'}}>
           <span>Nome</span>
@@ -99,6 +116,14 @@ function Register(props) {
           <div className="error-text">
             {textErrorPass}
           </div>
+        }
+        <div style={{display: 'flex', marginTop: '10px', alignItems:'center',}}>
+          <input type="checkbox" value={acceptTerm} onChange={() => setAcceptTerm(!acceptTerm)} style={{marginRight: '10px'}}/>
+          <span>Declaro que li o <span className="term-text-popup" onClick={handleOpenTerm}>termo de compromisso.</span></span>
+        </div>
+        {
+          noAccepted &&
+          <div className="error-text">Termo não aceito.</div>
         }
         <div className="btn-confirm" onClick={registerUser}>
           <span className="register-text">Finalizar cadastro</span>
