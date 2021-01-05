@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import {firebaseCheckToken} from '../utils/firebaseUtils';
 
 //configuração do axios
-const apiUrl = process.env.NODE_ENV === 'production' ? 'http://143.106.73.67:3000/' : 'http://localhost:3000';
+const apiUrl = 'http://143.106.73.67:3000/';
 
 export const axiosApi = axios.create({
   baseURL: apiUrl,
