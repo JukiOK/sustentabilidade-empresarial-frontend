@@ -242,6 +242,7 @@ Property | Type | Required | Default value | Description
 indicator|object|yes||Objeto do indicador
 saveAnswer|func|yes||Salvar resposta do indicador
 isFromOrg|bool|yes||Indicar se é tela para avaliação de uma organização
+isFinished|bool|yes||Indicar se a avaliação esta finalizada
 ### 2. FormEvaluation
 
 Componente para a página da avaliação de 1 dimensão.   
@@ -253,6 +254,50 @@ Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
 history|object|no||history do router-dom
 backBtn|bool|no||Se tem botão de voltar
+-----
+**src\pages\Invite\Invite.js**
+
+### 1. Invite
+
+
+
+
+-----
+**src\pages\InvitesList\InvitesList.js**
+
+### 1. SentInvites
+
+Componente para ver convites enviados.   
+
+
+
+
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+inviteList|array|yes||lista de convites
+setId|func|yes||função para atribuir id do convite selecionado
+setSelectedIndex|func|yes||função para atribuir o indice no vetor de convites do convite selecionado
+setOpenOverlay|func|yes||função para abrir ou fechar o popup
+### 2. ReceivedInvites
+
+Componente para ver convites recebidos.   
+
+
+
+
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+inviteList|array|yes||lista de convites
+setId|func|yes||função para atribuir id do convite selecionado
+setSelectedIndex|func|yes||função para atribuir o indice no vetor de convites do convite selecionado
+setOpenOverlay|func|yes||função para abrir ou fechar o popup
+### 3. InvitesList
+
+Componente para tela de convites.   
+
+
+
+
 -----
 **src\pages\Login\Login.js**
 
@@ -314,6 +359,16 @@ Componente para página de registrar novo usuário.
 
 
 -----
+**src\pages\Register\Terms.js**
+
+### 1. Terms
+
+Componente com os termos de uso.   
+
+
+
+
+-----
 **src\pages\Report\Report.js**
 
 ### 1. Report
@@ -329,6 +384,14 @@ Componente para página de relatório.
 ### 1. Users
 
 Componente para página de lista de usuários.   
+
+
+
+
+-----
+**src\pages\VerifyEmail\VerifyEmail.js**
+
+### 1. VerifyEmail
 
 
 
