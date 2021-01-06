@@ -93,7 +93,7 @@ function Register(props) {
         <div className="input-title">
           <span>Telefone</span>
         </div>
-        <InputMask mask="(99) 9999-9999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
+        <InputMask mask="(99) 9999-99999" maskChar="_"  onChange={e => setPhone(e.target.value)}/>
         <div className="input-title">
           <span>Email</span>
         </div>

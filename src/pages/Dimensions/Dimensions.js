@@ -114,7 +114,7 @@ export function Card(props) {
 function Dimensions(props) {
 
   const [filter, setFilter] = useState();
-  const [yearsList, setYearsList] = useState();
+  const [yearsList, setYearsList] = useState([]);
   const [yearInput, setYearInput] = useState('');
   const [openOverlay, setOpenOverlay] = useState(false);
   const [selectedYear, setSelectedYear] = useState('');

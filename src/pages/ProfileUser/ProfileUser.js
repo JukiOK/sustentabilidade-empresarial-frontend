@@ -35,16 +35,22 @@ function ProfileUser(props) {
   const org = useSelector(state => state.organization && state.organization.mineOrg);
 
   useEffect(() => {
-    if(user && org) {
-      getInfos();
+    getMe().then((data) => {
+      dispatch(setUser(data));
+    });
+  }, []);
+
+  useEffect(() => {
+    if(user) {
+      getInfos(user, org);
     }
   }, [user, org]);
 
-  async function getInfos() {
+  async function getInfos(user, org) {
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setEmail(user.email);
-    setOrganization(org.name);
+    if(org) setOrganization(org.name);
   }
 
   async function updateUser() {

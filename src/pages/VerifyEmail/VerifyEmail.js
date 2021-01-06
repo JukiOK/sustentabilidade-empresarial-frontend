@@ -7,7 +7,7 @@ require('./verifyEmail.scss');
 function VerifyEmail(props) {
 
   const [sent, setSent] = useState(false);
-  const apiUrl = 'http://143.106.73.67:3001/';
+  const apiUrl = 'http://143.106.73.67:3001';
   const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be in the authorized domains list in the Firebase Console.
@@ -27,6 +27,7 @@ function VerifyEmail(props) {
       setSent(true);
     })
     .catch(function(error) {
+      console.log(error);
       // Some error occurred, you can inspect the code: error.code
     });
   }

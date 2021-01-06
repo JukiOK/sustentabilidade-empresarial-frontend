@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
-import { createOrganization, updateOrganization, getCategories, getSectors, getNumbEmp } from '../../services/requests';
+import { createOrganization, updateOrganization, getCategories, getSectors, getNumbEmp, getOrganization } from '../../services/requests';
 import SaveBtn from '../../components/SaveBtn/SaveBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../redux/actions/userAction';
@@ -40,9 +40,12 @@ function OrganizationProfile(props) {
   const [saving, setSaving] = useState(false);
   const dispatch = useDispatch();
   const org = useSelector(state => state.organization && state.organization.mineOrg);
-  
+
   useEffect(() => {
     getLists();
+    getOrganization().then((data) => {
+      dispatch(setOrganization(data));
+    });
   }, []);
 
   useEffect(() => {
@@ -139,7 +142,7 @@ function OrganizationProfile(props) {
           <div style={{color: colorsobject.red}}>Campo obrigatório</div>
         }
         <div className="profile-row">
-          <InputMask value={phone} mask="(99) 9999-9999" maskChar="_" placeholder="Telefone" onChange={e => setPhone(e.target.value)}/>
+          <InputMask value={phone} mask="(99) 9999-99999" maskChar="_" placeholder="Telefone" onChange={e => setPhone(e.target.value)}/>
           <input placeholder="Site" style={{marginLeft: '10px'}} value={site} onChange={e => setSite(e.target.value)}/>
         </div>
         <div className="profile-row">
