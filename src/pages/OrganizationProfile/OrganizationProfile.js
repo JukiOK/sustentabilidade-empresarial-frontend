@@ -189,7 +189,7 @@ function OrganizationProfile(props) {
             }
           </div>
           <select className="profile-select" onChange={e => setSector(e.target.value)} value={sector}>
-            <option value="" disabled selected hidden>Setor</option>
+            <option value="" selected>Setor</option>
             {
               listSectors && listSectors.map((sector, index) => {
                 return (
