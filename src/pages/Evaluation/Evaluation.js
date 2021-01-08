@@ -225,7 +225,7 @@ function Evaluation(props) {
                 <div className="evaluation-container-info">
                   <span>Pontuação geral</span>
                   <div>
-                    <span>{pointsGeneral}</span>
+                    <span>{pointsGeneral.toFixed(2)}</span>
                   </div>
                 </div>
                 <div className="evaluation-container-info">

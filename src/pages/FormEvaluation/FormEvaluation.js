@@ -20,7 +20,7 @@ require('./formEvaluation.scss');
 */
 
 export function Indicator(props) {
-  const { indicator, saveAnswer, isFromOrg, isFinished } = props;
+  const { indicator, saveAnswer, isFromOrg, isFinished, criterion } = props;
   const [expand, setExpand] = useState(false);
   const [newAnswers, setNewAnswers] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -55,17 +55,17 @@ export function Indicator(props) {
           aux[0].ansId = parseInt(value);
           aux[0].text = indicator.question.options[value].text;
         }
-        setPoint(indicator.weight * indicator.question.options[value].points); //alterar pontuação do indicador para pontuação da resposta selecionada
+        setPoint(indicator.weight * indicator.question.options[value].points * criterion.weight); //alterar pontuação do indicador para pontuação da resposta selecionada
         break;
       case 'multiple':
         let answ = aux.findIndex(x => x.ansId === parseInt(value));
         let newPoint = point; //para questão multipla escolha precisa somar ou subtrair a pontuação
         if(answ !== -1){ //se ja tem a resposta então deve tira-la
           aux.splice(answ, 1);
-          newPoint -= indicator.weight * indicator.question.options[value].points;
+          newPoint -= indicator.weight * indicator.question.options[value].points * criterion.weight;
         } else { //senão adiciona a resposta
           aux.push({ansId: parseInt(value), text: indicator.question.options[value].text})
-          newPoint += indicator.weight * indicator.question.options[value].points;
+          newPoint += indicator.weight * indicator.question.options[value].points * criterion.weight;
         }
         setPoint(newPoint);
         break;
@@ -195,11 +195,14 @@ function FormEvaluation(props) {
   useEffect(() => {
     setPointsGeneral(0);
     setProgressGeneral(0);
-    getEvaluationInfo();
+    if(params.id) {
+      getEvaluationInfo();
+    }
   }, [params])
 
   async function getEvaluationInfo() {
     let data1 = await getDimension(params.id);
+    console.log('bla');
     data1.maxProgress = 0;
     setDimension(data1);
     let list = await getAllDimensions({year: data1.year});
@@ -262,6 +265,7 @@ function FormEvaluation(props) {
             for(let l = 0; l < answersIndicator.length; l++) {
               let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
               pointIndicator += data3[k].weight * data3[k].question.options[ind].points * data2[j].weight;
+              console.log('point', pointIndicator);
               setPointsGeneral(old => old + data3[k].weight * data3[k].question.options[ind].points * data2[j].weight);
             }
             setProgressGeneral(old => old + 1);
@@ -337,15 +341,15 @@ function FormEvaluation(props) {
     let newCriteriaList = criteriaList.slice();
     newCriteriaList[indexCriterion].point += - oldPoint + pointIndicator;
     setCriteriaList(newCriteriaList);
-
     //atualizando pontuação do indicador
     let indicList = indicatorsList[indicator.criteriaId].slice();
     indicList[indexInd].point = pointIndicator;
     let newIndicatorList = {...indicatorsList};
     newIndicatorList[indicator.criteriaId] = indicList;
     setIndicatorsList(newIndicatorList)
+    console.log(oldPoint, newPoints, pointIndicator);
   }
-  // console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension);
+  console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension, pointsGeneral);
 
   return (
     <BasePage title={dimension.name} backBtn={props.backBtn}>
@@ -360,7 +364,7 @@ function FormEvaluation(props) {
                 <div className="evaluation-container-info" style={{marginLeft: '0px'}}>
                   <span>Pontuação geral</span>
                   <div>
-                    <span>{pointsGeneral}</span>
+                    <span>{pointsGeneral.toFixed(2)}</span>
                   </div>
                 </div>
                 <div className="evaluation-container-info">
@@ -387,7 +391,7 @@ function FormEvaluation(props) {
                     indicatorsList &&
                     indicatorsList[criterion._id] &&
                     indicatorsList[criterion._id].map((indicator, index) => (
-                      <Indicator key={index} indicator={indicator}
+                      <Indicator key={index} indicator={indicator} criterion={criterion}
                         saveAnswer={(answer, setSaving, point, linkEvidence) => saveAnswer(answer, indicator, setSaving, point, indexCriterion, index, linkEvidence)}
                         isFromOrg={params.orgId}
                         isFinished={isFinished}
@@ -451,8 +455,12 @@ Indicator.propTypes = {
   /**
   * Indicar se é tela para avaliação de uma organização
   */
-  isFromOrg: PropTypes.bool.isRequired,
+  isFromOrg: PropTypes.bool,
   /** Indicar se a avaliação esta finalizada
   */
   isFinished: PropTypes.bool.isRequired,
+  /**
+  * Critério do indicador
+  */
+  criterion: PropTypes.object.isRequired,
 }

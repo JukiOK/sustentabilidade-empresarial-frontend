@@ -140,7 +140,7 @@ function Report(props) {
                     <span>Saiba mais</span> */}
                   </div>
                   <div className="report-circular" style={{borderColor: pointsGeneral === pointsGeneralTotal ? colors.brightgreen : colors.red}}>
-                    <span style={{fontSize: '30px'}}>{pointsGeneral} / {pointsGeneralTotal}</span>
+                    <span style={{fontSize: '30px'}}>{pointsGeneral.toFixed(2)} / {pointsGeneralTotal.toFixed(2)}</span>
                   </div>
                   {
                     evaluation &&
@@ -157,14 +157,14 @@ function Report(props) {
                       <div className="dimension-card" key={indexDimension}>
                         <p className="dimension-name">{dimension.name}</p>
                         <div className="report-circular small-circle" style={{borderColor: dimension.point === dimension.pointMax ? colors.brightgreen : colors.red}}>
-                          <span>{dimension.point} / {dimension.pointMax}</span>
+                          <span>{dimension.point && dimension.point.toFixed(2)} / {dimension.pointMax && dimension.pointMax.toFixed(2)}</span>
                         </div>
                         {
                           dimension.criteriaList &&
                           dimension.criteriaList.map((criterion, index) => (
                             <div style={{display: 'flex', margin: '5px 0px'}}>
                               <span>{criterion.name}</span>
-                              <span style={{marginLeft: 'auto'}}>{criterion.point ? criterion.point : 0} / {criterion.pointMax ? criterion.pointMax : 0}</span>
+                              <span style={{marginLeft: 'auto'}}>{criterion.point ? (criterion.point).toFixed(2) : 0} / {criterion.pointMax ? (criterion.pointMax).toFixed(2) : 0}</span>
                             </div>
                           ))
                         }
