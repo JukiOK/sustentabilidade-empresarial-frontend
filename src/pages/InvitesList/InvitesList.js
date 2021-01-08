@@ -209,6 +209,7 @@ function InvitesList(props) {
         }
       }
     });
+    setEmail('');
   }
 
   async function handleDelete() {
