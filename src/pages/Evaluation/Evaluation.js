@@ -178,7 +178,7 @@ function Evaluation(props) {
 
   async function handleValidate() {
     let data;
-    if(!evaluation.validate) {
+    if(!evaluation.validated) {
       data = await validateEvaluation(params.orgId, params.evaluationId);
     } else {
       data = await invalidateEvaluation(params.orgId, params.evaluationId);
