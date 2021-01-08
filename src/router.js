@@ -20,6 +20,7 @@ import EvaluationOrgDimension from './pages/EvaluationOrgDimension/EvaluationOrg
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import InvitesList from './pages/InvitesList/InvitesList';
 import Invite from './pages/Invite/Invite';
+import PrivacyPolice from './pages/PrivacyPolice/PrivacyPolice';
 import { useDispatch } from 'react-redux';
 import { userLogout } from './redux/actions/userAction';
 
@@ -66,6 +67,7 @@ export default function Router(props) {
         <Route path="/testslist/form/:id/:orgId?/:evaluationId?" component={EvaluationOrgDimension} />
         <Route exact path="/invites" component={InvitesList} />
         <Route path="/invites/:id" component={Invite} />
+        <Route path="/privacypolice" component={PrivacyPolice} />
       </Switch>
     </BrowserRouter>
   )

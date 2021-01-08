@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faFileSignature, faFileAlt, faBuilding, faUserCircle, faUsers, faCity, faEnvelope, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import colorsobject from '../../constants/colorsobject';
 import { getMe } from '../../services/requests';
 import { useSelector, useDispatch } from 'react-redux';
@@ -115,6 +115,12 @@ function Menu(props) {
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>),
       isAdmin: true,
     },
+    {
+      name: 'Politíca de privacidade',
+      path: '/privacypolice',
+      icon: (<FontAwesomeIcon icon={faUserShield} className="icon-menu"/>),
+      isAdmin: true,
+    }
   ];
 
   return (

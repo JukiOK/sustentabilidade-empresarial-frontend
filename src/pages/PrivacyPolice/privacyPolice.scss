@@ -1,0 +1,17 @@
+@import '../../constants/colors.scss';
+
+.privacy-police-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    margin-right: 10px;
+    width: 50%;
+  }
+
+  .btn-confirm {
+    color: $white;
+    width: 200px;
+  }
+}
