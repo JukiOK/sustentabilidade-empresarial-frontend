@@ -122,13 +122,13 @@ function Evaluation(props) {
                   let answersIndicator = answersList[data3[k]._id].answer;
                   for(let l = 0; l < answersIndicator.length; l++) { //somar pontuação das respostas
                     let ind = answersIndicator[l].ansId;
-                    pointDimension += data3[k].weight * data3[k].question.options[ind].points;
+                    pointDimension += data3[k].weight * data3[k].question.options[ind].points * data2[j].weight;
                     setDimensionsList(oldDimList => {
                       let newDimList = [...oldDimList];
                       newDimList[i].pointDimension = pointDimension;
                       return newDimList;
                     });
-                    setPointsGeneral(oldPoints => oldPoints + data3[k].weight * data3[k].question.options[ind].points);
+                    setPointsGeneral(oldPoints => oldPoints + data3[k].weight * data3[k].question.options[ind].points * data2[j].weight);
                   }
                   progressDimension += 1; //quantidade de indicadores respondidos
 
