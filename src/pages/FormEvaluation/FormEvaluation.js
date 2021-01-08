@@ -256,13 +256,13 @@ function FormEvaluation(props) {
           for(let l = 0; l < options.length; l++) { //calcular pontuação máxima do indicador
             pointIndicatorMax += options[l].points;
           }
-          data3[k].maxPoints = pointIndicatorMax * data3[k].weight;
+          data3[k].maxPoints = pointIndicatorMax * data3[k].weight * data2[j].weight;
           if(answersList[data3[k]._id]) { //se existe a resposta do indicador soma a pontuação da resposta, e o progresso na dimensão
             let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
             for(let l = 0; l < answersIndicator.length; l++) {
               let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
-              pointIndicator += data3[k].weight * data3[k].question.options[ind].points;
-              setPointsGeneral(old => old + data3[k].weight * data3[k].question.options[ind].points);
+              pointIndicator += data3[k].weight * data3[k].question.options[ind].points * data2[j].weight;
+              setPointsGeneral(old => old + data3[k].weight * data3[k].question.options[ind].points * data2[j].weight);
             }
             setProgressGeneral(old => old + 1);
             data3[k].answer = answersList[data3[k]._id].answer; //guardar vetor de respostas no indicador

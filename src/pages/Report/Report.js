@@ -78,7 +78,7 @@ function Report(props) {
             for(let k = 0; k < data3.length; k++) {
               let options = data3[k].question.options;
               for(let l = 0; l < options.length; l++) {
-                let points = options[l].points;
+                let points = options[l].points * data2[j].weight * data3[k].weight;
                 data2[j].pointMax += points;
                 data1[i].pointMax += points;
                 setPointsGeneralTotal(oldPoitsTotal => oldPoitsTotal + points);
@@ -89,7 +89,7 @@ function Report(props) {
                 let answersIndicator = answersList[data3[k]._id].answer; //lista das respostas do indicador
                 for(let l = 0; l < answersIndicator.length; l++) {
                   let ind = answersList[data3[k]._id].answer[l].ansId; //indice da resposta dentro do vetor de opções de respostas do indicador
-                  let points = data3[k].weight * data3[k].question.options[ind].points;
+                  let points = data3[k].weight * data3[k].question.options[ind].points * data2[j].weight;
                   data2[j].point += points;
                   data1[i].point += points;
                   setPointsGeneral(oldPoints => oldPoints + points);
