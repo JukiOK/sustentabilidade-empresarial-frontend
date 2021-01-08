@@ -67,7 +67,7 @@ function Menu(props) {
   //itens do menu, com url, nome e icone, e se pode ser acessado somente com a permissão de administrador
   const tabs = [
     {
-      name: 'Avaliação',
+      name: 'Questionário',
       path: '/evaluation',
       icon: (<FontAwesomeIcon icon={faFileSignature} className="icon-menu"/>)
     },
@@ -146,8 +146,8 @@ function Menu(props) {
         }
       </div>
       <div className="menu-logo-container">
-        <img src={hids} style={{height: '68px'}}/>
-        <img src={unicamp} style={{height: '68px', marginLeft: 'auto'}}/>
+        <img src={hids} style={{height: '60px'}}/>
+        <img src={unicamp} style={{height: '60px', marginLeft: 'auto'}}/>
       </div>
     </div>
   )

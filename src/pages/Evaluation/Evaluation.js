@@ -193,7 +193,7 @@ function Evaluation(props) {
 
   return (
     <BasePage
-      title={'Avaliação'}
+      title={'Questionário'}
       backBtn={props.backBtn}
     >
       {

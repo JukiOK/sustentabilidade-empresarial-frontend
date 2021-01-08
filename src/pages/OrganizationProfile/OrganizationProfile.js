@@ -38,6 +38,7 @@ function OrganizationProfile(props) {
   const [errorName, setErrorName] = useState(false);
   const [errorCategory, setErrorCategory] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [otherCategory, setOtherCategory] = useState('');
   const dispatch = useDispatch();
   const org = useSelector(state => state.organization && state.organization.mineOrg);
 
@@ -67,7 +68,14 @@ function OrganizationProfile(props) {
       setName(org.name);
       setPhone(org.phone);
       setSite(org.site);
-      setCategory(org.category);
+      if(listCategories && org.category) {
+        if(!listCategories.find(x => x.value === org.category)) { //se a categoria não pertence a lista das categorias, então category deve ser OTHER
+          setCategory('OTHER');
+          setOtherCategory(org.category);
+        } else {
+          setCategory(org.category);
+        }
+      }
       setSector(org.sector);
       setNumberEmp(org.size);
       if(org.address) {
@@ -97,8 +105,12 @@ function OrganizationProfile(props) {
     const addressFull = {address, cep, state, city, number};
     if(name && category) {
       setSaving(true);
+      let newCategory = category;
+      if(category === 'OTHER') {
+        newCategory = otherCategory;
+      }
       if(isNew) {
-        createOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
+        createOrganization({name, address: {...addressFull}, phone, site, category: newCategory, sector, size: numberEmp})
         .then((data) => {
           setIsNew(false);
           setSaving(false);
@@ -109,7 +121,7 @@ function OrganizationProfile(props) {
           alert(error);
         });
       } else {
-        updateOrganization({name, address: {...addressFull}, phone, site, category, sector, size: numberEmp})
+        updateOrganization({name, address: {...addressFull}, phone, site, category: newCategory, sector, size: numberEmp})
         .then((data) => {
           setSaving(false);
           dispatch(setOrganization(data));
@@ -157,7 +169,7 @@ function OrganizationProfile(props) {
         </div>
         <div className="profile-title">
           <span>Atividade</span>
-          <p style={{margin: '10px 0px'}}>Se sua empresa atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
+          <p style={{margin: '10px 0px'}}>Se sua instituição atua em vários setores, selecione a opção que melhor representa a maior atividade operacional da empresa em termos de receita geral</p>
         </div>
         <div style={{display: 'flex'}}>
           <div>
@@ -187,6 +199,10 @@ function OrganizationProfile(props) {
             }
           </select>
         </div>
+        {
+          category === 'OTHER' &&
+          <input placeholder="Insira outra categoria" value={otherCategory} onChange={e => setOtherCategory(e.target.value)}/>
+        }
 
         <div className="profile-title size-title">
           <span>Porte da instituição</span>
