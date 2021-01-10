@@ -13,6 +13,14 @@ export const axiosApi = axios.create({
 	}
 })
 
+export const axiosApiWithoutAuth = axios.create({
+  baseURL: apiUrl,
+  timeout: 20000,
+	headers: {
+	  'Content-Type': 'application/json',
+	}
+})
+
 //configuração do header da requisição do axios, para obter token do firebase
 axiosApi.interceptors.request.use(async (options) => {
   await firebaseCheckToken();
@@ -44,6 +52,18 @@ export const getOrganization = async () => {
 
 export const getMe = async () => {
   return axiosApi.get('/user/me')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const getTerms = async () => {
+  return axiosApiWithoutAuth.get('/term')
+  .then( response => response.data )
+  .catch(err => {console.log(err);});
+}
+
+export const setTerms = async (url) => {
+  return axiosApi.put('/term', {url})
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }

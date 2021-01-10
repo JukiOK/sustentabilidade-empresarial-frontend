@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BasePageLogin from '../BasePageLogin/BasePageLogin';
 import InputMask from 'react-input-mask';
 import firebase from 'firebase';
-import { createUser } from '../../services/requests';
+import { createUser, getTerms } from '../../services/requests';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/actions/userAction';
 import Overlay from '../../components/Overlay/Overlay';
@@ -29,7 +29,14 @@ function Register(props) {
   const [acceptTerm, setAcceptTerm] = useState(false);
   const [noAccepted, setNoAccepted] = useState(false);
   const [openTerm, setOpenTerm] = useState(false);
+  const [terms, setTerms] = useState(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    getTerms().then(data => {
+      setTerms(data.url)
+    })
+  }, [])
 
   function registerUser() {
     if(pass !== confirm) { //confirmação de senha
@@ -119,7 +126,7 @@ function Register(props) {
         }
         <div style={{display: 'flex', marginTop: '10px', alignItems:'center',}}>
           <input type="checkbox" value={acceptTerm} onChange={() => setAcceptTerm(!acceptTerm)} style={{marginRight: '10px'}}/>
-          <span>Declaro que li o <span className="term-text-popup" onClick={handleOpenTerm}>termo de compromisso.</span></span>
+          <span>Declaro que li o <a className="term-text-popup" href={terms} target={'_blank'}>termo de compromisso.</a></span>
         </div>
         {
           noAccepted &&
