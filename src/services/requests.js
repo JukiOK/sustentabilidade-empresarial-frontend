@@ -57,13 +57,13 @@ export const getMe = async () => {
 }
 
 export const getTerms = async () => {
-  return axiosApiWithoutAuth.get('/term')
+  return axiosApiWithoutAuth.get('/terms')
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
 
 export const setTerms = async (url) => {
-  return axiosApi.put('/term', {url})
+  return axiosApi.put('/terms', {url})
   .then( response => response.data )
   .catch(err => {console.log(err);});
 }
