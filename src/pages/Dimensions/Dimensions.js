@@ -37,11 +37,11 @@ export function Card(props) {
     let aux = {};
     //indexar lista de indicadores pelo id do critério deles
     for(let i = 0; i < data.length; i++) {
-      let indicators = await getAllIndicatorsCriterion(dimension._id, data[i]._id);
-      aux[data[i]._id] = indicators;
+      getAllIndicatorsCriterion(dimension._id, data[i]._id).then(indicators => {
+        aux[data[i]._id] = indicators;
+        setIndicatorsList({...aux});
+      });
     }
-
-    setIndicatorsList(aux);
   }
 
   function handleClickDelete() {
@@ -128,10 +128,11 @@ function Dimensions(props) {
     let data1 = await getAllYears();
     //Adicionar lista de dimensões ao seu ano
     for(let i = 0; i < data1.length; i++) {
-      let data = await getAllDimensions({year: data1[i].year});
-      data1[i].dimensionsList = data;
+      getAllDimensions({year: data1[i].year}).then(data => {
+        data1[i].dimensionsList = data;
+        setYearsList([...data1]);
+      })
     }
-    setYearsList(data1);
   }
 
   async function newDimension(year) {
