@@ -143,7 +143,7 @@ function DimensionForm(props) {
     setSaving(true);
     await updateDimension(id, {[field]: value});
     setSaving(false);
-    alert('Dimensão salva');
+    // alert('Dimensão salva');
   }
 
   async function saveInfoCriterion(idArray) {
@@ -153,7 +153,7 @@ function DimensionForm(props) {
     updateCriterionDimension(id, criterion._id, criterion)
     .then(() => {
       setTimeout(() => {setSaving(false)}, 500);
-      alert('Critério salvo');
+      // alert('Critério salvo');
     });
   }
 
@@ -170,7 +170,7 @@ function DimensionForm(props) {
     updateIndicatorCriterion(id, indicator.criteriaId, indicator._id, {...indicator, ...body})
     .then(() =>{
       setSaving(false);
-      alert('Indicador salvo');
+      // alert('Indicador salvo');
     });
   }
 
