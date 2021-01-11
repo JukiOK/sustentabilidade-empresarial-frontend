@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# deploy
+app.config.json
+
 # production
 /build
 

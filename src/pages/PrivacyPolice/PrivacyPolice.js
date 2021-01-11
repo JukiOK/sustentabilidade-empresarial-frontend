@@ -12,7 +12,13 @@ function PrivacyPolice(props) {
     getTerms().then(data => {
       setLink(data.url)
     })
-  }, [])
+  }, []);
+
+  function saveLink() {
+    setTerms(link).then(() => {
+      alert('O link foi enviado com sucesso');
+    })
+  }
 
   return (
     <BasePage title={'Editar Política de privacidade'}>
@@ -20,7 +26,7 @@ function PrivacyPolice(props) {
         <span>Digite o link do arquivo com a política de privacidade.</span>
         <div style={{display: 'flex', marginTop: '10px'}}>
           <input value={link} onChange={e => setLink(e.target.value)}/>
-          <button onClick={() => setTerms(link)} className="btn-confirm">Enviar</button>
+          <button onClick={saveLink} className="btn-confirm">Enviar</button>
         </div>
       </div>
     </BasePage>

@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import {firebaseCheckToken} from '../utils/firebaseUtils';
 
 //configuração do axios
-const apiUrl = 'http://143.106.73.67:3000/';
+const apiUrl = process.env.NODE_ENV === 'production' ? 'http://143.106.73.67:3000/' : 'http://localhost:3000';
 
 export const axiosApi = axios.create({
   baseURL: apiUrl,
@@ -137,7 +137,7 @@ export const deleteDimension = async (id) => {
 export const getAllCriteriaDimension = async (id) => {
   return axiosApi.get('/dimension/' + id + '/criteria')
   .then( response => response.data )
-  .catch(err => {console.log(err);});
+  .catch(err => {console.log(err, 'bla');});
 }
 
 export const saveCriterionDimension = async (id, body) => {
@@ -264,7 +264,7 @@ export const getYear = async (id) => {
   return axiosApi.get('/year', {params: id})
   axiosApi.get('/year')
  .then( response => response.data )
- .catch(err => {console.log(err);});
+ .catch(err => {console.log(err, 'bla');});
 }
 
 export const deleteYear = async (id) => {
