@@ -349,6 +349,23 @@ function FormEvaluation(props) {
     setIndicatorsList(newIndicatorList)
     console.log(oldPoint, newPoints, pointIndicator);
   }
+
+  function changeDimension(id) {
+    if(params.orgId) {
+      props.history.replace('/testslist/form/' + id + '/' + params.orgId + '/' + params.evaluationId);
+    } else {
+      props.history.replace('/evaluation/form/' + id);
+    }
+  }
+
+  function backToGeneral() {
+    if(params.orgId) {
+      props.history.replace('/testslist/' + params.orgId + '/' + params.evaluationId + '/' + dimension.year);
+    } else {
+      props.history.push('/evaluation');
+    }
+  }
+
   console.log(indicatorsList, criteriaList, evaluationId, answersList, indexDimension, pointsGeneral);
 
   return (
@@ -406,14 +423,14 @@ function FormEvaluation(props) {
           <div className="navigate-buttons-container">
             {
               dimensionsList && indexDimension > 0 &&
-              <div className="navigate-button" onClick={() => props.history.replace('/evaluation/form/' + dimensionsList[indexDimension - 1]._id)}>
+              <div className="navigate-button" onClick={() => changeDimension(dimensionsList[indexDimension - 1]._id)}>
                 <FontAwesomeIcon icon={faArrowLeft} />
                 <span style={{marginLeft: '5px'}}>{ dimensionsList[indexDimension - 1].name }</span>
               </div>
             }
             {
               dimensionsList &&
-              <div className="navigate-button right" onClick={() => indexDimension === dimensionsList.length - 1 ? props.history.push('/evaluation') : props.history.replace('/evaluation/form/' + dimensionsList[indexDimension + 1]._id)}>
+              <div className="navigate-button right" onClick={() => indexDimension === dimensionsList.length - 1 ? backToGeneral() : changeDimension(dimensionsList[indexDimension + 1]._id)}>
                 <span style={{marginRight: '5px'}}>{ indexDimension === dimensionsList.length - 1 ? 'Voltar para quadro geral' :dimensionsList[indexDimension + 1].name }</span>
                 <FontAwesomeIcon icon={faArrowRight} />
               </div>
